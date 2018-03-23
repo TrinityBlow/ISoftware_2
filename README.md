@@ -5,7 +5,7 @@ Todino Franco,
 Fernandez Francisco,
 Facundo López Osornio.
 
-Software solicitado
+Software solicitado.
 Un amigo los contacta porque tiene una conocida que quiere desarrollar un sistema para
 una idea que tiene. Su amigo, sin dar mucho detalle, les dice esto:
 "Un sistema que permita compartir un vehículo para un viaje. La idea es que cuando una
