@@ -1,11 +1,10 @@
-# ISoftware_2
+﻿# ISoftware_2
 
 Grupo 9 integrantes:
 
 Todino Franco,
 
-Fernandez Francisco,
+Fernández Francisco,
 
-Facundo López Osornio
-
+López Osornio Facundo
 
