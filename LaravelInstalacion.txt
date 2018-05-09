@@ -1,0 +1,22 @@
+Descargas necesarias:
+Descargar e instalar XAMPP (https://www.apachefriends.org/index.html)
+Dercargar e instalar composer (https://getcomposer.org/download/)
+
+Cambiar base del documento para montar el servidor:
+Abrir el panel de XAMPP, en la linea de apache presionar "Config" y seleccionar "Apache (httpd.conf)".
+En el archivo buscar DocumentRoot y cambiar lo que hay entre " por la direccion deseada,
+ej si el projecto esta en el escritorio de windows poner "C:/Users/{mi usuario}/Desktop/ISoftware_2/ViajeFacil/public" donde mi
+usuario es el usuario actual de windows.
+Hacer lo mismo con la linea de abajo que dice <Directory "">
+
+Crear una base de datos:
+Para entrar a phpmyadmin el servidor tiene que estar activo, en panel de XAMPP presionar start en la linea de apache y MySQL.
+Entrar por browser a "localhost/phpmyadmin" y en el panel de la izquierna presionar "new".
+Ingresar el nombre de la base de datos "viajefacil_db" y seleccionar "utf8_unicode_ci", presionar create.
+
+Montar el servidor:
+Para tener activo la pagina solo hay que tener activado Apache y MySQL en el panel de XAMPP
+
+Migrar Base de Datos:
+Por la consola de windows(cmd) ir al directorio de {ubicacion del git}/ViajeFacil
+y usar el comando "php artisan migrate"
