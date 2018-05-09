@@ -6,7 +6,7 @@ Cambiar base del documento para montar el servidor:
 Abrir el panel de XAMPP, en la linea de apache presionar "Config" y seleccionar "Apache (httpd.conf)".
 En el archivo buscar DocumentRoot y cambiar lo que hay entre " por la direccion deseada,
 ej si el projecto esta en el escritorio de windows poner "C:/Users/{mi usuario}/Desktop/ISoftware_2/ViajeFacil/public" donde mi
-usuario es el usuario actual de windows.
+usuario es el usuario actual de windows (usar "/", no "\" para las direcciones).
 Hacer lo mismo con la linea de abajo que dice <Directory "">
 
 Crear una base de datos:
