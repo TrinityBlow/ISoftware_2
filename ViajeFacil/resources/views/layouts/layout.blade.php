@@ -62,11 +62,13 @@
              <li><a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a></li>
               @else
                 <li class="nav-item dropdown">
-                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                    <a id="navbarDropdown" class="nav-link dropdown-toggle text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                         {{ Auth::user()->name }} <span class="caret"></span>
                     </a>
 
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      
+                        <a class="dropdown-item" href="/mi_usuario" class="list-group-item">Mi usuario</a>
                         <a class="dropdown-item" href="{{ route('logout') }}"
                             onclick="event.preventDefault();
                                           document.getElementById('logout-form').submit();">
@@ -97,7 +99,8 @@
           <div class="list-group">
             <a href="#" class="list-group-item active">Category 1</a>
             <a href="#" class="list-group-item">Category 2</a>
-            <a href="#" class="list-group-item">Category 3</a>
+            @auth
+            @endauth
           </div>
         <!-- /.col-lg-3 -->
 

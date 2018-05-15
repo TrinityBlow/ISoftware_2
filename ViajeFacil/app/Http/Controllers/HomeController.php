@@ -11,9 +11,11 @@ class HomeController extends Controller
      *
      * @return void
      */
+
+    // verificacion necesaria en controller para que tenga permiso de usuario
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth');  
     }
 
     /**
