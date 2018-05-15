@@ -27,3 +27,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/mi_usuario', 'MiUsuarioController@index');
 
 Route::post('/mi_usuario/modificar','MiUsuarioController@modificar');
+
+Route::get('/viajes/buscarViajes','Viajes@buscarViajes');

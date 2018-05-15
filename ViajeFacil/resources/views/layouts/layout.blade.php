@@ -18,7 +18,7 @@
 
 
 
-    <title>Shop Item - Start Bootstrap Template</title>
+    <title>Viaje Facil</title>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -36,30 +36,27 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="#">Start Bootstrap</a>
+        <a class="navbar-brand" href="#">Viaje F&aacute;cil</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="#">Home
+              <a class="nav-link" href="#">Inicio
                 <span class="sr-only">(current)</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">About</a>
+              <a class="nav-link" href="#">Ayuda</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Services</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Contact</a>
+              <a class="nav-link" href="#">Contacto</a>
             </li>
              <!-- Authentication Links -->
              @guest
-             <li><a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a></li>
-             <li><a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a></li>
+             <li><a class="nav-link" href="{{ route('login') }}">{{ __('Iniciar sesión') }}</a></li>
+             <li><a class="nav-link" href="{{ route('register') }}">{{ __('Registrarse') }}</a></li>
               @else
                 <li class="nav-item dropdown">
                     <a id="navbarDropdown" class="nav-link dropdown-toggle text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -95,10 +92,10 @@
       <div class="row">
 
         <div class="col-lg-3 col-sm-4">
-          <h1 class="my-4">Shop Name</h1>
-          <div class="list-group">
-            <a href="#" class="list-group-item active">Category 1</a>
-            <a href="#" class="list-group-item">Category 2</a>
+          
+          <div class="list-group mt-4">
+            <a href="/viajes/buscarViajes" class="list-group-item active">Buscar viaje</a>
+            <a href="#" class="list-group-item">Crear viaje</a>
             @auth
             @endauth
           </div>
@@ -118,7 +115,7 @@
     <!-- Footer -->
     <footer class="py-5 bg-dark sticky-footer">
       <div class="container">
-        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2017</p>
+        <p class="m-0 text-center text-white">Copyright &copy; Viaje Fácil 2018</p>
       </div>
       <!-- /.container -->
     </footer>

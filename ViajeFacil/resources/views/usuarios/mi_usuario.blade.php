@@ -67,7 +67,7 @@
                 <div class="card-body">
                     <form method="GET" action="/mi_usuario/agregar_vehiculo">
                         <button type="submit" class="btn btn-primary">
-                            {{ __('Agregar Vehiculo') }}
+                            {{ __('Agregar vehículo') }}
                         </button>
                     </form>
                 </div>
