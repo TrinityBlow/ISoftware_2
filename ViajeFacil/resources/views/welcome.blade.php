@@ -1,5 +1,5 @@
 @extends('layouts.layout')
 
 @section('content')
-    <p> Test </p>
+    <p> Test test test test</p>
 @endsection
