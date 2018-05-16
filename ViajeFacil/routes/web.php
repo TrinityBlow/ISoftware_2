@@ -28,4 +28,6 @@ Route::get('/mi_usuario', 'MiUsuarioController@index');
 
 Route::post('/mi_usuario/modificar','MiUsuarioController@modificar');
 
-Route::get('/viajes/buscarViajes','Viajes@buscarViajes');
+Route::get('/viajes/buscarViajes','Viajes@buscarViajes')->name('buscarViajes');
+
+Route::get('/viajes/crearViaje','Viajes@crearViaje')->name('crearViaje');

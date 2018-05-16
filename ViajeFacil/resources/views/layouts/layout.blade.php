@@ -27,7 +27,7 @@
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/body_align_layout.css" rel="stylesheet">
+    <link href="{{ asset('css/body_align_layout.css') }}" rel="stylesheet">
 
   </head>
 
@@ -94,8 +94,8 @@
         <div class="col-lg-3 col-sm-4">
           
           <div class="list-group mt-4">
-            <a href="/viajes/buscarViajes" class="list-group-item active">Buscar viaje</a>
-            <a href="#" class="list-group-item">Crear viaje</a>
+            <a href="{{ URL::route('buscarViajes') }}" class="list-group-item active">Buscar viaje</a>
+            <a href="{{ URL::route('crearViaje') }}" class="list-group-item">Crear viaje</a>
             @auth
             @endauth
           </div>
