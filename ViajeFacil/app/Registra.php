@@ -4,13 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Vehiculo extends Model
+class Registra extends Model
 {
-    protected $primaryKey = 'id_vehiculo';
+    protected $table = 'registra';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'patente','marca', 'modelo','cantidad_asientos',
+        'id','id_vehiculo',
     ];
 }

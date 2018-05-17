@@ -12,10 +12,10 @@ class Viajes extends Controller
 {
     public function __construct()
     {
+
+        // verificacion necesaria en controller para que tenga permiso de usuario
         $this->middleware('auth');  
     }
-
-
 
     public function buscarViajes()
     {
