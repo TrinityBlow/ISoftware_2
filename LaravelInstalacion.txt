@@ -17,8 +17,12 @@ Ingresar el nombre de la base de datos "viajefacil_db" y seleccionar "utf8_unico
 Montar el servidor:
 Para tener activo la pagina solo hay que tener activado Apache y MySQL en el panel de XAMPP
 
-Migrar Base de Datos:
-Por la consola de windows(cmd) ir al directorio de {ubicacion del git}/ViajeFacil
-y usar el comando "php artisan migrate"
 
 Con poner en el browser localhost te lleva a la pagina
+
+Estar en la carpeta del git:
+Guardar la carpeta ViajeFacil en otro lado
+Borrar la carpeta ViajeFacil
+ejecutar en cmd "composer create-project laravel/laravel ViajeFacil"
+copiar el ViajeFacil guardado arriba del ViajeFacil creado
+ejecutar en cmd "    composer require "laravelcollective/html":"^5.4.0"    "
