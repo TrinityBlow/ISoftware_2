@@ -1,5 +1,9 @@
 @extends('layouts.layout')
-
+@if (session('mensajeCrearViaje'))
+    <div class="alert alert-success">
+        {{ session('mensajeCrearViaje') }}
+    </div>
+@endif
 @section('content')
 <div class="row justify-content-center">
     <div class="col-md-8">
@@ -97,16 +101,18 @@
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <tr>
                                     <th>Patente</th>
+                                    <th>Marca</th>
                                     <th>Modelo</th>
                                     <th>Opciones</th>
                                 </tr>
                                 @foreach ($mis_vehiculos as $vehiculo)
                                     <tr>
                                         <th> {{ $vehiculo->patente }} </th> 
-                                        <th> {{ $vehiculo->modelo}}  </th> 
+                                        <th> {{ $vehiculo->marca}} </th>
+                                        <th> {{ $vehiculo->modelo}} </th> 
                                         <th>
                                             <a class= 'text-center' href="/vehiculos/modificarVehiculo/{{ $vehiculo->id_vehiculo }}"> <button type="button" class="btn btn-primary">Modificar</button> </a> 
-                                            <a class= 'text-center' href="/vehiculos/eliminarVehiculo/{{$vehiculo->id_vehiculo}}"> <button type="button" class="btn btn-primary">Eliminar</button> </a>      
+                                            <a class= 'text-center' href="/vehiculos/eliminarVehiculo/{{$vehiculo->id_vehiculo}}"> <button type="button" class="btn btn-danger mt-2">Eliminar</button> </a>      
                                         </th>
                                     </tr>
                                 @endforeach
