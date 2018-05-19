@@ -44,9 +44,26 @@ class MiUsuarioController extends Controller
         return view('usuarios.agregarVehiculo');
     }
 
+    private function validateModification($data){
+        if (Auth::user()->email == $data['email']){
+            $data->validate([
+                'name' => 'required|string|min:1|max:255',
+                'last_name' => 'required|string|min:1|max:255',
+                'birthdate' => 'required|date',
+            ]);
+        }else{
+            $data->validate([
+                'name' => 'required|string|min:1|max:255',
+                'last_name' => 'required|string|min:1|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'birthdate' => 'required|date',
+            ]);
+        }
+    }
+
     protected function modificar(Request $request)
     {
-    
+        $this->validateModification($request);
         $user = Auth::user();
         $user->name = $request->input('name');
         $user->last_name = $request->input('last_name');
