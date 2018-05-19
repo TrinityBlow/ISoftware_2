@@ -13,18 +13,18 @@ class Viajes extends Controller
 {
     public function __construct()
     {
+
+        // verificacion necesaria en controller para que tenga permiso de usuario
         $this->middleware('auth');  
     }
 
-
-
-    public function buscarViajes()
+   /* public function buscarViajes()
     {
         return view('viajes.buscarViajes');
     }
+    */
 
-
-        
+   
     public function crearViaje()
     {
         return view('viajes.crearViaje');
@@ -34,5 +34,11 @@ class Viajes extends Controller
     {
         $viaje = Viaje::find($id);
         return view('viajes.verDetallesViaje')->with('viaje',$viaje);
+    }
+
+    public function buscarViajes()
+    {
+        $viajes = Viaje::all();
+        return view('viajes.buscarViajes') -> with('viajes', $viajes);
     }
 }

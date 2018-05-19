@@ -39,6 +39,20 @@
                     </div>
 
                     <div class="form-group row">
+                        <label for="birthdate" class="col-md-4 col-form-label text-md-right">{{ __('Fecha de nacimiento') }}</label>
+
+                        <div class="col-md-6">
+                            <input id="birthdate" type="date" class="form-control{{ $errors->has('birthdate') ? ' is-invalid' : '' }}" name="birthdate" value="{{ Auth::user()->birthdate }}" required>
+
+                            @if ($errors->has('birthdate'))
+                                <span class="invalid-feedback">
+                                    <strong> Fecha de nacimiento inválida.</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
                         <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail') }}</label>
 
                         <div class="col-md-6">
@@ -62,16 +76,46 @@
                 </form>
             </div>
         </div>
-        <div class="card mt-4">
+
+        <div class="card mt-4">  
+            
+
             <div class="card-header">{{ __('Vehiculos') }}</div>
-                <div class="card-body">
-                    <form method="GET" action="/mi_usuario/agregar_vehiculo">
-                        <button type="submit" class="btn btn-primary">
-                            {{ __('Agregar vehículo') }}
-                        </button>
-                    </form>
-                </div>
+            <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="card-body">
+                            <a href="/mi_usuario/agregarVehiculo">
+                                <button type="submit" class="btn btn-primary">
+                                    {{ __('Agregar vehículo') }}
+                                </button>
+                            </a>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <b> Mis Vehiculos:</b>
+                        <div class="table-responsive mt-2">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <tr>
+                                    <th>Patente</th>
+                                    <th>Modelo</th>
+                                    <th>Opciones</th>
+                                </tr>
+                                @foreach ($mis_vehiculos as $vehiculo)
+                                    <tr>
+                                        <th> {{ $vehiculo->patente }} </th> 
+                                        <th> {{ $vehiculo->modelo}}  </th> 
+                                        <th>
+                                            <a class= 'text-center' href="/vehiculos/modificarVehiculo/{{ $vehiculo->id_vehiculo }}"> <button type="button" class="btn btn-primary">Modificar</button> </a> 
+                                            <a class= 'text-center' href="/vehiculos/eliminarVehiculo/{{$vehiculo->id_vehiculo}}"> <button type="button" class="btn btn-primary">Eliminar</button> </a>      
+                                        </th>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        </div>
+                    </li>
+                </ul>
             </div>
+            
         </div>
     </div>
 </div>

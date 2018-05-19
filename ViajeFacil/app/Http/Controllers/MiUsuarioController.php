@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Vehiculo;
+use App\Registra;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Database\Eloquent\Collection;
 use Auth;
 
 class MiUsuarioController extends Controller
@@ -15,11 +18,30 @@ class MiUsuarioController extends Controller
         $this->middleware('auth');  
     }
 
+    public function validation (){
+
+    }
+
 
 
     public function index()
     {
-        return view('usuarios.mi_usuario');
+        $mis_vehiculos= array();
+        $registros = Registra::all();
+        $user = Auth::user();
+
+        foreach($registros as $registro){
+            if($registro['id'] == $user['id']){
+                $mis_vehiculos[] = Vehiculo::find($registro['id_vehiculo']);
+            }
+        }
+        return view('usuarios.mi_usuario')->with('mis_vehiculos', $mis_vehiculos);
+    }
+
+    
+    public function agregarVehiculo()
+    {
+        return view('usuarios.agregarVehiculo');
     }
 
     protected function modificar(Request $request)
