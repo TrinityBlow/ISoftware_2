@@ -28,8 +28,8 @@ Route::get('/mi_usuario', 'MiUsuarioController@index');
 
 Route::post('/mi_usuario/modificar','MiUsuarioController@modificar');
 
-Route::get('/viajes/buscarViajes','Viajes@buscarViajes')->name('buscarViajes');
+Route::get('/viajes/buscarViajes','ViajesController@index')->name('buscarViajes');
 
 Route::get('/viajes/crearViaje','Viajes@crearViaje')->name('crearViaje');
 
-Route::get('/asd','VehiculosController@index');
+Route::get('/viajes/verDetallesViaje/{id_viaje}','Viajes@verDetallesViaje');

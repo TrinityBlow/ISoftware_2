@@ -14,7 +14,9 @@ class ViajesController extends Controller
      */
     public function index()
     {
-        //
+        //  
+        $viajes = Viaje::all();
+        return view('viajes.buscarViajes') -> with('viajes', $viajes);
     }
 
     /**

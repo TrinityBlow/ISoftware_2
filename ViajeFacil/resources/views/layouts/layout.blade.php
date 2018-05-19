@@ -94,9 +94,10 @@
         <div class="col-lg-3 col-sm-4">
           
           <div class="list-group mt-4">
+            @auth
             <a href="{{ URL::route('buscarViajes') }}" class="list-group-item active">Buscar viaje</a>
             <a href="{{ URL::route('crearViaje') }}" class="list-group-item">Crear viaje</a>
-            @auth
+            
             @endauth
           </div>
         <!-- /.col-lg-3 -->

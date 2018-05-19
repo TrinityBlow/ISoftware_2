@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Viaje;
 use Auth;
 
 class Viajes extends Controller
@@ -29,4 +30,9 @@ class Viajes extends Controller
         return view('viajes.crearViaje');
     }
 
+    public function verDetallesViaje($id)
+    {
+        $viaje = Viaje::find($id);
+        return view('viajes.verDetallesViaje')->with('viaje',$viaje);
+    }
 }
