@@ -22,8 +22,6 @@ class MiUsuarioController extends Controller
 
     }
 
-
-
     public function index()
     {
         $mis_vehiculos= array();
@@ -38,7 +36,6 @@ class MiUsuarioController extends Controller
         return view('usuarios.mi_usuario')->with('mis_vehiculos', $mis_vehiculos);
     }
 
-    
     public function agregarVehiculo()
     {
         return view('usuarios.agregarVehiculo');
@@ -68,14 +65,14 @@ class MiUsuarioController extends Controller
         $user->name = $request->input('name');
         $user->last_name = $request->input('last_name');
         $user->email = $request->input('email');
- 
+        if($request->image != null){
+            $user->image = $request->input('image');
+        }
         /*
-
             if ( ! Request::input('password') == '')
             {
                 $user->password = bcrypt(Request::input('password'));
             }
-
         */
 
         $user->save();

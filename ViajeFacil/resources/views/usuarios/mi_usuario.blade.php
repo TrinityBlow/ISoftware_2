@@ -10,15 +10,26 @@
                 <form method="POST" action="/mi_usuario/modificar">
                     @csrf
 
-                    <div class="form-group row">
+                    <div class="text-center mb-6">
+
+                        @if( Auth::user()->image == null )
+                            <img class="rounded" src={{ asset('css/images/predet.jpg') }} width="75%" height="75%" >
+                        @else
+                            <img class="rounded" src="" height="75%" width="75%">
+                        @endif
+
+                        <input id="image" type="file" class="{{ $errors->has('image') ? ' is-invalid' : '' }}" name="image" >
+                    </div>
+
+                    <div class="form-group row mt-2">
                         <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Nombre') }}</label>
 
                         <div class="col-md-6">
-                            <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ Auth::user()->name }}" required autofocus>
+                            <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ Auth::user()->name }}" required>
 
                             @if ($errors->has('name'))
                                 <span class="invalid-feedback">
-                                    <strong> Nombre invalido </strong>
+                                    <strong> Nombre inválido </strong>
                                 </span>
                             @endif
                         </div>
@@ -28,11 +39,11 @@
                         <label for="last_name" class="col-md-4 col-form-label text-md-right">{{ __('Apellido') }}</label>
 
                         <div class="col-md-6">
-                            <input id="last_name" type="text" class="form-control{{ $errors->has('last_name') ? ' is-invalid' : '' }}" name="last_name" value="{{ Auth::user()->last_name }}" required autofocus>
+                            <input id="last_name" type="text" class="form-control{{ $errors->has('last_name') ? ' is-invalid' : '' }}" name="last_name" value="{{ Auth::user()->last_name }}" required>
 
                             @if ($errors->has('last_name'))
                                 <span class="invalid-feedback">
-                                    <strong> Apellido invalido </strong>
+                                    <strong> Apellido inválido </strong>
                                 </span>
                             @endif
                         </div>
@@ -46,7 +57,7 @@
 
                             @if ($errors->has('birthdate'))
                                 <span class="invalid-feedback">
-                                    <strong> Fecha de nacimiento inválida.</strong>
+                                    <strong> Fecha de nacimiento inválida </strong>
                                 </span>
                             @endif
                         </div>
@@ -60,7 +71,7 @@
 
                             @if ($errors->has('email'))
                                 <span class="invalid-feedback">
-                                    <strong> E-mail ya existente</strong>
+                                    <strong> E-mail ya existente </strong>
                                 </span>
                             @endif
                         </div>

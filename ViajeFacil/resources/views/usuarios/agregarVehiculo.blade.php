@@ -4,7 +4,7 @@
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card">
-            <div class="card-header">{{ __('Mi usuario') }}</div>
+            <div class="card-header">{{ __('Agregar vehículo') }}</div>
 
             <div class="card-body">
                 <form method="POST" action="/vehiculo/agregarVehiculo">
@@ -32,7 +32,7 @@
 
                             @if ($errors->has('marca'))
                                 <span class="invalid-feedback">
-                                    <strong> Marca invalida </strong>
+                                    <strong> Marca inválida </strong>
                                 </span>
                             @endif
                         </div>
@@ -46,7 +46,7 @@
 
                             @if ($errors->has('modelo'))
                                 <span class="invalid-feedback">
-                                    <strong> Modelo inválido.</strong>
+                                    <strong> Modelo inválido </strong>
                                 </span>
                             @endif
                         </div>
@@ -60,7 +60,7 @@
 
                             @if ($errors->has('cantidad_asientos'))
                                 <span class="invalid-feedback">
-                                    <strong> Cantidad de asientos invalida</strong>
+                                    <strong> Cantidad de asientos inválido </strong>
                                 </span>
                             @endif
                         </div>

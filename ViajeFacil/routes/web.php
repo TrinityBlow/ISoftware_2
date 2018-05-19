@@ -39,6 +39,10 @@ Route::get('/viajes/crearViaje','Viajes@crearViaje')->name('crearViaje');
 
 Route::get('/vehiculos/modificarVehiculo/{id}','VehiculosController@modificarVehiculo');
 
-Route::get('/vehiculos/eliminarVehiculo/{id}','VehiculosController@elminarVehiculo');
+Route::post('/vehiculos/modificarVehiculo','VehiculosController@modificarVehiculoPorId');
+
+Route::get('/vehiculos/eliminarVehiculo/{id}','VehiculosController@eliminarVehiculo');
 
 Route::post('/vehiculo/agregarVehiculo','VehiculosController@agregarVehiculo');
+
+

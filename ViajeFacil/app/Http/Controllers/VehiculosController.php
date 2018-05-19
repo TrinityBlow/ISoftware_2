@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Auth;
 
 class VehiculosController extends Controller
@@ -18,11 +19,6 @@ class VehiculosController extends Controller
         $this->middleware('auth');  
     }
 
-    public function modificarVehiculo($id)
-    {
-        //
-        return view('vehiculos.modificarVehiculo');
-    }
 /*
     protected function validator(array $data)
     {
@@ -34,6 +30,7 @@ class VehiculosController extends Controller
         ]);
     }
 */
+
     private function validateVehiculo($data){
         $data->validate([
             'patente' => 'required|string|min:1|max:255|unique:vehiculos',
@@ -62,6 +59,51 @@ class VehiculosController extends Controller
         ]);
 
         return redirect('mi_usuario');
+    }
+
+    public function modificarVehiculo($id)
+    {
+        //
+        $mi_vehiculo = Vehiculo::find($id);
+        return view('vehiculos.modificarVehiculo')->with('mi_vehiculo',$mi_vehiculo);
+    }
+
+    private function validateVehiculoModificar($data,$mi_vehiculo){
+        if ($mi_vehiculo->patente ==  $data['patente']){
+            $data->validate([
+                'cantidad_asientos' => 'required|integer|min:1',
+            ]);
+        }else{
+            $data->validate([
+                'patente' => 'required|string|min:1|max:255|unique:vehiculos',
+                'cantidad_asientos' => 'required|integer|min:1',
+            ]);
+        }
+    }
+
+    public function modificarVehiculoPorId(Request $data)
+    {
+        //
+        $mi_vehiculo = Vehiculo::find($data['id_vehiculo']);
+        $this->validateVehiculoModificar($data,$mi_vehiculo);
+        
+        $mi_vehiculo->patente = $data->input('patente');
+        $mi_vehiculo->modelo = $data->input('modelo');
+        $mi_vehiculo->marca = $data->input('marca');
+        $mi_vehiculo->cantidad_asientos = $data->input('cantidad_asientos');
+
+        $mi_vehiculo->save();
+
+        return redirect("/vehiculos/modificarVehiculo/" . $mi_vehiculo->id_vehiculo);
+    }
+
+    public function eliminarVehiculo($id)
+    {
+        //
+        $mi_vehiculo = Vehiculo::find($id);
+        DB::table('registra')->where('id_vehiculo', '=', $mi_vehiculo->id_vehiculo)->delete();
+        DB::table('vehiculos')->where('id_vehiculo', '=', $mi_vehiculo->id_vehiculo)->delete();
+        return redirect('/mi_usuario');
     }
 
 }
