@@ -11,18 +11,19 @@
             <div class="card-header">{{ __('Mi usuario') }}</div>
 
             <div class="card-body">
-                <form method="POST" action="/mi_usuario/modificar">
+                <form method="POST" action="/mi_usuario/modificar" enctype="multipart/form-data">
                     @csrf
 
-                    <div class="text-center mb-6">
+                    <div class="text-center mb-6 form-group">
 
-                        @if( Auth::user()->image == null )
-                            <img class="rounded" src={{ asset('css/images/predet.jpg') }} width="75%" height="75%" >
-                        @else
-                            <img class="rounded" src="" height="75%" width="75%">
+                        <img class="rounded" src='/storage/images/{{ Auth::user()->image }}' height="50%" width="50%">
+
+                        <input id="image" type="file" class="mt-2 {{ $errors->has('image') ? ' is-invalid' : '' }}" name="image" >
+                        @if ($errors->has('image'))
+                        <span class="invalid-feedback">
+                            <strong> Apellido inválido </strong>
+                        </span>
                         @endif
-
-                        <input id="image" type="file" class="{{ $errors->has('image') ? ' is-invalid' : '' }}" name="image" >
                     </div>
 
                     <div class="form-group row mt-2">
