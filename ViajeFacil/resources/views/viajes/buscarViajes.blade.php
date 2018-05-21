@@ -1,8 +1,32 @@
 @extends('layouts.layout')
-
 @section('content')
+              <div class="card mt-1">
+                <div class="card-header">{{ __('Filtrar viajes por:') }}</div>
+                <form method="GET" action="/viajes/buscarViajes" class="form-horizontal" role="form">
+
+                @csrf
+
+                  <div class="form-group row mt-2">
+                        <label for="origen" class="col-md-12 col-form-label text-md-center">{{ __('Origen') }}</label>
+                  </div>
+                    <div class="col-sm-12">
+                      <input name="ori" type="text" class="form-control" placeholder="Ej.: 'La Plata'">
+                    </div>
+                  <div class="form-group row mt-2">
+                        <label for="destino" class="col-md-12 col-form-label text-md-center">{{ __('Destino') }}</label>
+                  </div>
+                    <div class="col-sm-12">
+                      <input name="dest" type="text" class="form-control" placeholder="Ej.: 'Brasil'">
+                    </div>
+                  <div class="form-group mt-2 ml-7">
+                    <div class="col-sm-10">
+                      <button type="submit" class="btn btn-default">{{ __('Buscar') }}</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
 @foreach ($viajes as $viaje)
-	<div class="card w-75 mb-2">
+	<div class="card w-75 mt-2">
 	  <div class="card-body">
 	  		<h5 class="card-title">{{ $viaje -> origen }} hacia {{ $viaje -> destino }}</h5>
 	    <a href="/viajes/verDetallesViaje/{{ $viaje -> id_viaje }}" class="btn btn-primary">Ver detalles</a>
