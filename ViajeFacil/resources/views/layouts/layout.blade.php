@@ -95,18 +95,13 @@
           
           <div class="list-group mt-4">
             @auth
-
-            <a href="{{ URL::route('buscarViajes') }}" class="list-group-item active">Buscar viaje</a>
-            <a href="{{ URL::route('crearViaje') }}" class="list-group-item">Crear viaje</a>
-            <a href="{{ URL::route('misViajes') }}" class="list-group-item">Mis viajes</a>
-
               <a href="{{ URL::route('buscarViajes') }}" class="list-group-item active">Buscar viaje</a>
               <a href="{{ URL::route('crearViaje') }}" class="list-group-item">Crear viaje</a>
+              <a href="{{ URL::route('misViajes') }}" class="list-group-item">Mis viajes</a>        
               
               @if( count($postulaciones) > 0)
                 <a href="/viajes/verPostulaciones" class="list-group-item">Pedido de Postulaciones ({{ $postulaciones->count() }})</a>
               @endif
-
             @endauth
           </div>
         <!-- /.col-lg-3 -->
