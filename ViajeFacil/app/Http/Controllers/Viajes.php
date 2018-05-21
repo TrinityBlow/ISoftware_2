@@ -6,6 +6,7 @@ use App\User;
 use App\Vehiculo;
 use App\Registra;
 use App\Viaje;
+use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -38,9 +39,30 @@ class Viajes extends Controller
         ->with('viaje',$viaje);
     }
 
-    public function buscarViajes()
+    public function buscarViajes(Request $data)
     {
-        $viajes = Viaje::all();
+
+        /* Carbon es un paquete de Laravel que permite hacer todo tipo de operaciones con fechas */     
+        $f0 = Carbon::today();
+
+        $f1 = Carbon::today();
+
+        $f1 -> addDays(30);
+
+        if (!empty($data)){
+            $viajes = Viaje::whereBetween('fecha', [$f0, $f1])->get();
+        } elseif ((!empty($data['ori'])) and (empty($data['dest']))) {
+            $filtroOrigen = $data['ori'];
+            $viajes = Viaje::whereBetween('fecha', [$f0, $f1])->get()->where('origen','like','%'.$filtroOrigen.'%');
+        } elseif (empty($data['ori'])) {
+            $filtroDestino = $data['dest'];
+            $viajes = Viaje::whereBetween('fecha', [$f0, $f1])->get()->where('dest','like','%'.$filtroDestino.'%');
+        } else {
+           $filtroOrigen = $data['ori'];
+           $filtroDestino = $data['dest'];
+           $viajes = Viaje::whereBetween('fecha', [$f0, $f1])->get()->where('origen','like','%'.$filtroOrigen.'%')->where('dest','like','%'.$filtroDestino.'%');
+        }
+
         return view('viajes.buscarViajes') -> with('viajes', $viajes);
     }
 

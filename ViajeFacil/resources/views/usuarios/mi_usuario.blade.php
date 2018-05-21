@@ -15,11 +15,10 @@
                     @csrf
 
                     <div class="text-center mb-6">
-
                         @if( Auth::user()->image == null )
                             <img class="rounded" src={{ asset('css/images/predet.jpg') }} width="75%" height="75%" >
                         @else
-                            <img class="rounded" src="" height="75%" width="75%">
+
                         @endif
 
                         <input id="image" type="file" class="{{ $errors->has('image') ? ' is-invalid' : '' }}" name="image" >

@@ -33,7 +33,7 @@ class MiUsuarioController extends Controller
                 $mis_vehiculos[] = Vehiculo::find($registro['id_vehiculo']);
             }
         }
-        return view('usuarios.mi_usuario')->with('mis_vehiculos', $mis_vehiculos);
+        return view('usuarios.mi_usuario')->with('mis_vehiculos', $mis_vehiculos)->with('user', $user);
     }
 
     public function agregarVehiculo()
@@ -79,4 +79,15 @@ class MiUsuarioController extends Controller
         return redirect('mi_usuario');
     }
     
+    /*public function showPicture($id)
+    {
+        $picture = User::find($id);
+        $pic = Image::make($picture->image);
+        $response = Response::make($pic->encode('jpg'));
+
+        //setting content-type
+        $response->header('Content-Type', 'image/jpg');
+
+        return $response;
+    }*/
 }
