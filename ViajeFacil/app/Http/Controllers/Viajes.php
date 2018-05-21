@@ -42,25 +42,27 @@ class Viajes extends Controller
     public function buscarViajes(Request $data)
     {
 
-        /* Carbon es un paquete de Laravel que permite hacer todo tipo de operaciones con fechas */     
+        /* Carbon es un paquete de Laravel que permite hacer todo tipo de operaciones con fechas */ 
+        
         $f0 = Carbon::today();
 
         $f1 = Carbon::today();
 
         $f1 -> addDays(30);
 
-        if (!empty($data)){
-            $viajes = Viaje::whereBetween('fecha', [$f0, $f1])->get();
-        } elseif ((!empty($data['ori'])) and (empty($data['dest']))) {
-            $filtroOrigen = $data['ori'];
-            $viajes = Viaje::whereBetween('fecha', [$f0, $f1])->get()->where('origen','like','%'.$filtroOrigen.'%');
-        } elseif (empty($data['ori'])) {
+
+        if ((!is_null($data['ori'])) and (is_null($data['dest']))) {
+            $filtroOrigen = '%' . $data['ori'] . '%';
+            $viajes = Viaje::whereBetween('fecha', [$f0, $f1])->where('origen','like',$filtroOrigen)->get();
+        } elseif ((is_null($data['ori'])) and (!is_null($data['dest']))) {
             $filtroDestino = $data['dest'];
-            $viajes = Viaje::whereBetween('fecha', [$f0, $f1])->get()->where('dest','like','%'.$filtroDestino.'%');
-        } else {
+            $viajes = Viaje::whereBetween('fecha', [$f0, $f1])->where('destino','like','%'.$filtroDestino.'%')->get();
+        } elseif ((!is_null($data['ori'])) and (!is_null($data['dest']))) {
            $filtroOrigen = $data['ori'];
            $filtroDestino = $data['dest'];
-           $viajes = Viaje::whereBetween('fecha', [$f0, $f1])->get()->where('origen','like','%'.$filtroOrigen.'%')->where('dest','like','%'.$filtroDestino.'%');
+           $viajes = Viaje::whereBetween('fecha', [$f0, $f1])->where('origen','like','%'.$filtroOrigen.'%')->where('destino','like','%'.$filtroDestino.'%')->get();
+        } else {
+           $viajes = Viaje::whereBetween('fecha', [$f0, $f1])->get();
         }
 
         return view('viajes.buscarViajes') -> with('viajes', $viajes);
