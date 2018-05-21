@@ -37,7 +37,9 @@ Route::get('/viajes/buscarViajes/','Viajes@buscarViajes')->name('buscarViajes');
 
 Route::get('/viajes/crearViaje','Viajes@crearViaje')->name('crearViaje');
 
-Route::get('/viajes/postularmeViaje/{id}','Viajes@postularmeViaje');
+Route::get('/viajes/postularmeViaje/{id}','PostulacionesController@postularmeViaje');
+
+Route::get('/viajes/cancelarPostulacion/{id}','PostulacionesController@cancelarPostulacion');
 
 Route::post('/viajes/publicarViaje','Viajes@publicarViaje');
 
