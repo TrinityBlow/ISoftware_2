@@ -11,7 +11,7 @@
     <p class="card-text">Fecha del viaje: {{ $viaje -> fecha }} </p>
     <p class="card-text">Precio del viaje: {{ $viaje -> precio }} </p>
     <p class="card-text">Tipo de viaje: {{ $viaje -> tipo_viaje }} </p>
-    <button type="button" class="btn btn-success">Postularme para viajar</button>
+    <a href="/viajes/postularmeViaje/{{ $viaje->id_viaje }}"> <button type="button" class="btn btn-success">Postularme para viajar</button> </a> 
     <button type="button" class="btn btn-info">Hacer consulta</button>
   </div>
 </div>

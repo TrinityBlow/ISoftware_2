@@ -82,4 +82,11 @@ class Viajes extends Controller
         }
         return $mis_vehiculos;
     }
+
+    public function postularmeViaje($id)
+    {
+        $user = Auth::user();
+        return redirect('/viajes/buscarViajes');
+    }
+
 }

@@ -73,14 +73,12 @@ class MiUsuarioController extends Controller
             $extension = $request->file('image')->getClientOriginalExtension();
             $fileNameToStore = $fileName.'_'.time().'.'.$extension;
             $path = $request->file('image')->storeAs('public/images',$fileNameToStore);
-        }else{ 
-            $fileNameToStore = $user->image;
+            $user->image = $fileNameToStore;
         }
 
         $user->name = $request->input('name');
         $user->last_name = $request->input('last_name');
         $user->email = $request->input('email');
-        $user->image = $fileNameToStore;
         /*
             if ( ! Request::input('password') == '')
             {
