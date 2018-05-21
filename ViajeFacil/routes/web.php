@@ -33,13 +33,21 @@ Route::get('/viajes/verDetallesViaje/{id_viaje}','Viajes@verDetallesViaje');
 
 Route::get('/mi_usuario/agregarVehiculo','MiUsuarioController@agregarVehiculo');
 
-Route::get('/viajes/buscarViajes/','Viajes@buscarViajes')->name('buscarViajes');
+Route::post('/viajes/buscarViajes/','Viajes@buscarViajes')->name('buscarViajes');
 
 Route::get('/viajes/crearViaje','Viajes@crearViaje')->name('crearViaje');
 
 Route::get('/viajes/postularmeViaje/{id}','Viajes@postularmeViaje');
 
 Route::post('/viajes/publicarViaje','Viajes@publicarViaje');
+
+Route::get('/viajes/misViajes','Viajes@misViajes')->name('misViajes');
+
+Route::get('/viajes/modificarViaje/{id}','Viajes@modificarViaje');
+
+Route::post('/viajes/modificarViaje','Viajes@modificarViajeId');
+
+Route::get('/viajes/eliminarViaje/{id}','Viajes@eliminarViaje');
 
 Route::get('/vehiculos/modificarVehiculo/{id}','VehiculosController@modificarVehiculo');
 
