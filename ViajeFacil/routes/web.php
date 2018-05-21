@@ -20,6 +20,7 @@ Route::get('/try', function () {
     return view('welcome');
 });
 
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -27,7 +28,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/mi_usuario', 'MiUsuarioController@index');
 
 Route::post('/mi_usuario/modificar','MiUsuarioController@modificar');
-
 
 Route::get('/viajes/verDetallesViaje/{id_viaje}','Viajes@verDetallesViaje');
 

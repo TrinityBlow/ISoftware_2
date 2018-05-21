@@ -9,7 +9,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Response;
 use Auth;
+
 
 class MiUsuarioController extends Controller
 {
@@ -47,6 +49,7 @@ class MiUsuarioController extends Controller
                 'name' => 'required|string|min:1|max:255',
                 'last_name' => 'required|string|min:1|max:255',
                 'birthdate' => 'required|date',
+                'image' => 'image|nullable|max:1999',
             ]);
         }else{
             $data->validate([
@@ -54,6 +57,7 @@ class MiUsuarioController extends Controller
                 'last_name' => 'required|string|min:1|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
                 'birthdate' => 'required|date',
+                'image' => 'image|nullable|max:1999',
             ]);
         }
     }
@@ -62,12 +66,21 @@ class MiUsuarioController extends Controller
     {
         $this->validateModification($request);
         $user = Auth::user();
+
+		if($request->hasFile('image')){
+            $fileNameWithExt = $request->file('image')->getClientOriginalName();
+            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $fileNameToStore = $fileName.'_'.time().'.'.$extension;
+            $path = $request->file('image')->storeAs('public/images',$fileNameToStore);
+        }else{ 
+            $fileNameToStore = $user->image;
+        }
+
         $user->name = $request->input('name');
         $user->last_name = $request->input('last_name');
         $user->email = $request->input('email');
-        if($request->image != null){
-            $user->image = $request->input('image');
-        }
+        $user->image = $fileNameToStore;
         /*
             if ( ! Request::input('password') == '')
             {
@@ -77,6 +90,13 @@ class MiUsuarioController extends Controller
 
         $user->save();
         return redirect('mi_usuario');
+    }
+
+    public function imagenUsuario($id){
+        $user = Auth::user();
+        header("Content-type: image/jpg"); 
+        echo $user->image; 
+        
     }
     
     /*public function showPicture($id)

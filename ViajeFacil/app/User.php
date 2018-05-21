@@ -9,6 +9,10 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    protected $attributes = array(
+        'image' => 'mr_x.png'
+      );
+
     /**
      * The attributes that are mass assignable.
      *
