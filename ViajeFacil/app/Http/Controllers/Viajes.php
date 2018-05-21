@@ -6,6 +6,7 @@ use App\User;
 use App\Vehiculo;
 use App\Registra;
 use App\Viaje;
+use App\Postulacion;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -33,11 +34,14 @@ class Viajes extends Controller
 
     public function verDetallesViaje($id)
     {
+        $user = Auth::user();
         $viaje = Viaje::find($id);
         $usuario_creador = User::find($viaje['id']);
+        $tiene_postulacion = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$viaje->id_viaje)->get();
         return view('viajes.verDetallesViaje')
         ->with('usuario_creador',$usuario_creador)
-        ->with('viaje',$viaje);
+        ->with('viaje',$viaje)
+        ->with('postulacion',$tiene_postulacion);
     }
 
     public function buscarViajes(Request $data)
@@ -108,11 +112,6 @@ class Viajes extends Controller
         return $mis_vehiculos;
     }
 
-    public function postularmeViaje($id)
-    {
-        $user = Auth::user();
-        return redirect('/viajes/buscarViajes');
-    }
 
     public function misViajes(){
         $user = Auth::user();

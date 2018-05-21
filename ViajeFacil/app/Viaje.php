@@ -20,4 +20,9 @@ class Viaje extends Model
         'id_vehiculo',
         'id',
     ];
+
+    public function user()
+    {
+        return $this->hasOne('App\User','id','id');
+    }
 }
