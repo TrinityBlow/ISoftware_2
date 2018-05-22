@@ -24,12 +24,20 @@ class Viajes extends Controller
     }
    
     public function crearViaje()
-    {
+    {        
+        $f0 = Carbon::today();
+
+        $f1 = Carbon::today();
+
+        $f1 -> addDays(30);
+
         $vehiculos = $this->vehiculosUsuario();
         if(!count($vehiculos)){
             return redirect('/');
         }
-        return view('viajes.crearViaje')->with('vehiculos',$vehiculos);
+        return view('viajes.crearViaje')->with('vehiculos',$vehiculos)
+        ->with('f0',$f0)
+        ->with('f1',$f1);
     }
 
     public function verDetallesViaje($id)

@@ -3,7 +3,7 @@
 @section('content')
 <form method="POST" action="/viajes/publicarViaje">
     
-    @csrf
+    @csrf 
 	<div class="form-group">
 		<label for="origen" class="control-label">Origen:</label>
 		<input required type="text" class="form-control" name="origen">
@@ -16,7 +16,7 @@
 
 	<div class="form-group">
 		<label for="fecha" class="control-label">Fecha:</label>
-		<input required type="date" class="form-control" name="fecha">
+		<input required type="date" class="form-control" name="fecha" value={{ $f0 }} min={{ $f0 }} max={{ $f1 }}>
 	</div>
 
 	<div class="form-group">
