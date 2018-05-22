@@ -128,13 +128,13 @@
                                 </tr>
                                 @foreach ($mis_vehiculos as $vehiculo)
                                     <tr>
-                                        <th> {{ $vehiculo->patente }} </th> 
-                                        <th> {{ $vehiculo->marca}} </th>
-                                        <th> {{ $vehiculo->modelo}} </th> 
-                                        <th>
+                                        <td> {{ $vehiculo->patente }} </td> 
+                                        <td> {{ $vehiculo->marca}} </td>
+                                        <td> {{ $vehiculo->modelo}} </td> 
+                                        <td>
                                             <a class= 'text-center' href="/vehiculos/modificarVehiculo/{{ $vehiculo->id_vehiculo }}"> <button type="button" class="btn btn-primary">Modificar</button> </a> 
                                             <a class= 'text-center' href="/vehiculos/eliminarVehiculo/{{$vehiculo->id_vehiculo}}"> <button type="button" class="btn btn-danger mt-2">Eliminar</button> </a>      
-                                        </th>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </table>

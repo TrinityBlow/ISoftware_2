@@ -11,6 +11,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\DB;
 use Auth;
 
 class Viajes extends Controller
@@ -109,6 +110,44 @@ class Viajes extends Controller
             }
         }
         return $mis_vehiculos;
+    }
+
+
+    public function misViajes(){
+        $user = Auth::user();
+        $mis_viajes = Viaje::where('id','like',$user['id'])->get();
+        return view('viajes.misViajes') -> with('mis_viajes', $mis_viajes);
+    }
+
+    public function modificarViaje($id)
+    {
+        //
+        $viaje = Viaje::find($id);
+        return view('viajes.modificarViaje')->with('viaje',$viaje);
+    }
+
+    public function modificarViajeId(Request $data)
+    {
+        //
+        $mi_viaje = Viaje::find($data['id_viaje']);
+
+        $mi_viaje->origen = $data->input('origen');
+        $mi_viaje->destino = $data->input('destino');
+        $mi_viaje->fecha = $data->input('fecha');
+        $mi_viaje->precio = $data->input('precio');
+        $mi_viaje->tipo_viaje = $data->input('tipo_viaje');        
+
+        $mi_viaje->save();
+
+        return redirect("/viajes/modificarViaje/" . $mi_viaje->id_viaje);
+    }
+
+    public function eliminarViaje($id)
+    {
+        //
+        $mi_viaje = Viaje::find($id);
+        DB::table('viajes')->where('id_viaje', '=', $mi_viaje->id_viaje)->delete();
+        return redirect('/mi_usuario');
     }
 
 
