@@ -87,13 +87,13 @@
     <!-- Page Content -->
 
     
-    <div class="container margin_fix">
+    <div class="container-fluid margin_fix">
 
       <div class="row">
 
         <div class="col-lg-3 col-sm-4">
           
-          <div class="list-group mt-4">
+          <div class="list-group mt-4 mr-5">
             @auth
               <a href="{{ URL::route('buscarViajes') }}" class="list-group-item active">Buscar viaje</a>
               <a href="{{ URL::route('crearViaje') }}" class="list-group-item">Crear viaje</a>

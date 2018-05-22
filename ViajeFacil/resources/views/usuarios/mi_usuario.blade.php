@@ -17,11 +17,6 @@
 
 
                     <div class="text-center mb-6">
-                        @if( Auth::user()->image == null )
-                            <img class="rounded" src={{ asset('css/images/predet.jpg') }} width="75%" height="75%" >
-                        @else
-
-                        @endif
 
                     <div class="text-center mb-6 form-group">
 

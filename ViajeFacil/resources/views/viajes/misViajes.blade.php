@@ -16,7 +16,7 @@
                                     <th>Vehículo a utilizar</th>
                                     <th>Acciones</th>
                                 </tr>
-                                @foreach ($mis_viajes as $viaje)
+                                @foreach ($mis_viajes->reverse() as $viaje)
                                     <tr>
                                         <td> {{ $viaje -> origen }} </td> 
                                         <td> {{ $viaje -> destino }} </td>
