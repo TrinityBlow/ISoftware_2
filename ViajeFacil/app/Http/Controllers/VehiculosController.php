@@ -102,7 +102,6 @@ class VehiculosController extends Controller
         //
         $mi_vehiculo = Vehiculo::find($id);
         DB::table('registra')->where('id_vehiculo', '=', $mi_vehiculo->id_vehiculo)->delete();
-        DB::table('vehiculos')->where('id_vehiculo', '=', $mi_vehiculo->id_vehiculo)->delete();
         return redirect('/mi_usuario');
     }
 

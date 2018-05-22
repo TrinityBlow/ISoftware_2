@@ -41,5 +41,35 @@ class PostulacionesController extends Controller
 
     }
     
+    public function verPostulaciones($id){
+        
+        $user = Auth::user(); 
+        $postulacionesDelViaje = Postulacion::where('id','!=',$user->id)->where('id_viaje','=',$id);
+        return view('postulaciones.verPostulaciones')->with('postulaciones',$postulacionesDelViaje->get());
+
+    }
+
+    public function manejarPostulacion(Request $data){
+        
+        $user = Auth::user(); 
+        $id_viaje = Postulacion::find($data->id_postulacion)->id_viaje;
+        if($data->action == 'aceptar'){
+            $postulacionUpdate = Postulacion::where('id','=',$data->postulado_id)->where('id_viaje','=',$id_viaje)->first();
+            if($postulacionUpdate->count()){
+                $postulacionUpdate->estado_postulacion = 'aceptado';
+                $postulacionUpdate->save();
+            }
+        }elseif($data->action == 'rechazar'){
+            $postulacionUpdate = Postulacion::where('id','=',$data->postulado_id)->where('id_viaje','=',$id_viaje)->first();
+            if($postulacionUpdate->count()){
+                $postulacionUpdate->estado_postulacion = 'rechazado';
+                $postulacionUpdate->save();
+            }
+        }
+        return redirect('/viajes/verPostulacionesViaje/'.$id_viaje);
+
+    }
+
+
 
 }
