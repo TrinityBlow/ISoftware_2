@@ -11,6 +11,7 @@
 
                     @csrf
                     <div class="form-group row">
+                        <input type="hidden" name="id_viaje" value="{{ $viaje->id_viaje }}" >
                         <label for="origen" class="col-md-4 col-form-label text-md-right">{{ __('Origen:') }}</label>
 
                         <div class="col-md-6">

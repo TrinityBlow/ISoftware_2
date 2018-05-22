@@ -33,7 +33,7 @@ Route::get('/viajes/verDetallesViaje/{id_viaje}','Viajes@verDetallesViaje');
 
 Route::get('/mi_usuario/agregarVehiculo','MiUsuarioController@agregarVehiculo');
 
-Route::post('/viajes/buscarViajes/','Viajes@buscarViajes')->name('buscarViajes');
+Route::get('/viajes/buscarViajes/','Viajes@buscarViajes')->name('buscarViajes');
 
 Route::get('/viajes/crearViaje','Viajes@crearViaje')->name('crearViaje');
 

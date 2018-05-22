@@ -4,7 +4,6 @@
                 <div class="card-header">{{ __('Filtrar viajes por:') }}</div>
                 <form method="GET" action="/viajes/buscarViajes" class="form-horizontal" role="form">
 
-                @csrf
 
                   <div class="form-group row mt-2">
                         <label for="origen" class="col-md-12 col-form-label text-md-center">{{ __('Origen') }}</label>

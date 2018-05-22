@@ -130,7 +130,7 @@ class Viajes extends Controller
     {
         //
         $mi_viaje = Viaje::find($data['id_viaje']);
-        
+
         $mi_viaje->origen = $data->input('origen');
         $mi_viaje->destino = $data->input('destino');
         $mi_viaje->fecha = $data->input('fecha');
