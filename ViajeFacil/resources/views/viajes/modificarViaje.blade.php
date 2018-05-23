@@ -11,7 +11,7 @@
 
                     @csrf
                     <div class="form-group row">
-                        <input type="hidden" name="id_viaje" value="{{ $viaje->id_viaje }}" >
+                        <input type="hidden" name="id_grupo" value="{{ $viaje->id_grupo }}" >
                         <label for="origen" class="col-md-4 col-form-label text-md-right">{{ __('Origen:') }}</label>
 
                         <div class="col-md-6">
@@ -28,12 +28,17 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="fecha" class="col-md-4 col-form-label text-md-right">{{ __('Fecha:') }}</label>
-
+                            <label for="fecha" class="col-md-4 col-form-label text-md-right">Fecha:</label>
                         <div class="col-md-6">
-                            <input id="fecha" type="datetime" class="form-control" name="fecha" value="{{ $viaje->fecha }}" required>
+                            <input required type="date" class="form-control" name="fecha" value={{ $viaje->fecha }}>
                         </div>
                     </div>
+                    <div class="form-group row">
+                            <label for="hora" class="col-md-4 col-form-label text-md-right">Hora:</label>
+                        <div class="col-md-6">
+                            <input required type="time" class="form-control" name="hora" value={{ $hora}}>
+                        </div>    
+                    </div>  
 
                     <div class="form-group row">
                         <label for="precio" class="col-md-4 col-form-label text-md-right">{{ __('Precio:') }}</label>
@@ -42,6 +47,14 @@
                             <input id="precio" type="text" class="form-control" name="precio" value="{{ $viaje->precio }}" required autofocus>
                         </div>
                     </div>
+                     <div class="form-group">
+                        <label for="id_vehiculo" class="control-label">Vehículo que se usará para viajar:</label>
+                        <select class="form-control" name="id_vehiculo">
+                        @foreach ($vehiculos as $vehiculo)
+                            <option value={{$vehiculo->id_vehiculo}}>Patente: {{$vehiculo->patente}} | Marca: {{$vehiculo->marca}} | Modelo: {{$vehiculo->modelo}} | Cantidad de asientos: {{$vehiculo->cantidad_asientos}}</option>
+                        @endforeach 
+                        </select>                   
+                    </div>              
                     <div class="form-group">
                         <label for="tipo_viaje" class="control-label">Tipo de viaje:</label>
                         <select name="tipo_viaje" class="form-control">

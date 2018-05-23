@@ -29,11 +29,13 @@ Route::get('/mi_usuario', 'MiUsuarioController@index');
 
 Route::post('/mi_usuario/modificar','MiUsuarioController@modificar');
 
-Route::get('/viajes/verDetallesViaje/{id_viaje}','Viajes@verDetallesViaje');
-
 Route::get('/mi_usuario/agregarVehiculo','MiUsuarioController@agregarVehiculo');
 
 Route::get('/viajes/buscarViajes/','Viajes@buscarViajes')->name('buscarViajes');
+
+Route::get('/viajes/verDetallesGrupo/{id_grupo}','GruposController@verDetallesGrupo');
+
+Route::get('/viajes/verDetallesViaje/{id_viaje}','Viajes@verDetallesViaje');
 
 Route::get('/viajes/crearViaje','Viajes@crearViaje')->name('crearViaje');
 
@@ -51,7 +53,7 @@ Route::get('/viajes/misViajes','Viajes@misViajes')->name('misViajes');
 
 Route::get('/viajes/modificarViaje/{id}','Viajes@modificarViaje');
 
-Route::post('/viajes/modificarViaje','Viajes@modificarViajeId');
+Route::post('/viajes/modificarViaje','GruposController@modificarGrupoId');
 
 Route::get('/viajes/eliminarViaje/{id}','Viajes@eliminarViaje');
 

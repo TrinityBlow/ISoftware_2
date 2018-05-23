@@ -20,7 +20,7 @@ class Postulacion extends Model
     {
         return $this->hasOne('App\User','id','id');
     }
-
+    
     public function viaje()
     {
         return $this->hasOne('App\Viaje','id_viaje','id_viaje');
