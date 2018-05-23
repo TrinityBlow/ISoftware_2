@@ -1,12 +1,13 @@
 @extends('layouts.layout')
-@if (session('mensajeCrearViaje'))
-    <div class="alert alert-success">
-        {{ session('mensajeCrearViaje') }}
-    </div>
-@endif
 @section('content')
 <div class="row justify-content-center">
     <div class="col-md-8">
+        
+        @if (session('mensajeCrearViaje'))
+        <div class="alert alert-success">
+            {{ session('mensajeCrearViaje') }}
+        </div>
+        @endif
         <div class="card">
             <div class="card-header">{{ __('Mi usuario') }}</div>
 
