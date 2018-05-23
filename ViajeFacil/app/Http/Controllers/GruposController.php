@@ -50,8 +50,12 @@ class GruposController extends Viajes
         /* FALTA EL TITULO */
         $mi_grupo->origen = $data->input('origen');
         $mi_grupo->destino = $data->input('destino');
-
         if (($mi_grupo->fecha != $data->fecha) || ($mi_grupo->tipo_viaje != $data->tipo_viaje)) {
+            $grupos_viaje = GruposViaje::where('id_grupo', '=', $data['id_grupo']);
+            foreach ($grupos_viaje->get() as $dato) {
+                parent::eliminarViaje($dato->id_viaje);
+            }
+            $grupos_viaje->delete();
             parent::createViajes($data);
         }
 
@@ -69,4 +73,15 @@ class GruposController extends Viajes
         return redirect("/viajes/misViajes/");
     }
 
+    public function eliminarGrupo($id){
+        $grupo = Grupo::find($id);
+        $grupos_viaje = GruposViaje::where('id_grupo', '=', $id);
+        foreach ($grupos_viaje->get() as $dato) {
+            parent::eliminarViaje($dato->id_viaje);
+        }
+        $grupo->delete();
+
+        $grupos_viaje->delete();
+        return redirect('/viajes/misViajes');
+    }
 }

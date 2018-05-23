@@ -55,7 +55,7 @@ Route::get('/viajes/modificarViaje/{id}','Viajes@modificarViaje');
 
 Route::post('/viajes/modificarViaje','GruposController@modificarGrupoId');
 
-Route::get('/viajes/eliminarViaje/{id}','Viajes@eliminarViaje');
+Route::get('/viajes/eliminarViaje/{id}','GruposController@eliminarGrupo');
 
 Route::get('/vehiculos/modificarVehiculo/{id}','VehiculosController@modificarVehiculo');
 

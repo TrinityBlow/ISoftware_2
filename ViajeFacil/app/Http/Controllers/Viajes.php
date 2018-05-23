@@ -208,15 +208,19 @@ class Viajes extends Controller
         return redirect("/viajes/modificarViaje/" . $mi_viaje->id_viaje);
     }
 
-    public function eliminarViaje($id)
-    {
-        
+    protected function eliminarViajeId($id){
         $mi_viaje = Viaje::find($id);
         $postulaciones = Postulacion::where('id_viaje','=',$id)->get();
         foreach ($postulaciones as $postulacion){
             Postulacion::find($postulacion->id_postulacion)->delete();
         }
         DB::table('viajes')->where('id_viaje', '=', $mi_viaje->id_viaje)->delete();
+    }
+
+    public function eliminarViaje($id)
+    {
+        
+        $this->eliminarViajeId($id);
         return redirect('/mi_usuario');
     }
 
