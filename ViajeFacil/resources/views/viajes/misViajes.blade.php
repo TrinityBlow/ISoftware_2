@@ -26,7 +26,7 @@
                                         <td> {{ $viaje -> estado_viaje }} </td>
                                         <td> Vehiculo </td>   
                                         <td> <a class= 'text-center' href="/viajes/modificarViaje/{{ $viaje -> id_viaje }}"> <button type="button" class="btn btn-primary btn-sm">Modificar</button> </a>
-                                        <a class="text-center" href="#"><button type="button" class="btn btn-info mt-2 btn-sm">Ver solicitudes</button></a> 
+                                        <a class="text-center" href="/viajes/verPostulacionesViaje/{{ $viaje -> id_viaje }}"><button type="button" class="btn btn-info mt-2 btn-sm">Ver solicitudes</button></a> 
                                         <a class= 'text-center' href="/viajes/eliminarViaje/{{ $viaje -> id_viaje }}"> <button type="button" class="btn btn-danger mt-2 btn-sm">Eliminar</button> </a>      
                                         </td>
                                         

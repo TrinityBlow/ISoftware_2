@@ -154,6 +154,10 @@ class Viajes extends Controller
     {
         //
         $mi_viaje = Viaje::find($id);
+        $postulaciones = Postulacion::where('id_viaje','=',$id)->get();
+        foreach ($postulaciones as $postulacion){
+            Postulacion::find($postulacion->id_postulacion)->delete();
+        }
         DB::table('viajes')->where('id_viaje', '=', $mi_viaje->id_viaje)->delete();
         return redirect('/mi_usuario');
     }
