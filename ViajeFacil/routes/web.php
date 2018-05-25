@@ -47,6 +47,8 @@ Route::get('/viajes/postularmeViaje/{id}','PostulacionesController@postularmeVia
 
 Route::get('/viajes/cancelarPostulacion/{id}','PostulacionesController@cancelarPostulacion');
 
+Route::get('/viajes/rechazarPostulacionViajante/{id}','PostulacionesController@rechazarPostulacionViajante');
+
 Route::get('/viajes/verPostulacionesViaje/{id}','PostulacionesController@verPostulaciones');
 
 Route::get('/viajes/misViajes','Viajes@misViajes')->name('misViajes');
@@ -56,6 +58,8 @@ Route::get('/viajes/modificarViaje/{id}','Viajes@modificarViaje');
 Route::post('/viajes/modificarViaje','GruposController@modificarGrupoId');
 
 Route::get('/viajes/eliminarViaje/{id}','GruposController@eliminarGrupo');
+
+Route::get('/viajes/verViajesDetalle/{id}','GruposController@verViajesDetalle');
 
 Route::get('/vehiculos/modificarVehiculo/{id}','VehiculosController@modificarVehiculo');
 

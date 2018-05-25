@@ -47,7 +47,7 @@ class Viajes extends Controller
         $user = Auth::user();
         $viaje = Viaje::find($id);
         $usuario_creador = User::find($viaje['id']);
-        $tiene_postulacion = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$viaje->id_viaje)->get();
+        $tiene_postulacion = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$viaje->id_viaje)->first();
         return view('viajes.verDetallesViaje')
         ->with('usuario_creador',$usuario_creador)
         ->with('viaje',$viaje)
@@ -179,7 +179,17 @@ class Viajes extends Controller
     public function misViajes(){
         $user = Auth::user();
         $mis_viajes = Grupo::where('id','like',$user['id'])->get();
-        return view('viajes.misViajes') -> with('mis_viajes', $mis_viajes);
+        $postuPorGrupo = array();
+        foreach($mis_viajes as $grupo){
+            $relacionDelGrupo = GruposViaje::where('id_grupo','=',$grupo->id_grupo)->get();
+            $suma = 0;
+            foreach($relacionDelGrupo as $relacion){
+                $suma = Postulacion::where('id_viaje','=',$relacion->id_viaje)->where('estado_postulacion','=','pendiente')->count() + $suma;
+            }
+            $postuPorGrupo[$grupo->id_grupo] = $suma;
+        }
+        return view('viajes.misViajes') -> with('mis_viajes', $mis_viajes)
+        ->with('postuPorGrupo',$postuPorGrupo);
     }
 
     public function modificarViaje($id)

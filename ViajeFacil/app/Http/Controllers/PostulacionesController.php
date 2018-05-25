@@ -16,6 +16,11 @@ use Auth;
 class PostulacionesController extends Controller
 {    
     
+    public function __construct()
+    {
+        $this->middleware('auth');  
+    }
+    
     public function postularmeViaje($id)
     {
         $user = Auth::user(); 
@@ -33,9 +38,25 @@ class PostulacionesController extends Controller
     public function cancelarPostulacion($id){
         
         $user = Auth::user(); 
-        $postulacionBorrar = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$id);
-        if($postulacionBorrar->get()->count()){
-            $postulacionBorrar->delete();
+        $postulacionBorrar = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$id)->firstOrFail();
+        if($postulacionBorrar->count()){
+            if($postulacionBorrar->estado_postulacion == 'pendiente'){
+                $postulacionBorrar->delete();
+            }
+        }
+        return redirect('/viajes/verDetallesViaje/'.$id);
+
+    }
+
+    public function rechazarPostulacionViajante($id){
+        
+        $user = Auth::user(); 
+        $postulacionBorrar = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$id)->firstOrFail();
+        if($postulacionBorrar->count()){
+            if($postulacionBorrar->estado_postulacion == 'aceptado'){
+                //codigo de bajar reputacion
+                $postulacionBorrar->delete();
+            }
         }
         return redirect('/viajes/verDetallesViaje/'.$id);
 
