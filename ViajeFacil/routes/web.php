@@ -55,6 +55,8 @@ Route::get('/viajes/misViajes','Viajes@misViajes')->name('misViajes');
 
 Route::get('/viajes/modificarViaje/{id}','Viajes@modificarViaje');
 
+Route::get('/viajes/finalizarViaje/{id_viaje}','Viajes@finalizarViaje');
+
 Route::post('/viajes/modificarViaje','GruposController@modificarGrupoId');
 
 Route::get('/viajes/eliminarViaje/{id}','GruposController@eliminarGrupo');

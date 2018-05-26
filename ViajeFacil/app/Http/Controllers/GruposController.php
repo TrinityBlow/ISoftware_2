@@ -89,6 +89,7 @@ class GruposController extends Viajes
     	$user = Auth::user();
     	$mis_viajes=array();
         $registros = GruposViaje::all();
+        $today = Carbon::now();
 
 
         foreach($registros as $registro){
@@ -110,6 +111,7 @@ class GruposController extends Viajes
         return view('viajes.verViajesDetalle')
         ->with('usuario_creador',$usuario_creador)
         ->with('mis_viajes',$mis_viajes)
-        ->with('postulacionesViajes',$postulacionesViajes);
+        ->with('postulacionesViajes',$postulacionesViajes)
+        ->with('today',$today);
     }
 }

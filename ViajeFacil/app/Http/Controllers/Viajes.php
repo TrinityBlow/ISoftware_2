@@ -9,6 +9,7 @@ use App\Viaje;
 use App\Postulacion;
 use App\Grupo;
 use App\GruposViaje;
+use App\Configuracion;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -79,7 +80,6 @@ class Viajes extends Controller
         } else {
            $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->get();
         }
-
         return view('viajes.buscarViajes') -> with('viajes', $viajes);
     }
 
@@ -232,6 +232,25 @@ class Viajes extends Controller
         
         $this->eliminarViajeId($id);
         return redirect('/mi_usuario');
+    }
+
+    public function finalizarViaje($id_viaje){
+        $today = Carbon::now();
+        $user = Auth::user();
+        $viaje = Viaje::find($id_viaje);   
+
+        if(!is_null($viaje)){
+            if($user->id == $viaje->id){
+                if ( $today > $viaje->fecha ){
+                    $viaje->estado_viaje = 'finalizado';
+                    $viaje->save();
+                    $conf = Configuracion::find(1);
+                    $conf->fondo = $conf->fondo + $viaje->precio;
+                    $conf->save(); 
+                }
+            }
+        }
+        return redirect()->back();
     }
 
 

@@ -1,6 +1,10 @@
 @extends('layouts.layout')
 @section('content')
-
+  @if($errors->any())
+    <div class="alert alert-warning">
+      <strong>{{$errors->first()}}</strong>
+    </div>
+  @endif
   @if($postulaciones->count() > 0)
     @foreach ($postulaciones->reverse() as $postulacion)
       <div class="card w-75 mt-2">
