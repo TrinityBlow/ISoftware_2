@@ -31,7 +31,8 @@ class VehiculosController extends Controller
     }
 */
 
-    private function validateVehiculo($data){
+    private function validateVehiculo($data)
+    {
         $data->validate([
             'patente' => 'required|string|min:1|max:255|unique:vehiculos',
             'marca' => 'required|string|min:1|max:255',
@@ -40,8 +41,8 @@ class VehiculosController extends Controller
         ]);
     }
 
-    public function agregarVehiculo(Request $data){
-
+    public function agregarVehiculo(Request $data)
+    {
         $user = Auth::user();
 
         $this->validateVehiculo($data);
@@ -58,17 +59,17 @@ class VehiculosController extends Controller
             'id_vehiculo' => $nuevo_vehiculo['id_vehiculo'],
         ]);
 
-        return redirect('mi_usuario');
+        return redirect('/mi_usuario');
     }
 
     public function modificarVehiculo($id)
     {
-        //
         $mi_vehiculo = Vehiculo::find($id);
         return view('vehiculos.modificarVehiculo')->with('mi_vehiculo',$mi_vehiculo);
     }
 
-    private function validateVehiculoModificar($data,$mi_vehiculo){
+    private function validateVehiculoModificar($data,$mi_vehiculo)
+    {
         if ($mi_vehiculo->patente ==  $data['patente']){
             $data->validate([
                 'cantidad_asientos' => 'required|integer|min:1',
@@ -83,7 +84,6 @@ class VehiculosController extends Controller
 
     public function modificarVehiculoPorId(Request $data)
     {
-        //
         $mi_vehiculo = Vehiculo::find($data['id_vehiculo']);
         $this->validateVehiculoModificar($data,$mi_vehiculo);
         
@@ -97,10 +97,9 @@ class VehiculosController extends Controller
         return redirect("/vehiculos/modificarVehiculo/" . $mi_vehiculo->id_vehiculo);
     }
 
-    public function eliminarVehiculo($id)
+    public function eliminarVehiculo(Request $data)
     {
-        //
-        $mi_vehiculo = Vehiculo::find($id);
+        $mi_vehiculo = Vehiculo::find($data->id_vehiculo);
         DB::table('registra')->where('id_vehiculo', '=', $mi_vehiculo->id_vehiculo)->delete();
         return redirect('/mi_usuario');
     }

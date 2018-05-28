@@ -11,6 +11,6 @@ class Vehiculo extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'patente','marca', 'modelo','cantidad_asientos',
+        'patente','marca','modelo','cantidad_asientos',
     ];
 }

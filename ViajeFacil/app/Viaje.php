@@ -12,6 +12,7 @@ class Viaje extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'titulo',
         'origen',
         'destino',
         'fecha',

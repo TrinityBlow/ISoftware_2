@@ -20,8 +20,7 @@ class Viajes extends Controller
 {
     public function __construct()
     {
-
-        // verificacion necesaria en controller para que tenga permiso de usuario
+        // Verificacion necesaria en controller para que tenga permiso de usuario.
         $this->middleware('auth');  
     }
    
@@ -65,7 +64,6 @@ class Viajes extends Controller
 
         $f1 -> addDays(30);
 
-
         if ((!is_null($data['ori'])) and (is_null($data['dest']))) {
             $filtroOrigen = '%' . $data['ori'] . '%';
             $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->where('origen','like',$filtroOrigen)->get();
@@ -83,19 +81,24 @@ class Viajes extends Controller
         return view('viajes.buscarViajes') -> with('viajes', $viajes);
     }
 
-    private function validateViaje($data){
+    private function validateViaje($data)
+    {
         $data->validate([
+            'titulo' => 'required|string|min:1|max:255',
             'origen' => 'required|string|min:1|max:255',
             'destino' => 'required|string|min:1|max:255',
             'precio' => 'required',
         ]);
     }    
 
-    protected function createViajes(Request $data){
+    protected function createViajes(Request $data)
+    {
         $user = Auth::user();
         $grupo = Grupo::find($data->id_grupo);
-        if($data->tipo_viaje == 'ocasional'){
+        if($data->tipo_viaje == 'ocasional')
+        {
             $nuevo_viaje = Viaje::create([
+                'titulo' => $data['titulo'],
                 'origen' => $data['origen'],
                 'destino' => $data['destino'],
                 'fecha' => date_create($data['fecha'] . $data['hora']),
@@ -108,10 +111,10 @@ class Viajes extends Controller
                 'id_grupo' => $grupo->id_grupo,
                 'id_viaje' => $nuevo_viaje->id_viaje,
             ]);
-        } else{
+        } else {
             if ($data->tipo_viaje == 'diario'){
                 $dias = 1;
-            }else{
+            } else {
                 $dias = 7;
             }
             $date = explode('-',$data->fecha);
@@ -119,10 +122,11 @@ class Viajes extends Controller
             $carbonDate->setTimeFromTimeString($data->hora);
             $f1 = Carbon::today();
             $f1 -> addDays(31);
-            while ($carbonDate->lessThan($f1)){
-
+            while ($carbonDate->lessThan($f1))
+            {
                 $date = date_create($carbonDate);
                 $nuevo_viaje = Viaje::create([
+                    'titulo' => $data['titulo'],
                     'origen' => $data['origen'],
                     'destino' => $data['destino'],
                     'fecha' => date_format($date,'Y-m-d H:i'),
@@ -140,18 +144,24 @@ class Viajes extends Controller
         }
     } 
 
-    public function publicarViaje(Request $data){
+    public function publicarViaje(Request $data)
+    {
+        if ($data->titulo == null)
+        {
+            $data['titulo'] = "Viaje desde " . $data['origen'] . " hasta " . $data['destino'] . " el día " . $data['fecha'] . " a las " . $data['hora'] . " hs.";
+        }
+
         $this->validateViaje($data);
 
         $user = Auth::user();
 
         $firstDate = date_create($data['fecha'] . $data['hora']);
         $grupo = Grupo::create([
+            'titulo' => $data['titulo'],
             'origen' => $data['origen'],
             'destino' => $data['destino'],
             'fecha' => $firstDate,
             'precio' => $data['precio'],
-            'titulo' => 'nada',
             'tipo_viaje' => $data['tipo_viaje'],
             'id_vehiculo' => $data['id_vehiculo'],
             'id' => $user['id'],
@@ -167,7 +177,8 @@ class Viajes extends Controller
         $user = Auth::user();
         $registras = Registra::all();
         $mis_vehiculos = array();
-        foreach ($registras as $registra){
+        foreach ($registras as $registra)
+        {
             if($registra['id'] == $user['id']){
                 $mis_vehiculos[] = Vehiculo::find($registra['id_vehiculo']);
             }
@@ -176,7 +187,8 @@ class Viajes extends Controller
     }
 
 
-    public function misViajes(){
+    public function misViajes()
+    {
         $user = Auth::user();
         $mis_viajes = Grupo::where('id','like',$user['id'])->get();
         return view('viajes.misViajes') -> with('mis_viajes', $mis_viajes);
@@ -184,7 +196,6 @@ class Viajes extends Controller
 
     public function modificarViaje($id)
     {
-        //
         $viaje = Grupo::find($id);
         $hora = explode(' ',$viaje->fecha)[1];
         $vehiculos = $this->vehiculosUsuario();
@@ -195,9 +206,9 @@ class Viajes extends Controller
 
     public function modificarViajeId(Request $data)
     {
-        //
         $mi_viaje = Viaje::find($data['id_viaje']);
 
+        $mi_viaje->titulo = $data->input('titulo');
         $mi_viaje->origen = $data->input('origen');
         $mi_viaje->destino = $data->input('destino');
         $mi_viaje->fecha = $data->input('fecha');
@@ -208,10 +219,12 @@ class Viajes extends Controller
         return redirect("/viajes/modificarViaje/" . $mi_viaje->id_viaje);
     }
 
-    protected function eliminarViajeId($id){
+    protected function eliminarViajeId($id)
+    {
         $mi_viaje = Viaje::find($id);
         $postulaciones = Postulacion::where('id_viaje','=',$id)->get();
-        foreach ($postulaciones as $postulacion){
+        foreach ($postulaciones as $postulacion)
+        {
             Postulacion::find($postulacion->id_postulacion)->delete();
         }
         DB::table('viajes')->where('id_viaje', '=', $mi_viaje->id_viaje)->delete();
@@ -219,10 +232,8 @@ class Viajes extends Controller
 
     public function eliminarViaje($id)
     {
-        
         $this->eliminarViajeId($id);
         return redirect('/mi_usuario');
     }
-
 
 }

@@ -1,4 +1,5 @@
 @extends('layouts.layout')
+
 @section('content')
 <div class="row justify-content-center">
     <div class="col-md-8">
@@ -15,23 +16,22 @@
                 <form method="POST" action="/mi_usuario/modificar" enctype="multipart/form-data">
                     @csrf
 
-
                     <div class="text-center mb-6">
 
                     <div class="text-center mb-6 form-group">
 
-                        <img class="rounded" src='/storage/images/{{ Auth::user()->image }}' height="50%" width="50%">
+                        <img class="rounded" src='/images/{{ Auth::user()->image }}' height="50%" width="50%">
 
-
-                        <input id="image" type="file" class="mt-2 {{ $errors->has('image') ? ' is-invalid' : '' }}" name="image" >
+                        <input id="image" type="file" class="mt-2{{ $errors->has('image') ? ' is-invalid' : '' }}" name="image">
+                        
                         @if ($errors->has('image'))
                         <span class="invalid-feedback">
-                            <strong> Apellido inválido </strong>
+                            <strong> Imagen inválida </strong>
                         </span>
                         @endif
                     </div>
 
-                    <div class="form-group row mt-2">
+                    <div class="form-group row">
                         <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Nombre') }}</label>
 
                         <div class="col-md-6">
@@ -94,42 +94,42 @@
                             </button>
                         </div>
                     </div>
+
                 </form>
+            </div>
+            
             </div>
         </div>
 
-        <div class="card mt-4">  
-            
+        <div class="card mt-2">  
 
-            <div class="card-header">{{ __('Vehiculos') }}</div>
-            <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <div class="card-body">
-                            <a href="/mi_usuario/agregarVehiculo">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Agregar vehículo') }}
-                                </button>
-                            </a>
-                        </div>
+            <div class="card-header">{{ __('Vehículos') }}</div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-center">
+                        <a href="/mi_usuario/agregarVehiculo">
+                            <button type="submit" class="btn btn-primary">
+                                {{ __('Agregar vehículo') }}
+                            </button>
+                        </a>
                     </li>
                     <li class="list-group-item">
-                        <b> Mis Vehiculos:</b>
+                        <b> Mis vehículos: </b>
                         <div class="table-responsive mt-2">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
                                 <tr>
-                                    <th>Patente</th>
-                                    <th>Marca</th>
-                                    <th>Modelo</th>
-                                    <th>Opciones</th>
+                                    <th> Patente </th>
+                                    <th> Marca </th>
+                                    <th> Modelo </th>
+                                    <th> Opciones </th>
                                 </tr>
                                 @foreach ($mis_vehiculos as $vehiculo)
                                     <tr>
                                         <td> {{ $vehiculo->patente }} </td> 
-                                        <td> {{ $vehiculo->marca}} </td>
-                                        <td> {{ $vehiculo->modelo}} </td> 
+                                        <td> {{ $vehiculo->marca }} </td>
+                                        <td> {{ $vehiculo->modelo }} </td> 
                                         <td>
-                                            <a class= 'text-center' href="/vehiculos/modificarVehiculo/{{ $vehiculo->id_vehiculo }}"> <button type="button" class="btn btn-primary">Modificar</button> </a> 
-                                            <a class= 'text-center' href="/vehiculos/eliminarVehiculo/{{$vehiculo->id_vehiculo}}"> <button type="button" class="btn btn-danger mt-2">Eliminar</button> </a>      
+                                            <a href="/vehiculos/modificarVehiculo/{{ $vehiculo->id_vehiculo }}" class="btn btn-primary"> Modificar </a> 
+                                            <button class="btn btn-danger" data-id="{{ $vehiculo->id_vehiculo }}" data-toggle="modal" data-target="#eliminarModal"> Eliminar </button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -140,6 +140,33 @@
             </div>
             
         </div>
+
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="eliminarModal" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCenterTitle">Eliminar vehículo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="/vehiculos/eliminarVehiculo">
+                @csrf
+                <div class="modal-body">
+                    ¿Estás seguro que quieres eliminarlo?
+                    <input type="hidden" id="id_modal" name="id_vehiculo" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Sí, estoy seguro</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @endsection
