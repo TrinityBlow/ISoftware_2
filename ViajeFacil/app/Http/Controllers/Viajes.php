@@ -77,16 +77,15 @@ class Viajes extends Controller
 
         /* SI UTILIZO SOLAMENTE ORIGEN Y DESTINO ANDA, CON LOS DEMAS FILTROS NO */
 
-        if ($data->has('precio')){
-            $viajes->where('precio','<', $data['precio']);
+        if (!is_null($data->precio)){
+            $viajes->where('precio','<=', $data['precio']);
         }
-        if ($data->has('fecha1')){
+        if (!is_null($data->fecha1)){
             $viajes->whereBetween('fecha', [$data['fecha1'], $f1]);
         }
-        if ($data->has('fecha2')){
+        if (!is_null($data->fecha2)){
             $viajes->whereBetween('fecha', [$f0, $data['fecha2']]);
-        }
-        if ((is_null($data['fecha1'])) and (is_null($data['fecha2']))) {
+        } elseif ((is_null($data['fecha1'])) and (is_null($data['fecha2']))) {
             $viajes->whereBetween('fecha', [$f0, $f1]);            
         }
 
@@ -109,14 +108,9 @@ class Viajes extends Controller
         } else {
            $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->get();
         }
-<<<<<<< HEAD
 
 */
         return view('viajes.buscarViajes') -> with('viajes', $viajes->get());
-
-=======
-        return view('viajes.buscarViajes') -> with('viajes', $viajes);
->>>>>>> 309eb864c41e51ad1d92d7ab0fe603eace54cccb
     }
 
     private function validateViaje($data){
