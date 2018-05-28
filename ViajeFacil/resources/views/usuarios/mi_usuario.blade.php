@@ -128,8 +128,8 @@
                                         <td> {{ $vehiculo->marca}} </td>
                                         <td> {{ $vehiculo->modelo}} </td> 
                                         <td>
-                                            <a class= 'text-center' href="/vehiculos/modificarVehiculo/{{ $vehiculo->id_vehiculo }}"> <button type="button" class="btn btn-primary">Modificar</button> </a> 
-                                            <a class= 'text-center' href="/vehiculos/eliminarVehiculo/{{$vehiculo->id_vehiculo}}"> <button type="button" class="btn btn-danger mt-2">Eliminar</button> </a>      
+                                            <a class= 'text-center' href="/vehiculos/modificarVehiculo/{{ $vehiculo->id_vehiculo }}"> <button type="button" class="btn btn-primary">Modificar</button></a><br> 
+                                            <a class= 'text-center' href="/vehiculos/eliminarVehiculo/{{$vehiculo->id_vehiculo}}"> <button type="button" class="btn btn-danger mt-2">Eliminar</button></a>      
                                         </td>
                                     </tr>
                                 @endforeach

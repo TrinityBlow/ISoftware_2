@@ -17,6 +17,24 @@
                     <div class="col-sm-12">
                       <input name="dest" type="text" class="form-control" placeholder="Ej.: 'Brasil'">
                     </div>
+                    <div class="form-group row mt-2">
+                      <label for="fecha1" class="col-md-12 col-form-label text-md-center">Desde la fecha:</label>
+                    </div>
+                    <div class="col-sm-12">
+                      <input type="date" class="form-control" name="fecha1">
+                    </div>
+                    <div class="form-group row mt-2">
+                      <label for="fecha2" class="col-md-12 col-form-label text-md-center">Hasta la fecha:</label>
+                    </div>
+                    <div class="col-sm-12">
+                      <input type="date" class="form-control" name="fecha2">
+                    </div>
+                  <div class="form-group row mt-2">
+                        <label for="destino" class="col-md-12 col-form-label text-md-center">{{ __('Precio límite:') }}</label>
+                  </div>
+                    <div class="col-sm-12">
+                      <input name="precio" type="number" class="form-control" placeholder="Ej.: 500">
+                    </div>
                   <div class="form-group mt-2 ml-7">
                     <div class="col-sm-10">
                       <button type="submit" class="btn btn-default">{{ __('Buscar') }}</button>

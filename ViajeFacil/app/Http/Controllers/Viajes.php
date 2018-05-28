@@ -65,22 +65,53 @@ class Viajes extends Controller
 
         $f1 -> addDays(30);
 
+        $viajes = (new Grupo)->newQuery();
 
-        if ((!is_null($data['ori'])) and (is_null($data['dest']))) {
+        if ($data->has('ori')){
+            $viajes->where('origen','like', '%'.$data['ori'].'%');
+        }
+        if ($data->has('dest')){
+            $viajes->where('destino','like', '%'.$data['dest'].'%');
+        }
+
+        /* SI UTILIZO SOLAMENTE ORIGEN Y DESTINO ANDA, CON LOS DEMAS FILTROS NO */
+
+        if ($data->has('precio')){
+            $viajes->where('precio','<', $data['precio']);
+        }
+        if ($data->has('fecha1')){
+            $viajes->whereBetween('fecha', [$data['fecha1'], $f1]);
+        }
+        if ($data->has('fecha2')){
+            $viajes->whereBetween('fecha', [$f0, $data['fecha2']]);
+        }
+        if ((is_null($data['fecha1'])) and (is_null($data['fecha2']))) {
+            $viajes->whereBetween('fecha', [$f0, $f1]);            
+        }
+
+
+/*  
+
+ ESTE ES EL CODIGO ANTERIOR----------(SOLO CON 3 CONDICIONES)
+
+
+        if ((!is_null($data['ori'])) and (is_null($data['dest'])) and (is_null($data['dest']))) {
             $filtroOrigen = '%' . $data['ori'] . '%';
             $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->where('origen','like',$filtroOrigen)->get();
-        } elseif ((is_null($data['ori'])) and (!is_null($data['dest']))) {
-            $filtroDestino = $data['dest'];
-            $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->where('destino','like','%'.$filtroDestino.'%')->get();
         } elseif ((!is_null($data['ori'])) and (!is_null($data['dest']))) {
            $filtroOrigen = $data['ori'];
            $filtroDestino = $data['dest'];
            $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->where('origen','like','%'.$filtroOrigen.'%')->where('destino','like','%'.$filtroDestino.'%')->get();
+        } elseif ((is_null($data['ori'])) and (!is_null($data['dest']))) {
+            $filtroDestino = $data['dest'];
+            $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->where('destino','like','%'.$filtroDestino.'%')->get();
         } else {
            $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->get();
         }
 
-        return view('viajes.buscarViajes') -> with('viajes', $viajes);
+*/
+        return view('viajes.buscarViajes') -> with('viajes', $viajes->get());
+
     }
 
     private function validateViaje($data){
