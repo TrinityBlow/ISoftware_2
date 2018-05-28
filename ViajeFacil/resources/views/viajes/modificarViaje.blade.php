@@ -76,17 +76,9 @@
                     </select>                   
                 </div>
 
-                <div class="form-group row mb-0">
-                    <div class="col-md-6 offset-md-4">
-                        <button type="submit" class="btn btn-primary">
-                            {{ __('Modificar') }}
-                        </button>
-                        <a href="/viajes/misViajes">                      
-                            <button type="button" class="btn btn-secondary">
-                                {{ __('Cancelar') }}
-                            </button>
-                        </a>
-                    </div>
+                <div class="form-group text-center">
+                        <button type="submit" class="btn btn-primary"> {{ __('Modificar') }} </button>
+                        <a href="/viajes/misViajes" class="btn btn-secondary"> {{ __('Cancelar') }} </a>
                 </div>
 
             </form>

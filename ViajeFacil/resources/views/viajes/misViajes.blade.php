@@ -1,49 +1,52 @@
 @extends('layouts.layout', ['postulaciones',$postulaciones])
 
 @section('content')
-<div class="card">
-    @csrf
 
-    <li class="list-group ml-4 mt-3 mr-4">
-        <b> Mis viajes:</b>
-        <div class="table-responsive mt-2">
-            <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
-                <tr>
-                    <th>Origen</th>
-                    <th>Destino</th>
-                    <th>Precio</th>
-                    <th>Fecha</th>
-                    <th>Tipo de viaje</th>
-                    <th>Vehículo a utilizar</th>
-                    <th>Acciones</th>
-                </tr>
-                @foreach ($mis_viajes->reverse() as $viaje)
-                    <tr>
-                        <td> {{ $viaje -> origen }} </td> 
-                        <td> {{ $viaje -> destino }} </td>
-                        <td> {{ $viaje -> precio }} </td>
-                        <td> {{ $viaje -> fecha }} </td>
-                        <td> {{ $viaje -> tipo_viaje }} </td> 
-                        <td> Vehículo </td>  
-                        <td>
-                            <a class="text-center" href="/viajes/verViajesDetalle/{{$viaje->id_grupo}}">
-                                <button type="button" class="btn btn-info">
-                                    Ver detalles de viajes
-                                    @if($postuPorGrupo[$viaje->id_grupo] > 0)
-                                        ({{$postuPorGrupo[$viaje->id_grupo]}})
-                                    @endif
-                                </button>
-                            </a>
-                            <a class="text-center" href="/viajes/modificarViaje/{{ $viaje -> id_grupo }}"> <button type="button" class="btn btn-primary"> Modificar </button> </a>
-                            <button class="btn btn-danger" data-id="{{ $viaje -> id_grupo }}" data-toggle="modal" data-target="#eliminarModal"> Eliminar </button> </a>
-                        </td>
-                    </tr>
-                @endforeach
-            </table>
-        </div>
-    </li>
+    <div class="card">
+        @csrf
 
-</div>
+        <li class="list-group ml-4 mt-3 mr-4">
+            <b> Mis viajes:</b>
+            <div class="table-responsive mt-2">
+                <table class="table" id="dataTable" width="100%" cellspacing="0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Origen</th>
+                            <th>Destino</th>
+                            <th>Precio</th>
+                            <th>Fecha</th>
+                            <th>Tipo de viaje</th>
+                            <th>Vehículo a utilizar</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </div>
+                    <tbody>
+                    @foreach ($mis_viajes->reverse() as $viaje)
+                        <tr>
+                            <td> {{ $viaje -> origen }} </td> 
+                            <td> {{ $viaje -> destino }} </td>
+                            <td> {{ $viaje -> precio }} </td>
+                            <td> {{ $viaje -> fecha }} </td>
+                            <td> {{ $viaje -> tipo_viaje }} </td> 
+                            <td> Vehículo </td>  
+                            <td>
+                                <div class="btn-group-vertical" style="width:100%">
+                                    <a href="/viajes/verViajesDetalle/{{$viaje->id_grupo}}" class="btn btn-info"> Ver detalles de viajes @if($postuPorGrupo[$viaje->id_grupo] > 0) ({{$postuPorGrupo[$viaje->id_grupo]}}) @endif </a>
+                                    <div class="btn-group">
+                                        <a href="/viajes/modificarViaje/{{ $viaje -> id_grupo }}" class="btn btn-primary"> Modificar </a>
+                                        <button class="btn btn-danger" data-id="{{ $viaje -> id_grupo }}" data-toggle="modal" data-target="#eliminarModal"> Eliminar </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                    </div>
+                </table>
+            </div>
+        </li>
+
+    </div>
+
 
 <!-- Modal -->
 <div class="modal fade" id="eliminarModal" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">

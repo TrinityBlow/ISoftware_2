@@ -1,17 +1,23 @@
 @extends('layouts.layout')
+
 @section('content')
-	<div class="card mt-4">
+
+	<div class="card">
 		@csrf
-		<li class="list-group-item">
+
+		<li class="list-group ml-4 mt-3 mr-4">
 			<b> Mis viajes:</b>
 			<div class="table-responsive mt-2">
-				<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-					<tr>
-						<th>Origen</th>
-						<th>Destino</th>
-						<th>Fecha</th>
-						<th>Acciones</th>
-					</tr>
+				<table class="table" id="dataTable" width="100%" cellspacing="0">
+					<thead class="thead-light">
+						<tr>
+							<th>Origen</th>
+							<th>Destino</th>
+							<th>Fecha</th>
+							<th>Acciones</th>
+						</tr>
+					</div>
+					<tbody>
 					@foreach ($mis_viajes as $viaje)
 						<tr>
 							<td> {{ $viaje -> origen }} </td> 
@@ -37,9 +43,11 @@
 							</td>
 						</tr>
 					@endforeach
+					</div>
 				</table>
 			</div>
 		</li>
 
 	</div>
+
 @endsection

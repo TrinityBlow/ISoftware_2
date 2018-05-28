@@ -96,15 +96,15 @@
             
               <a href="{{ URL::route('buscarViajes') }}" class="list-group-item active">Buscar viaje</a>
               <a href="{{ URL::route('crearViaje') }}" class="list-group-item">Crear viaje</a>
-              <a href="{{ URL::route('misViajes') }}" class="list-group-item">Mis viajes</a>        
-              
-              @if( count($postulaciones) > 0)
-              <div class="alert alert-info mt-1 inline">
-                  <strong>Pedido de Postulaciones ({{ $postulaciones->count() }})</strong>
-              </div>
-              @endif
-            
+              <a href="{{ URL::route('misViajes') }}" class="list-group-item">Mis viajes</a>
+
           </div>
+              
+          @if( count($postulaciones) > 0)
+          <div class="alert alert-info mt-2 ml-4 mr-4 inline">
+              <strong>Pedido de Postulaciones ({{ $postulaciones->count() }})</strong>
+          </div>
+          @endif
 
         
         <!-- /.col-lg-3 -->

@@ -10,7 +10,7 @@
                     <form method="POST" action="/vehiculo/agregarVehiculo">
                         @csrf
 
-                        <div class="text-center mb-6">
+                        <div class="text-center">
 
                         <div class="form-group row">
                             <label for="patente" class="col-md-4 col-form-label text-md-right">{{ __('Patente') }}</label>
@@ -79,6 +79,8 @@
                                     </button>
                                 </a>
                             </div>
+                        </div>
+
                         </div>
 
                     </form>

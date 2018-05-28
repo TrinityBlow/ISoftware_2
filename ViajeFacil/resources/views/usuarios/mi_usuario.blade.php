@@ -16,10 +16,9 @@
                 <form method="POST" action="/mi_usuario/modificar" enctype="multipart/form-data">
                     @csrf
 
-                    <div class="text-center mb-6">
+                    <div class="text-center">
 
                     <div class="text-center mb-6 form-group">
-
                         <img class="rounded" src='/storage/images/{{ Auth::user()->image }}' height="50%" width="50%">
 
                         <input id="image" type="file" class="mt-2{{ $errors->has('image') ? ' is-invalid' : '' }}" name="image">
@@ -95,9 +94,9 @@
                         </div>
                     </div>
 
+                    </div>
+
                 </form>
-            </div>
-            
             </div>
         </div>
 
@@ -115,24 +114,32 @@
                     <li class="list-group-item">
                         <b> Mis vehículos: </b>
                         <div class="table-responsive mt-2">
-                            <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
-                                <tr>
-                                    <th> Patente </th>
-                                    <th> Marca </th>
-                                    <th> Modelo </th>
-                                    <th> Opciones </th>
-                                </tr>
+                            <table class="table" id="dataTable" width="100%" cellspacing="0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th> Patente </th>
+                                        <th> Marca </th>
+                                        <th> Modelo </th>
+                                        <th> Opciones </th>
+                                    </tr>
+                                </div>
+                                <tbody>
                                 @foreach ($mis_vehiculos as $vehiculo)
                                     <tr>
                                         <td> {{ $vehiculo->patente }} </td> 
                                         <td> {{ $vehiculo->marca }} </td>
                                         <td> {{ $vehiculo->modelo }} </td> 
                                         <td>
-                                            <a href="/vehiculos/modificarVehiculo/{{ $vehiculo->id_vehiculo }}" class="btn btn-primary"> Modificar </a> 
-                                            <button class="btn btn-danger" data-id="{{ $vehiculo->id_vehiculo }}" data-toggle="modal" data-target="#eliminarModal"> Eliminar </button>
+                                            <div class="btn-group-vertical" style="width:100%">
+                                                <div class="btn-group">
+                                                    <a href="/vehiculos/modificarVehiculo/{{ $vehiculo->id_vehiculo }}" class="btn btn-primary"> Modificar </a> 
+                                                    <button class="btn btn-danger" data-id="{{ $vehiculo->id_vehiculo }}" data-toggle="modal" data-target="#eliminarModal"> Eliminar </button>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
+                                </div>
                             </table>
                         </div>
                     </li>

@@ -46,7 +46,7 @@
 
                 </div>
 
-                <div class="form-group text-center mt-3">
+                <div class="form-group text-center">
                     <button type="submit" class="btn btn-primary">{{ __('Buscar') }}</button>
                 </div>
 

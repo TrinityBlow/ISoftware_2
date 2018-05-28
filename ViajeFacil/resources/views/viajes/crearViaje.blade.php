@@ -74,7 +74,7 @@
 					</select>					
 				</div>
 
-				<div class="form-group text-center"> <!-- Submit Button -->
+				<div class="form-group text-center mt-3"> <!-- Submit Button -->
 					<button type="submit" class="btn btn-primary">Publicar viaje</button>
 				</div>
 
