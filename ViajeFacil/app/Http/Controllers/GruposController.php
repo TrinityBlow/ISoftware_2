@@ -84,4 +84,34 @@ class GruposController extends Viajes
         $grupos_viaje->delete();
         return redirect('/viajes/misViajes');
     }
+
+    public function verViajesDetalle($id_grupo){
+    	$user = Auth::user();
+    	$mis_viajes=array();
+        $registros = GruposViaje::all();
+        $today = Carbon::now();
+
+
+        foreach($registros as $registro){
+            if($registro['id_grupo'] == $id_grupo){
+                $mis_viajes[] = Viaje::find($registro['id_viaje']);
+            }
+        }
+
+        
+        $postulacionesViajes = array();
+        $relacionDelGrupo = GruposViaje::where('id_grupo','=',$id_grupo)->get();
+        foreach($relacionDelGrupo as $relacion){
+            $suma = 0;
+            $suma = Postulacion::where('id_viaje','=',$relacion->id_viaje)->where('estado_postulacion','=','pendiente')->count() + $suma;
+            $postulacionesViajes[$relacion->id_viaje] = $suma;
+        }
+
+        $usuario_creador = User::find(Grupo::find($id_grupo)->id);
+        return view('viajes.verViajesDetalle')
+        ->with('usuario_creador',$usuario_creador)
+        ->with('mis_viajes',$mis_viajes)
+        ->with('postulacionesViajes',$postulacionesViajes)
+        ->with('today',$today);
+    }
 }

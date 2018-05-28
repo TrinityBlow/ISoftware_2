@@ -100,7 +100,9 @@
               <a href="{{ URL::route('misViajes') }}" class="list-group-item">Mis viajes</a>        
               
               @if( count($postulaciones) > 0)
-                <a href="/viajes/verPostulaciones" class="list-group-item">Pedido de Postulaciones ({{ $postulaciones->count() }})</a>
+              <div class="alert alert-info mt-1 inline">
+                <strong>Pedido de Postulaciones ({{ $postulaciones->count() }})</strong>
+              </div>
               @endif
             @endauth
           </div>

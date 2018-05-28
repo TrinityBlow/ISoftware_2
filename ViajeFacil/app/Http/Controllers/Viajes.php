@@ -9,6 +9,7 @@ use App\Viaje;
 use App\Postulacion;
 use App\Grupo;
 use App\GruposViaje;
+use App\Configuracion;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -47,7 +48,7 @@ class Viajes extends Controller
         $user = Auth::user();
         $viaje = Viaje::find($id);
         $usuario_creador = User::find($viaje['id']);
-        $tiene_postulacion = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$viaje->id_viaje)->get();
+        $tiene_postulacion = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$viaje->id_viaje)->first();
         return view('viajes.verDetallesViaje')
         ->with('usuario_creador',$usuario_creador)
         ->with('viaje',$viaje)
@@ -108,10 +109,14 @@ class Viajes extends Controller
         } else {
            $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->get();
         }
+<<<<<<< HEAD
 
 */
         return view('viajes.buscarViajes') -> with('viajes', $viajes->get());
 
+=======
+        return view('viajes.buscarViajes') -> with('viajes', $viajes);
+>>>>>>> 309eb864c41e51ad1d92d7ab0fe603eace54cccb
     }
 
     private function validateViaje($data){
@@ -210,7 +215,17 @@ class Viajes extends Controller
     public function misViajes(){
         $user = Auth::user();
         $mis_viajes = Grupo::where('id','like',$user['id'])->get();
-        return view('viajes.misViajes') -> with('mis_viajes', $mis_viajes);
+        $postuPorGrupo = array();
+        foreach($mis_viajes as $grupo){
+            $relacionDelGrupo = GruposViaje::where('id_grupo','=',$grupo->id_grupo)->get();
+            $suma = 0;
+            foreach($relacionDelGrupo as $relacion){
+                $suma = Postulacion::where('id_viaje','=',$relacion->id_viaje)->where('estado_postulacion','=','pendiente')->count() + $suma;
+            }
+            $postuPorGrupo[$grupo->id_grupo] = $suma;
+        }
+        return view('viajes.misViajes') -> with('mis_viajes', $mis_viajes)
+        ->with('postuPorGrupo',$postuPorGrupo);
     }
 
     public function modificarViaje($id)
@@ -253,6 +268,25 @@ class Viajes extends Controller
         
         $this->eliminarViajeId($id);
         return redirect('/mi_usuario');
+    }
+
+    public function finalizarViaje($id_viaje){
+        $today = Carbon::now();
+        $user = Auth::user();
+        $viaje = Viaje::find($id_viaje);   
+
+        if(!is_null($viaje)){
+            if($user->id == $viaje->id){
+                if ( $today > $viaje->fecha ){
+                    $viaje->estado_viaje = 'finalizado';
+                    $viaje->save();
+                    $conf = Configuracion::find(1);
+                    $conf->fondo = $conf->fondo + $viaje->precio;
+                    $conf->save(); 
+                }
+            }
+        }
+        return redirect()->back();
     }
 
 
