@@ -1,4 +1,4 @@
-@extends('layouts.layout')
+@extends('layouts.layout', ['postulaciones',$postulaciones])
 
 @section('content')
 <div class="card">
@@ -26,7 +26,14 @@
                         <td> {{ $viaje -> tipo_viaje }} </td> 
                         <td> Vehículo </td>  
                         <td>
-                            <a class="text-center" href="#"><button type="button" class="btn btn-info"> Ver detalles de viajes </button> </a>
+                            <a class="text-center" href="/viajes/verViajesDetalle/{{$viaje->id_grupo}}">
+                                <button type="button" class="btn btn-info">
+                                    Ver detalles de viajes
+                                    @if($postuPorGrupo[$viaje->id_grupo] > 0)
+                                        ({{$postuPorGrupo[$viaje->id_grupo]}})
+                                    @endif
+                                </button>
+                            </a>
                             <a class="text-center" href="/viajes/modificarViaje/{{ $viaje -> id_grupo }}"> <button type="button" class="btn btn-primary"> Modificar </button> </a>
                             <button class="btn btn-danger" data-id="{{ $viaje -> id_grupo }}" data-toggle="modal" data-target="#eliminarModal"> Eliminar </button> </a>
                         </td>

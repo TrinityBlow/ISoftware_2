@@ -20,7 +20,7 @@
 
                     <div class="text-center mb-6 form-group">
 
-                        <img class="rounded" src='/images/{{ Auth::user()->image }}' height="50%" width="50%">
+                        <img class="rounded" src='/storage/images/{{ Auth::user()->image }}' height="50%" width="50%">
 
                         <input id="image" type="file" class="mt-2{{ $errors->has('image') ? ' is-invalid' : '' }}" name="image">
                         

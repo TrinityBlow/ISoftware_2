@@ -18,8 +18,9 @@ class AppServiceProvider extends ServiceProvider
      * @return void
      */
 
-    private function hacer (){        
-       /* $user = Auth::user();
+    protected function hacer ()
+    {        
+        /* $user = Auth::user();
         return \App\Postulacion::all()->where('id','=',$user->id)->where('estado_postulacion','=','pendiente');*/        
         $f0 = Carbon::today();
 
@@ -50,6 +51,13 @@ class AppServiceProvider extends ServiceProvider
             }
         });
 
+        view()->composer('viajes.misViajes',function($view){
+            $user = Auth::user();
+            if($user){
+                $view->with('postulaciones',$this->hacer() );
+            }
+        });
+
 
     }
 
@@ -58,6 +66,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
+
     public function register()
     {
         //

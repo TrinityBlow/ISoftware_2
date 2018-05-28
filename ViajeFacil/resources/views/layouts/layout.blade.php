@@ -99,11 +99,9 @@
               <a href="{{ URL::route('misViajes') }}" class="list-group-item">Mis viajes</a>        
               
               @if( count($postulaciones) > 0)
-                <!-- /viajes/verPostulaciones -->
-                <a href="#" class="list-group-item">
-                    Pedido de Postulaciones
-                    <span class="badge badge-pill badge-primary">{{ $postulaciones->count() }}</span>
-                </a>
+              <div class="alert alert-info mt-1 inline">
+                  <strong>Pedido de Postulaciones ({{ $postulaciones->count() }})</strong>
+              </div>
               @endif
             
           </div>

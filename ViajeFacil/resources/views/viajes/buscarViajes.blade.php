@@ -22,7 +22,31 @@
 
                 </div>
 
-                <div class="form-group text-center">
+                <div class="row">
+
+                    <div class="form-group col">
+                        <label for="fecha1" class="col-form-label">Desde la fecha:</label>
+                        <input name="fecha1" type="date" class="form-control">
+                    </div>
+
+                    <div class="form-group col">
+                        <label for="fecha2" class="col-form-label">Hasta la fecha:</label>
+                        <input name="fecha2" type="date" class="form-control">
+                    </div>
+
+                    <div class="form-group col">
+                        <label for="precio_limite" class="col-form-label">{{ __('Precio límite:') }}</label>
+                        <div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text">$</span>
+							</div>
+                            <input name="precio" type="number" class="form-control" placeholder="Ej.: 100">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group text-center mt-3">
                     <button type="submit" class="btn btn-primary">{{ __('Buscar') }}</button>
                 </div>
 

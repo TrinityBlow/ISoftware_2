@@ -9,6 +9,7 @@ use App\Viaje;
 use App\Postulacion;
 use App\Grupo;
 use App\GruposViaje;
+use App\Configuracion;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -46,7 +47,7 @@ class Viajes extends Controller
         $user = Auth::user();
         $viaje = Viaje::find($id);
         $usuario_creador = User::find($viaje['id']);
-        $tiene_postulacion = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$viaje->id_viaje)->get();
+        $tiene_postulacion = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$viaje->id_viaje)->first();
         return view('viajes.verDetallesViaje')
         ->with('usuario_creador',$usuario_creador)
         ->with('viaje',$viaje)
@@ -64,21 +65,50 @@ class Viajes extends Controller
 
         $f1 -> addDays(30);
 
+        $viajes = (new Grupo)->newQuery();
+
+        if ($data->has('ori')){
+            $viajes->where('origen','like', '%'.$data['ori'].'%');
+        }
+        if ($data->has('dest')){
+            $viajes->where('destino','like', '%'.$data['dest'].'%');
+        }
+
+        /* SI UTILIZO SOLAMENTE ORIGEN Y DESTINO ANDA, CON LOS DEMAS FILTROS NO */
+
+        if (!is_null($data->precio)){
+            $viajes->where('precio','<=', $data['precio']);
+        }
+        if (!is_null($data->fecha1)){
+            $viajes->whereBetween('fecha', [$data['fecha1'], $f1]);
+        }
+        if (!is_null($data->fecha2)){
+            $viajes->whereBetween('fecha', [$f0, $data['fecha2']]);
+        } elseif ((is_null($data['fecha1'])) and (is_null($data['fecha2']))) {
+            $viajes->whereBetween('fecha', [$f0, $f1]);            
+        }
+
+/*  
+
+ESTE ES EL CODIGO ANTERIOR----------(SOLO CON 3 CONDICIONES)
+
         if ((!is_null($data['ori'])) and (is_null($data['dest']))) {
             $filtroOrigen = '%' . $data['ori'] . '%';
             $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->where('origen','like',$filtroOrigen)->get();
-        } elseif ((is_null($data['ori'])) and (!is_null($data['dest']))) {
-            $filtroDestino = $data['dest'];
-            $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->where('destino','like','%'.$filtroDestino.'%')->get();
         } elseif ((!is_null($data['ori'])) and (!is_null($data['dest']))) {
            $filtroOrigen = $data['ori'];
            $filtroDestino = $data['dest'];
            $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->where('origen','like','%'.$filtroOrigen.'%')->where('destino','like','%'.$filtroDestino.'%')->get();
+        } elseif ((is_null($data['ori'])) and (!is_null($data['dest']))) {
+            $filtroDestino = $data['dest'];
+            $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->where('destino','like','%'.$filtroDestino.'%')->get();
         } else {
            $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->get();
         }
 
-        return view('viajes.buscarViajes') -> with('viajes', $viajes);
+*/
+
+        return view('viajes.buscarViajes') -> with('viajes', $viajes->get());
     }
 
     private function validateViaje($data)
@@ -191,7 +221,17 @@ class Viajes extends Controller
     {
         $user = Auth::user();
         $mis_viajes = Grupo::where('id','like',$user['id'])->get();
-        return view('viajes.misViajes') -> with('mis_viajes', $mis_viajes);
+        $postuPorGrupo = array();
+        foreach($mis_viajes as $grupo){
+            $relacionDelGrupo = GruposViaje::where('id_grupo','=',$grupo->id_grupo)->get();
+            $suma = 0;
+            foreach($relacionDelGrupo as $relacion){
+                $suma = Postulacion::where('id_viaje','=',$relacion->id_viaje)->where('estado_postulacion','=','pendiente')->count() + $suma;
+            }
+            $postuPorGrupo[$grupo->id_grupo] = $suma;
+        }
+        return view('viajes.misViajes') -> with('mis_viajes', $mis_viajes)
+        ->with('postuPorGrupo',$postuPorGrupo);
     }
 
     public function modificarViaje($id)
@@ -234,6 +274,29 @@ class Viajes extends Controller
     {
         $this->eliminarViajeId($id);
         return redirect('/mi_usuario');
+    }
+
+    public function finalizarViaje($id_viaje)
+    {
+        $today = Carbon::now();
+        $user = Auth::user();
+        $viaje = Viaje::find($id_viaje);   
+
+        if(!is_null($viaje))
+        {
+            if($user->id == $viaje->id)
+            {
+                if ( $today > $viaje->fecha )
+                {
+                    $viaje->estado_viaje = 'finalizado';
+                    $viaje->save();
+                    $conf = Configuracion::find(1);
+                    $conf->fondo = $conf->fondo + $viaje->precio;
+                    $conf->save(); 
+                }
+            }
+        }
+        return redirect()->back();
     }
 
 }
