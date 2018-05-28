@@ -20,7 +20,8 @@ class MiUsuarioController extends Controller
         $this->middleware('auth');  
     }
 
-    public function validation (){
+    public function validation ()
+    {
 
     }
 
@@ -30,8 +31,10 @@ class MiUsuarioController extends Controller
         $registros = Registra::all();
         $user = Auth::user();
 
-        foreach($registros as $registro){
-            if($registro['id'] == $user['id']){
+        foreach($registros as $registro)
+        {
+            if($registro['id'] == $user['id'])
+            {
                 $mis_vehiculos[] = Vehiculo::find($registro['id_vehiculo']);
             }
         }
@@ -43,15 +46,17 @@ class MiUsuarioController extends Controller
         return view('usuarios.agregarVehiculo');
     }
 
-    private function validateModification($data){
-        if (Auth::user()->email == $data['email']){
+    private function validateModification($data)
+    {
+        if (Auth::user()->email == $data['email'])
+        {
             $data->validate([
                 'name' => 'required|string|min:1|max:255',
                 'last_name' => 'required|string|min:1|max:255',
                 'birthdate' => 'required|date',
                 'image' => 'image|nullable|max:1999',
             ]);
-        }else{
+        } else {
             $data->validate([
                 'name' => 'required|string|min:1|max:255',
                 'last_name' => 'required|string|min:1|max:255',
@@ -67,7 +72,8 @@ class MiUsuarioController extends Controller
         $this->validateModification($request);
         $user = Auth::user();
 
-		if($request->hasFile('image')){
+        if($request->hasFile('image'))
+        {
             $fileNameWithExt = $request->file('image')->getClientOriginalName();
             $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('image')->getClientOriginalExtension();
@@ -78,7 +84,9 @@ class MiUsuarioController extends Controller
 
         $user->name = $request->input('name');
         $user->last_name = $request->input('last_name');
+        $user->birthdate = $request->input('birthdate');
         $user->email = $request->input('email');
+
         /*
             if ( ! Request::input('password') == '')
             {
@@ -90,14 +98,15 @@ class MiUsuarioController extends Controller
         return redirect('mi_usuario');
     }
 
-    public function imagenUsuario($id){
+    public function imagenUsuario($id)
+    {
         $user = Auth::user();
-        header("Content-type: image/jpg"); 
-        echo $user->image; 
-        
+        header("Content-type: image/jpg");
+        echo $user->image;
     }
     
-    /*public function showPicture($id)
+    /*
+    public function showPicture($id)
     {
         $picture = User::find($id);
         $pic = Image::make($picture->image);
@@ -107,5 +116,6 @@ class MiUsuarioController extends Controller
         $response->header('Content-Type', 'image/jpg');
 
         return $response;
-    }*/
+    }
+    */
 }

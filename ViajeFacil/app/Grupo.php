@@ -13,6 +13,7 @@ class Grupo extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'titulo',
         'origen',
         'destino',
         'fecha',

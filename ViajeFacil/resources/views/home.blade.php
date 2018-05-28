@@ -12,8 +12,7 @@
                         {{ session('status') }}
                     </div>
                 @endif
-
-                Has iniciado sesión correctamente!
+                ¡Has iniciado sesión correctamente!
             </div>
         </div>
     </div>

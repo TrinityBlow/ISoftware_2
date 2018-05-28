@@ -16,8 +16,6 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
 
 
-
-
     <title>Viaje Facil</title>
 
     <!-- Styles -->
@@ -53,10 +51,10 @@
             <li class="nav-item">
               <a class="nav-link" href="#">Contacto</a>
             </li>
-             <!-- Authentication Links -->
-             @guest
-             <li><a class="nav-link" href="{{ route('login') }}">{{ __('Iniciar sesión') }}</a></li>
-             <li><a class="nav-link" href="{{ route('register') }}">{{ __('Registrarse') }}</a></li>
+              <!-- Authentication Links -->
+              @guest
+              <li><a class="nav-link" href="{{ route('login') }}">{{ __('Iniciar sesión') }}</a></li>
+              <li><a class="nav-link" href="{{ route('register') }}">{{ __('Registrarse') }}</a></li>
               @else
                 <li class="nav-item dropdown">
                     <a id="navbarDropdown" class="nav-link dropdown-toggle text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -91,32 +89,35 @@
 
       <div class="row">
 
+        @auth
         <div class="col-lg-3 col-sm-4">
           
-          <div class="list-group mt-4 mr-5">
-            @auth
+          <div class="list-group mt-4 ml-4 mr-4">
+            
               <a href="{{ URL::route('buscarViajes') }}" class="list-group-item active">Buscar viaje</a>
               <a href="{{ URL::route('crearViaje') }}" class="list-group-item">Crear viaje</a>
               <a href="{{ URL::route('misViajes') }}" class="list-group-item">Mis viajes</a>        
               
               @if( count($postulaciones) > 0)
               <div class="alert alert-info mt-1 inline">
-                <strong>Pedido de Postulaciones ({{ $postulaciones->count() }})</strong>
+                  <strong>Pedido de Postulaciones ({{ $postulaciones->count() }})</strong>
               </div>
               @endif
-            @endauth
+            
           </div>
-        <!-- /.col-lg-3 -->
 
         
-
+        <!-- /.col-lg-3 -->
         </div>
+        @endauth
+
+
       <!-- /.container -->
       <div class="container col-sm-8 mt-4">
         @yield('content')
       </div>
 
-      </div>
+    </div>
 
     </div>
     <!-- Footer -->

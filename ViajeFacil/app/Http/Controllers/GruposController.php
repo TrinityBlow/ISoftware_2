@@ -20,19 +20,20 @@ class GruposController extends Viajes
 {
     public function __construct()
     {
-
-        // verificacion necesaria en controller para que tenga permiso de usuario
+        // Verificacion necesaria en controller para que tenga permiso de usuario.
         $this->middleware('auth');  
     }
 
-    public function verDetallesGrupo($id_grupo){
+    public function verDetallesGrupo($id_grupo)
+    {
     	$user = Auth::user();
     	$mis_viajes=array();
         $registros = GruposViaje::all();
 
-
-        foreach($registros as $registro){
-            if($registro['id_grupo'] == $id_grupo){
+        foreach($registros as $registro)
+        {
+            if($registro['id_grupo'] == $id_grupo)
+            {
                 $mis_viajes[] = Viaje::find($registro['id_viaje']);
             }
         }
@@ -45,14 +46,16 @@ class GruposController extends Viajes
 
     public function modificarGrupoId(Request $data)
     {
-        //
         $mi_grupo = Grupo::find($data['id_grupo']);
-        /* FALTA EL TITULO */
+        $mi_grupo->titulo = $data->input('titulo');
         $mi_grupo->origen = $data->input('origen');
         $mi_grupo->destino = $data->input('destino');
-        if (($mi_grupo->fecha != $data->fecha) || ($mi_grupo->tipo_viaje != $data->tipo_viaje)) {
+
+        if (($mi_grupo->fecha != $data->fecha) || ($mi_grupo->tipo_viaje != $data->tipo_viaje))
+        {
             $grupos_viaje = GruposViaje::where('id_grupo', '=', $data['id_grupo']);
-            foreach ($grupos_viaje->get() as $dato) {
+            foreach ($grupos_viaje->get() as $dato)
+            {
                 parent::eliminarViaje($dato->id_viaje);
             }
             $grupos_viaje->delete();
@@ -73,10 +76,13 @@ class GruposController extends Viajes
         return redirect("/viajes/misViajes/");
     }
 
-    public function eliminarGrupo($id){
+    public function eliminarGrupo(Request $data)
+    {
+        $id = $data->id_grupo;
         $grupo = Grupo::find($id);
         $grupos_viaje = GruposViaje::where('id_grupo', '=', $id);
-        foreach ($grupos_viaje->get() as $dato) {
+        foreach ($grupos_viaje->get() as $dato)
+        {
             parent::eliminarViaje($dato->id_viaje);
         }
         $grupo->delete();
@@ -92,16 +98,18 @@ class GruposController extends Viajes
         $today = Carbon::now();
 
 
-        foreach($registros as $registro){
-            if($registro['id_grupo'] == $id_grupo){
+        foreach($registros as $registro)
+        {
+            if($registro['id_grupo'] == $id_grupo)
+            {
                 $mis_viajes[] = Viaje::find($registro['id_viaje']);
             }
         }
 
-        
         $postulacionesViajes = array();
         $relacionDelGrupo = GruposViaje::where('id_grupo','=',$id_grupo)->get();
-        foreach($relacionDelGrupo as $relacion){
+        foreach($relacionDelGrupo as $relacion)
+        {
             $suma = 0;
             $suma = Postulacion::where('id_viaje','=',$relacion->id_viaje)->where('estado_postulacion','=','pendiente')->count() + $suma;
             $postulacionesViajes[$relacion->id_viaje] = $suma;

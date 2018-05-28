@@ -1,47 +1,59 @@
 @extends('layouts.layout')
+
 @section('content')
-              <div class="card mt-1">
-                <div class="card-header">{{ __('Filtrar viajes por:') }}</div>
-                <form method="GET" action="/viajes/buscarViajes" class="form-horizontal" role="form">
+<div class="container">
+    <div class="card mb-2">
+        <div class="card-header">{{ __('Filtrar viajes por:') }}</div>
 
+        <div class="card-body">
+            <form method="GET" action="/viajes/buscarViajes" class="form-horizontal" role="form">
 
-                  <div class="form-group row mt-2">
-                        <label for="origen" class="col-md-12 col-form-label text-md-center">{{ __('Origen') }}</label>
-                  </div>
-                    <div class="col-sm-12">
-                      <input name="ori" type="text" class="form-control" placeholder="Ej.: 'La Plata'">
+                <div class="row">
+
+                    <div class="form-group col">
+                        <label for="origen" class="col-form-label">{{ __('Origen:') }}</label>
+                        <input name="ori" type="text" class="form-control" placeholder="Ej.: 'La Plata'">
                     </div>
-                  <div class="form-group row mt-2">
-                        <label for="destino" class="col-md-12 col-form-label text-md-center">{{ __('Destino') }}</label>
-                  </div>
-                    <div class="col-sm-12">
-                      <input name="dest" type="text" class="form-control" placeholder="Ej.: 'Brasil'">
+
+                    <div class="form-group col">
+                        <label for="destino" class="col-form-label">{{ __('Destino:') }}</label>
+                        <input name="dest" type="text" class="form-control" placeholder="Ej.: 'Capital Federal'">
                     </div>
-                    <div class="form-group row mt-2">
-                      <label for="fecha1" class="col-md-12 col-form-label text-md-center">Desde la fecha:</label>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="form-group col">
+                        <label for="fecha1" class="col-form-label">Desde la fecha:</label>
+                        <input name="fecha1" type="date" class="form-control">
                     </div>
-                    <div class="col-sm-12">
-                      <input type="date" class="form-control" name="fecha1">
+
+                    <div class="form-group col">
+                        <label for="fecha2" class="col-form-label">Hasta la fecha:</label>
+                        <input name="fecha2" type="date" class="form-control">
                     </div>
-                    <div class="form-group row mt-2">
-                      <label for="fecha2" class="col-md-12 col-form-label text-md-center">Hasta la fecha:</label>
+
+                    <div class="form-group col">
+                        <label for="precio_limite" class="col-form-label">{{ __('Precio límite:') }}</label>
+                        <div class="input-group">
+            							<div class="input-group-prepend">
+            								<span class="input-group-text">$</span>
+            							</div>
+                          <input name="precio" type="number" class="form-control" placeholder="Ej.: 100">
+                        </div>
                     </div>
-                    <div class="col-sm-12">
-                      <input type="date" class="form-control" name="fecha2">
-                    </div>
-                  <div class="form-group row mt-2">
-                        <label for="destino" class="col-md-12 col-form-label text-md-center">{{ __('Precio límite:') }}</label>
-                  </div>
-                    <div class="col-sm-12">
-                      <input name="precio" type="number" class="form-control" placeholder="Ej.: 500">
-                    </div>
-                  <div class="form-group mt-2 ml-7">
-                    <div class="col-sm-10">
-                      <button type="submit" class="btn btn-default">{{ __('Buscar') }}</button>
-                    </div>
-                  </div>
-                </form>
-              </div>
+
+                </div>
+
+                <div class="form-group text-center mt-3">
+                    <button type="submit" class="btn btn-primary">{{ __('Buscar') }}</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
 @foreach ($viajes as $viaje)
 <div class="card border-dark mb-3 mt-2">
   <div class="card-header">{{ $viaje -> titulo }}</div>

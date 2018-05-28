@@ -18,8 +18,9 @@ class AppServiceProvider extends ServiceProvider
      * @return void
      */
 
-    protected function hacer (){        
-       /* $user = Auth::user();
+    protected function hacer ()
+    {        
+        /* $user = Auth::user();
         return \App\Postulacion::all()->where('id','=',$user->id)->where('estado_postulacion','=','pendiente');*/        
         $f0 = Carbon::today();
 
@@ -65,6 +66,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
+
     public function register()
     {
         //
