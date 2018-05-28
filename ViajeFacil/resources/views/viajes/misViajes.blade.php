@@ -31,7 +31,7 @@
                             <td> Vehículo </td>  
                             <td>
                                 <div class="btn-group-vertical" style="width:100%">
-                                    <a href="/viajes/verViajesDetalle/{{$viaje->id_grupo}}" class="btn btn-info"> Ver detalles de viajes @if($postuPorGrupo[$viaje->id_grupo] > 0) ({{$postuPorGrupo[$viaje->id_grupo]}}) @endif </a>
+                                    <a href="/viajes/verViajesDetalle/{{ $viaje->id_grupo }}" class="btn btn-info"> Ver detalles de viajes @if($postuPorGrupo[$viaje->id_grupo] > 0) ({{$postuPorGrupo[$viaje->id_grupo]}}) @endif </a>
                                     <div class="btn-group">
                                         <a href="/viajes/modificarViaje/{{ $viaje -> id_grupo }}" class="btn btn-primary"> Modificar </a>
                                         <button class="btn btn-danger" data-id="{{ $viaje -> id_grupo }}" data-toggle="modal" data-target="#eliminarModal"> Eliminar </button>

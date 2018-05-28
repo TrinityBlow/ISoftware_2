@@ -87,27 +87,6 @@ class Viajes extends Controller
         } elseif ((is_null($data['fecha1'])) and (is_null($data['fecha2']))) {
             $viajes->whereBetween('fecha', [$f0, $f1]);            
         }
-
-/*  
-
-ESTE ES EL CODIGO ANTERIOR----------(SOLO CON 3 CONDICIONES)
-
-        if ((!is_null($data['ori'])) and (is_null($data['dest']))) {
-            $filtroOrigen = '%' . $data['ori'] . '%';
-            $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->where('origen','like',$filtroOrigen)->get();
-        } elseif ((!is_null($data['ori'])) and (!is_null($data['dest']))) {
-           $filtroOrigen = $data['ori'];
-           $filtroDestino = $data['dest'];
-           $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->where('origen','like','%'.$filtroOrigen.'%')->where('destino','like','%'.$filtroDestino.'%')->get();
-        } elseif ((is_null($data['ori'])) and (!is_null($data['dest']))) {
-            $filtroDestino = $data['dest'];
-            $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->where('destino','like','%'.$filtroDestino.'%')->get();
-        } else {
-           $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->get();
-        }
-
-*/
-
         return view('viajes.buscarViajes') -> with('viajes', $viajes->get());
     }
 
@@ -118,6 +97,7 @@ ESTE ES EL CODIGO ANTERIOR----------(SOLO CON 3 CONDICIONES)
             'origen' => 'required|string|min:1|max:255',
             'destino' => 'required|string|min:1|max:255',
             'precio' => 'required',
+            'titulo' => 'required',
         ]);
     }    
 
@@ -178,7 +158,7 @@ ESTE ES EL CODIGO ANTERIOR----------(SOLO CON 3 CONDICIONES)
     {
         if ($data->titulo == null)
         {
-            $data['titulo'] = "Viaje desde " . $data['origen'] . " hasta " . $data['destino'] . " el día " . $data['fecha'] . " a las " . $data['hora'] . " hs.";
+            $data['titulo'] = "Viaje desde " . $data['origen'] . " hasta " . $data['destino'];
         }
 
         $this->validateViaje($data);
@@ -254,6 +234,7 @@ ESTE ES EL CODIGO ANTERIOR----------(SOLO CON 3 CONDICIONES)
         $mi_viaje->fecha = $data->input('fecha');
         $mi_viaje->precio = $data->input('precio');
         $mi_viaje->tipo_viaje = $data->input('tipo_viaje');
+        $mi_viaje->titulo = $data->input('titulo');
         $mi_viaje->save();
 
         return redirect("/viajes/modificarViaje/" . $mi_viaje->id_viaje);

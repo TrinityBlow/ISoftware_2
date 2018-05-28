@@ -37,10 +37,10 @@
                     <div class="form-group col">
                         <label for="precio_limite" class="col-form-label">{{ __('Precio límite:') }}</label>
                         <div class="input-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text">$</span>
-							</div>
-                            <input name="precio" type="number" class="form-control" placeholder="Ej.: 100">
+            							<div class="input-group-prepend">
+            								<span class="input-group-text">$</span>
+            							</div>
+                          <input name="precio" type="number" class="form-control" placeholder="Ej.: 100">
                         </div>
                     </div>
 
@@ -52,17 +52,16 @@
 
             </form>
         </div>
-
     </div>
-
-    @foreach ($viajes as $viaje)
-        <div class="card mb-2">
-            <div class="card-body">
-                <h5 class="card-title">{{ $viaje -> titulo }}</h5>
-                <a href="/viajes/verDetallesGrupo/{{ $viaje -> id_grupo }}" class="btn btn-info">Ver detalles</a>
-            </div>
-        </div>
-    @endforeach
-
 </div>
+@foreach ($viajes as $viaje)
+<div class="card border-dark mb-3 mt-2">
+  <div class="card-header">{{ $viaje -> titulo }}</div>
+  <div class="card-body text-dark">
+    <h5 class="card-title">Origen: <u>{{ $viaje -> origen }}</u> - Destino: <u>{{ $viaje -> destino }}</u></h5>
+    <p class="card-text">Precio: {{ $viaje -> precio }} | Tipo: {{ $viaje -> tipo_viaje }} | Fecha y hora: {{ $viaje -> fecha }}</p>
+    <a href="/viajes/verDetallesGrupo/{{ $viaje -> id_grupo }}" class="btn btn-primary">Ver detalles</a>
+  </div>
+</div>
+@endforeach
 @endsection
