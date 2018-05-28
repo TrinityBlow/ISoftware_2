@@ -43,11 +43,13 @@
                 </form>
               </div>
 @foreach ($viajes as $viaje)
-	<div class="card w-75 mt-2">
-	  <div class="card-body">
-	  		<h5 class="card-title">{{ $viaje -> origen }} hacia {{ $viaje -> destino }}</h5>
-	    <a href="/viajes/verDetallesGrupo/{{ $viaje -> id_grupo }}" class="btn btn-primary">Ver detalles</a>
-	  </div>
-	</div>
+<div class="card border-dark mb-3 mt-2">
+  <div class="card-header">{{ $viaje -> titulo }}</div>
+  <div class="card-body text-dark">
+    <h5 class="card-title">Origen: <u>{{ $viaje -> origen }}</u> - Destino: <u>{{ $viaje -> destino }}</u></h5>
+    <p class="card-text">Precio: {{ $viaje -> precio }} | Tipo: {{ $viaje -> tipo_viaje }} | Fecha y hora: {{ $viaje -> fecha }}</p>
+    <a href="/viajes/verDetallesGrupo/{{ $viaje -> id_grupo }}" class="btn btn-primary">Ver detalles</a>
+  </div>
+</div>
 @endforeach
 @endsection

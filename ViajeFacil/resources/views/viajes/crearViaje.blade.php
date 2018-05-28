@@ -46,7 +46,11 @@
 			<option value="periodico">Periódico</option>
 			<option value="diario">Diario</option>			
 		</select>					
-	</div>	
+	</div>
+	<div class="form-group">
+		<label for="titulo" class="control-label">Título:</label>
+		<input required type="text" class="form-control" name="titulo" placeholder="Inserte un titulo descriptivo para la publicación del viaje. Ejemplo: 'Viajo todos los viernes hacia el sur de Bs. As.'">
+	</div>		
 	
 	<div class="form-group"> <!-- Submit Button -->
 		<button type="submit" class="btn btn-primary">Publicar viaje</button>

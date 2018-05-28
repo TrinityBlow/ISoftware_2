@@ -89,27 +89,6 @@ class Viajes extends Controller
             $viajes->whereBetween('fecha', [$f0, $f1]);            
         }
 
-
-/*  
-
- ESTE ES EL CODIGO ANTERIOR----------(SOLO CON 3 CONDICIONES)
-
-
-        if ((!is_null($data['ori'])) and (is_null($data['dest'])) and (is_null($data['dest']))) {
-            $filtroOrigen = '%' . $data['ori'] . '%';
-            $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->where('origen','like',$filtroOrigen)->get();
-        } elseif ((!is_null($data['ori'])) and (!is_null($data['dest']))) {
-           $filtroOrigen = $data['ori'];
-           $filtroDestino = $data['dest'];
-           $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->where('origen','like','%'.$filtroOrigen.'%')->where('destino','like','%'.$filtroDestino.'%')->get();
-        } elseif ((is_null($data['ori'])) and (!is_null($data['dest']))) {
-            $filtroDestino = $data['dest'];
-            $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->where('destino','like','%'.$filtroDestino.'%')->get();
-        } else {
-           $viajes = Grupo::whereBetween('fecha', [$f0, $f1])->get();
-        }
-
-*/
         return view('viajes.buscarViajes') -> with('viajes', $viajes->get());
     }
 
@@ -118,6 +97,7 @@ class Viajes extends Controller
             'origen' => 'required|string|min:1|max:255',
             'destino' => 'required|string|min:1|max:255',
             'precio' => 'required',
+            'titulo' => 'required',
         ]);
     }    
 
@@ -181,7 +161,7 @@ class Viajes extends Controller
             'destino' => $data['destino'],
             'fecha' => $firstDate,
             'precio' => $data['precio'],
-            'titulo' => 'nada',
+            'titulo' => $data['titulo'],
             'tipo_viaje' => $data['tipo_viaje'],
             'id_vehiculo' => $data['id_vehiculo'],
             'id' => $user['id'],
@@ -243,6 +223,7 @@ class Viajes extends Controller
         $mi_viaje->fecha = $data->input('fecha');
         $mi_viaje->precio = $data->input('precio');
         $mi_viaje->tipo_viaje = $data->input('tipo_viaje');
+        $mi_viaje->titulo = $data->input('titulo');
         $mi_viaje->save();
 
         return redirect("/viajes/modificarViaje/" . $mi_viaje->id_viaje);

@@ -9,7 +9,15 @@
             <div class="card-body">
                 <form method="POST" action="/viajes/modificarViaje">
 
-                    @csrf
+                    @csrf                     
+                    <div class="form-group row">
+                        <input type="hidden" name="id_grupo" value="{{ $viaje->id_grupo }}" >
+                        <label for="titulo" class="col-md-4 col-form-label text-md-right">{{ __('Título:') }}</label>
+
+                        <div class="col-md-6">
+                            <input id="origen" type="text" class="form-control" name="titulo" value="{{ $viaje->titulo }}" required autofocus>
+                        </div>
+                    </div> 
                     <div class="form-group row">
                         <input type="hidden" name="id_grupo" value="{{ $viaje->id_grupo }}" >
                         <label for="origen" class="col-md-4 col-form-label text-md-right">{{ __('Origen:') }}</label>
@@ -62,8 +70,7 @@
                             <option value="periodico">Periódico</option>
                             <option value="diario">Diario</option>          
                         </select>                   
-                    </div>                     
-
+                    </div>   
                     <div class="form-group row mb-0">
                         <div class="col-md-6 offset-md-4">
                             <button type="submit" class="btn btn-primary">
