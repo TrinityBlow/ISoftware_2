@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <div class="card mb-2">
+    <div class="card mb-4">
         <div class="card-header">{{ __('Filtrar viajes por:') }}</div>
 
         <div class="card-body">
@@ -52,16 +52,22 @@
 
             </form>
         </div>
+
     </div>
+
+    @foreach ($viajes as $viaje)
+    <div class="card mb-2">
+        <div class="card-header">{{ $viaje -> titulo }}</div>
+
+        <div class="card-body">
+            <h5 class="card-title">Origen: <u>{{ $viaje -> origen }}</u> - Destino: <u>{{ $viaje -> destino }}</u></h5>
+            <p class="card-text">Fecha y hora: {{ $viaje -> fecha }} | Precio: {{ $viaje -> precio }} | Tipo: {{ $viaje -> tipo_viaje }}</p>
+            <a href="/viajes/verDetallesGrupo/{{ $viaje -> id_grupo }}" class="btn btn-info">Ver detalles</a>
+        </div>
+
+    </div>
+    @endforeach
+
 </div>
-@foreach ($viajes as $viaje)
-<div class="card border-dark mb-3 mt-2">
-  <div class="card-header">{{ $viaje -> titulo }}</div>
-  <div class="card-body text-dark">
-    <h5 class="card-title">Origen: <u>{{ $viaje -> origen }}</u> - Destino: <u>{{ $viaje -> destino }}</u></h5>
-    <p class="card-text">Precio: {{ $viaje -> precio }} | Tipo: {{ $viaje -> tipo_viaje }} | Fecha y hora: {{ $viaje -> fecha }}</p>
-    <a href="/viajes/verDetallesGrupo/{{ $viaje -> id_grupo }}" class="btn btn-primary">Ver detalles</a>
-  </div>
-</div>
-@endforeach
+
 @endsection

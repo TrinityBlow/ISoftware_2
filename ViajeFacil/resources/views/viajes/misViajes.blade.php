@@ -7,7 +7,7 @@
 
         <li class="list-group ml-4 mt-3 mr-4">
             <b> Mis viajes:</b>
-            <div class="table-responsive mt-2">
+            <div class="table-responsive mt-3">
                 <table class="table" id="dataTable" width="100%" cellspacing="0">
                     <thead class="thead-light">
                         <tr>

@@ -100,7 +100,7 @@
             </div>
         </div>
 
-        <div class="card mt-2">  
+        <div class="card mt-3">  
 
             <div class="card-header">{{ __('Vehículos') }}</div>
                 <ul class="list-group list-group-flush">
@@ -113,7 +113,7 @@
                     </li>
                     <li class="list-group-item">
                         <b> Mis vehículos: </b>
-                        <div class="table-responsive mt-2">
+                        <div class="table-responsive mt-3">
                             <table class="table" id="dataTable" width="100%" cellspacing="0">
                                 <thead class="thead-light">
                                     <tr>

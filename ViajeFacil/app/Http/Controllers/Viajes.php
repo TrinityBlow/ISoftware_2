@@ -56,7 +56,6 @@ class Viajes extends Controller
 
     public function buscarViajes(Request $data)
     {
-
         /* Carbon es un paquete de Laravel que permite hacer todo tipo de operaciones con fechas */ 
         
         $f0 = Carbon::today();
@@ -105,8 +104,7 @@ class Viajes extends Controller
     {
         $user = Auth::user();
         $grupo = Grupo::find($data->id_grupo);
-        if($data->tipo_viaje == 'ocasional')
-        {
+        if($data->tipo_viaje == 'ocasional'){
             $nuevo_viaje = Viaje::create([
                 'titulo' => $data['titulo'],
                 'origen' => $data['origen'],
@@ -156,9 +154,8 @@ class Viajes extends Controller
 
     public function publicarViaje(Request $data)
     {
-        if ($data->titulo == null)
-        {
-            $data['titulo'] = "Viaje desde " . $data['origen'] . " hasta " . $data['destino'];
+        if ($data->titulo == null){
+            $data['titulo'] = "Viaje desde " . $data['origen'] . " hacia " . $data['destino'];
         }
 
         $this->validateViaje($data);
@@ -202,10 +199,12 @@ class Viajes extends Controller
         $user = Auth::user();
         $mis_viajes = Grupo::where('id','like',$user['id'])->get();
         $postuPorGrupo = array();
-        foreach($mis_viajes as $grupo){
+        foreach($mis_viajes as $grupo)
+        {
             $relacionDelGrupo = GruposViaje::where('id_grupo','=',$grupo->id_grupo)->get();
             $suma = 0;
-            foreach($relacionDelGrupo as $relacion){
+            foreach($relacionDelGrupo as $relacion)
+            {
                 $suma = Postulacion::where('id_viaje','=',$relacion->id_viaje)->where('estado_postulacion','=','pendiente')->count() + $suma;
             }
             $postuPorGrupo[$grupo->id_grupo] = $suma;
@@ -263,12 +262,9 @@ class Viajes extends Controller
         $user = Auth::user();
         $viaje = Viaje::find($id_viaje);   
 
-        if(!is_null($viaje))
-        {
-            if($user->id == $viaje->id)
-            {
-                if ( $today > $viaje->fecha )
-                {
+        if(!is_null($viaje)){
+            if($user->id == $viaje->id){
+                if ( $today > $viaje->fecha ){
                     $viaje->estado_viaje = 'finalizado';
                     $viaje->save();
                     $conf = Configuracion::find(1);
