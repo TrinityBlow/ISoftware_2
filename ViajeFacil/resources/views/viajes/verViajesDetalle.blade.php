@@ -26,23 +26,22 @@
 							<td>
 								@if( $viaje->fecha < $today )
 									@if( $viaje->estado_viaje != 'finalizado')
-										<a href='/viajes/finalizarViaje/{{$viaje->id_viaje}}'>
-											<button type="button" class="btn btn-success btn-sm">
-												Finalizar
-											</button>
-										</a>
-										<a class="text-center" href="/viajes/verPostulacionesViaje/{{$viaje->id_viaje}}">
-											<button type="button" class="btn btn-info mt-2 btn-sm">
-												Ver postulaciones viaje
-												@if($postulacionesViajes[$viaje->id_viaje] > 0)
-													({{$postulacionesViajes[$viaje->id_viaje]}})
-												@endif
-											</button>
-										</a> <br>
+										<div class="btn-group-vertical" style="width:100%">
+											<div class="btn-group">
+												<a href="/viajes/finalizarViaje/{{$viaje->id_viaje}}" class="btn btn-success btn-sm">
+													Finalizar
+												</a>
+												<a href="/viajes/verPostulacionesViaje/{{$viaje->id_viaje}}" class="btn btn-info btn-sm">
+													Ver postulaciones viaje
+													@if($postulacionesViajes[$viaje->id_viaje] > 0)
+														({{$postulacionesViajes[$viaje->id_viaje]}})
+													@endif
+												</a>
+											</div>
+										</div>
 									@else
 										<strong>Viaje finalizado</strong>
 									@endif
-									<br>
 								@endif
 							</td>
 						</tr>

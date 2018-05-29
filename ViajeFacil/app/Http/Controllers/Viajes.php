@@ -176,7 +176,7 @@ class Viajes extends Controller
         $data['id_grupo'] = $grupo->id_grupo;
         $this->createViajes($data);
         
-        return redirect('mi_usuario')->with('mensajeCrearViaje', 'El viaje ha sido publicado correctamente.');
+        return redirect('/viajes/crearViaje')->with('mensaje', '¡El viaje ha sido publicado correctamente!');
     }
 
     private function vehiculosUsuario()
@@ -253,7 +253,7 @@ class Viajes extends Controller
     public function eliminarViaje($id)
     {
         $this->eliminarViajeId($id);
-        return redirect('/mi_usuario');
+        return redirect('/viajes/misViajes');
     }
 
     public function finalizarViaje($id_viaje)

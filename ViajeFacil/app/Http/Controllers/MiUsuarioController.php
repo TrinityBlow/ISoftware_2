@@ -33,8 +33,7 @@ class MiUsuarioController extends Controller
 
         foreach($registros as $registro)
         {
-            if($registro['id'] == $user['id'])
-            {
+            if($registro['id'] == $user['id']){
                 $mis_vehiculos[] = Vehiculo::find($registro['id_vehiculo']);
             }
         }
@@ -48,8 +47,7 @@ class MiUsuarioController extends Controller
 
     private function validateModification($data)
     {
-        if (Auth::user()->email == $data['email'])
-        {
+        if (Auth::user()->email == $data['email']){
             $data->validate([
                 'name' => 'required|string|min:1|max:255',
                 'last_name' => 'required|string|min:1|max:255',
@@ -72,8 +70,7 @@ class MiUsuarioController extends Controller
         $this->validateModification($request);
         $user = Auth::user();
 
-        if($request->hasFile('image'))
-        {
+        if($request->hasFile('image')){
             $fileNameWithExt = $request->file('image')->getClientOriginalName();
             $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('image')->getClientOriginalExtension();
@@ -88,14 +85,13 @@ class MiUsuarioController extends Controller
         $user->email = $request->input('email');
 
         /*
-            if ( ! Request::input('password') == '')
-            {
+            if ( ! Request::input('password') == ''){
                 $user->password = bcrypt(Request::input('password'));
             }
         */
 
         $user->save();
-        return redirect('mi_usuario');
+        return redirect('/mi_usuario')->with('mensaje','¡Los datos han sido modificados correctamente!');
     }
 
     public function imagenUsuario($id)

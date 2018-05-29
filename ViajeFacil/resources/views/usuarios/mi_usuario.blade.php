@@ -4,11 +4,6 @@
 <div class="row justify-content-center">
     <div class="col-md-8">
         
-        @if (session('mensajeCrearViaje'))
-        <div class="alert alert-success">
-            {{ session('mensajeCrearViaje') }}
-        </div>
-        @endif
         <div class="card">
             <div class="card-header">{{ __('Mi usuario') }}</div>
 
@@ -132,8 +127,8 @@
                                         <td>
                                             <div class="btn-group-vertical" style="width:100%">
                                                 <div class="btn-group">
-                                                    <a href="/vehiculos/modificarVehiculo/{{ $vehiculo->id_vehiculo }}" class="btn btn-primary"> Modificar </a> 
-                                                    <button class="btn btn-danger" data-id="{{ $vehiculo->id_vehiculo }}" data-toggle="modal" data-target="#eliminarModal"> Eliminar </button>
+                                                    <a href="/vehiculos/modificarVehiculo/{{ $vehiculo->id_vehiculo }}" class="btn btn-primary btn-sm"> Modificar </a> 
+                                                    <button class="btn btn-danger btn-sm" data-id="{{ $vehiculo->id_vehiculo }}" data-toggle="modal" data-target="#eliminarModal"> Eliminar </button>
                                                 </div>
                                             </div>
                                         </td>

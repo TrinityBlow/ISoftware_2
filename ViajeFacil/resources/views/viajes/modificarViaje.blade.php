@@ -8,6 +8,9 @@
         <div class="card-body">
             <form method="POST" action="/viajes/modificarViaje">
                 @csrf
+
+                <input type="hidden" name="id_grupo" value={{ $viaje->id_grupo}}>
+
                 <div class="form-group">
                     <label for="titulo" class="control-label">Título:</label>
                     <input type="text" class="form-control" id="titulo" name="titulo" value="{{ $viaje->titulo }}" placeholder="(Opcional)">

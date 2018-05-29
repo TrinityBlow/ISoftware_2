@@ -32,8 +32,7 @@ class GruposController extends Viajes
 
         foreach($registros as $registro)
         {
-            if($registro['id_grupo'] == $id_grupo)
-            {
+            if($registro['id_grupo'] == $id_grupo){
                 $mis_viajes[] = Viaje::find($registro['id_viaje']);
             }
         }
@@ -51,8 +50,7 @@ class GruposController extends Viajes
         $mi_grupo->origen = $data->input('origen');
         $mi_grupo->destino = $data->input('destino');
 
-        if (($mi_grupo->fecha != $data->fecha) || ($mi_grupo->tipo_viaje != $data->tipo_viaje))
-        {
+        if (($mi_grupo->fecha != $data->fecha) || ($mi_grupo->tipo_viaje != $data->tipo_viaje)){
             $grupos_viaje = GruposViaje::where('id_grupo', '=', $data['id_grupo']);
             foreach ($grupos_viaje->get() as $dato)
             {
@@ -69,11 +67,11 @@ class GruposController extends Viajes
         $mi_grupo->fecha = $date;
 
         $mi_grupo->precio = $data->input('precio');
-        $mi_grupo->tipo_viaje = $data->input('tipo_viaje');        
+        $mi_grupo->tipo_viaje = $data->input('tipo_viaje');
 
         $mi_grupo->save();
 
-        return redirect("/viajes/misViajes/");
+        return redirect("/viajes/misViajes")->with('mensaje', '¡El viaje ha sido modificado correctamente!');
     }
 
     public function eliminarGrupo(Request $data)
@@ -88,7 +86,7 @@ class GruposController extends Viajes
         $grupo->delete();
 
         $grupos_viaje->delete();
-        return redirect('/viajes/misViajes');
+        return redirect('/viajes/misViajes')->with('mensaje', '¡El viaje ha sido eliminado correctamente!');
     }
 
     public function verViajesDetalle($id_grupo){
@@ -97,11 +95,9 @@ class GruposController extends Viajes
         $registros = GruposViaje::all();
         $today = Carbon::now();
 
-
         foreach($registros as $registro)
         {
-            if($registro['id_grupo'] == $id_grupo)
-            {
+            if($registro['id_grupo'] == $id_grupo){
                 $mis_viajes[] = Viaje::find($registro['id_viaje']);
             }
         }

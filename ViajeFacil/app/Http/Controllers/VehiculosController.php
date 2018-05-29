@@ -59,7 +59,7 @@ class VehiculosController extends Controller
             'id_vehiculo' => $nuevo_vehiculo['id_vehiculo'],
         ]);
 
-        return redirect('/mi_usuario');
+        return redirect('/mi_usuario')->with('mensaje','¡El vehículo ha sido agregado correctamente!');
     }
 
     public function modificarVehiculo($id)
@@ -94,14 +94,14 @@ class VehiculosController extends Controller
 
         $mi_vehiculo->save();
 
-        return redirect("/vehiculos/modificarVehiculo/" . $mi_vehiculo->id_vehiculo);
+        return redirect('/mi_usuario')->with('mensaje','¡El vehículo ha sido modificado correctamente!');
     }
 
     public function eliminarVehiculo(Request $data)
     {
         $mi_vehiculo = Vehiculo::find($data->id_vehiculo);
         DB::table('registra')->where('id_vehiculo', '=', $mi_vehiculo->id_vehiculo)->delete();
-        return redirect('/mi_usuario');
+        return redirect('/mi_usuario')->with('mensaje','¡El vehículo ha sido eliminado correctamente!');
     }
 
 }
