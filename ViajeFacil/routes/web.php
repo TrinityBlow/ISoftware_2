@@ -71,3 +71,4 @@ Route::post('/vehiculos/eliminarVehiculo','VehiculosController@eliminarVehiculo'
 
 Route::post('/vehiculo/agregarVehiculo','VehiculosController@agregarVehiculo');
 
+Route::post('/password/resetEmail','Auth\ForgotPasswordController@customResetLink');

@@ -13,7 +13,7 @@
             <p class="card-text">Precio del viaje: {{ $viaje -> precio }} </p>
             <p class="card-text">Tipo de viaje: {{ $viaje -> tipo_viaje }} </p>
             @if( $viaje->id == Auth::user()->id)
-                <span> Este es mi viaje </span> <a href="#"> <button type="button" class="btn btn-success">Modificar</button> </a>
+                <strong> Este es mi viaje </strong>
             @else
                 @if( is_null($postulacion) )
                     <a href="/viajes/postularmeViaje/{{ $viaje->id_viaje }}"> <button type="button" class="btn btn-success">Postularme para viajar</button> </a>
@@ -27,7 +27,6 @@
                         @endif
                     @endif
                 @endif
-                <button type="button" class="btn btn-info">Hacer consulta</button>
             @endif
         </div>
     </div>
