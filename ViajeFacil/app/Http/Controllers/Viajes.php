@@ -86,7 +86,12 @@ class Viajes extends Controller
         } elseif ((is_null($data['fecha1'])) and (is_null($data['fecha2']))) {
             $viajes->whereBetween('fecha', [$f0, $f1]);            
         }
-        return view('viajes.buscarViajes') -> with('viajes', $viajes->get());
+        $viajes = $viajes->get();
+        foreach ($viajes as $viaje){
+            $vehiculo = Vehiculo::find($viaje->id_vehiculo);
+            $viaje['precio'] = $viaje->precio / $vehiculo->cantidad_asientos;
+        }
+        return view('viajes.buscarViajes') -> with('viajes', $viajes);
     }
 
     private function validateViaje($data)
@@ -104,6 +109,7 @@ class Viajes extends Controller
     {
         $user = Auth::user();
         $grupo = Grupo::find($data->id_grupo);
+        $data->precio = $data->precio * 1.1;
         if($data->tipo_viaje == 'ocasional'){
             $nuevo_viaje = Viaje::create([
                 'titulo' => $data['titulo'],
@@ -158,6 +164,7 @@ class Viajes extends Controller
             $data['titulo'] = "Viaje desde " . $data['origen'] . " hacia " . $data['destino'];
         }
 
+        $data['precio'] = $data->precio * 1.1;
         $this->validateViaje($data);
 
         $user = Auth::user();
@@ -268,7 +275,7 @@ class Viajes extends Controller
                     $viaje->estado_viaje = 'finalizado';
                     $viaje->save();
                     $conf = Configuracion::find(1);
-                    $conf->fondo = $conf->fondo + $viaje->precio;
+                    $conf->fondo = $conf->fondo + ceil( ceil(ceil($viaje->precio * 100) / 110) * 0.10  );
                     $conf->save(); 
                 }
             }

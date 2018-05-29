@@ -16,7 +16,6 @@
                             <th>Precio</th>
                             <th>Fecha</th>
                             <th>Tipo de viaje</th>
-                            <th>Vehículo a utilizar</th>
                             <th>Acciones</th>
                         </tr>
                     </div>
@@ -28,7 +27,6 @@
                             <td> {{ $viaje -> precio }} </td>
                             <td> {{ $viaje -> fecha }} </td>
                             <td> {{ $viaje -> tipo_viaje }} </td> 
-                            <td> Vehículo </td>  
                             <td>
                                 <div class="btn-group-vertical" style="width:100%">
                                     <a href="/viajes/verViajesDetalle/{{ $viaje->id_grupo }}" class="btn btn-info btn-sm"> Ver detalles de viajes @if($postuPorGrupo[$viaje->id_grupo] > 0) ({{$postuPorGrupo[$viaje->id_grupo]}}) @endif </a>
