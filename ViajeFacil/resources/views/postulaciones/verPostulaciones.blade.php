@@ -40,7 +40,7 @@
             </div>
         @endforeach
     @else
-        <h5 class="card-title text-center">No se encuentra ninguna postulación</h5>
+        <h5 class="card-title text-center">No se ha encontrado ninguna postulación</h5>
     @endif
 </div>
 

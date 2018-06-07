@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
 
-    <h5 class="card-title text-center">Seleccione alguna/s de las fecha/s de viaje</h5>
+    <h5 class="card-title text-center">Seleccione alguna/s de las fechas de viaje</h5>
     
     @foreach ($viajes as $viaje)
         <div class="card mb-2">

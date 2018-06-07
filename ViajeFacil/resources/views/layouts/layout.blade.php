@@ -82,10 +82,17 @@
     </nav>
 
 
-    @if (session('mensaje'))
+    @if (session('mensajeSuccess'))
         <div class="alert alert-success alert-dismissible">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            {{ session('mensaje') }}
+            {{ session('mensajeSuccess') }}
+        </div>
+    @endif
+
+    @if (session('mensajeDanger'))
+        <div class="alert alert-danger alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {{ session('mensajeDanger') }}
         </div>
     @endif
 

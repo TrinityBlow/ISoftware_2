@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Vehiculo;
 use App\Registra;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Response;
@@ -37,6 +39,7 @@ class MiUsuarioController extends Controller
                 $mis_vehiculos[] = Vehiculo::find($registro['id_vehiculo']);
             }
         }
+
         return view('usuarios.mi_usuario')->with('mis_vehiculos', $mis_vehiculos)->with('user', $user);
     }
 
@@ -70,7 +73,7 @@ class MiUsuarioController extends Controller
         $this->validateModification($request);
         $user = Auth::user();
 
-        if($request->hasFile('image')){
+        if ($request->hasFile('image')){
             $fileNameWithExt = $request->file('image')->getClientOriginalName();
             $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('image')->getClientOriginalExtension();
@@ -91,7 +94,7 @@ class MiUsuarioController extends Controller
         */
 
         $user->save();
-        return redirect('/mi_usuario')->with('mensaje','¡Los datos han sido modificados correctamente!');
+        return redirect('/mi_usuario')->with('mensajeSuccess','¡Los datos han sido modificados correctamente!');
     }
 
     public function imagenUsuario($id)
@@ -99,6 +102,28 @@ class MiUsuarioController extends Controller
         $user = Auth::user();
         header("Content-type: image/jpg");
         echo $user->image;
+    }
+
+    public function verPassword()
+    {
+        $user = Auth::user();
+        return view('usuarios.verPassword')->with('user', $user);
+    }   
+
+    protected function validator($data)
+    {
+        $data->validate([
+            'password' => 'required|string|min:4|confirmed',
+        ]);
+    }
+
+    public function cambiarPassword(Request $data)
+    {
+        $this->validator($data);
+        $user = Auth::user();
+        $user->password = Hash::make($data['password']);
+        $user->update();
+        return redirect('/mi_usuario')->with('mensajeSuccess','¡La contraseña ha sido modificada correctamente!');
     }
     
     /*

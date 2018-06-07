@@ -55,19 +55,22 @@
 
     </div>
 
-    @foreach ($viajes as $viaje)
-    <div class="card mb-2">
-        <div class="card-header">{{ $viaje -> titulo }}</div>
+    @if ($viajes != '[]')
+        @foreach ($viajes as $viaje)
+        <div class="card mb-2">
+            <div class="card-header">{{ $viaje -> titulo }}</div>
 
-        <div class="card-body">
-            <h5 class="card-title">Origen: <u>{{ $viaje -> origen }}</u> - Destino: <u>{{ $viaje -> destino }}</u></h5>
-            <p class="card-text">Fecha y hora: {{ $viaje -> fecha }} | Precio: {{ $viaje -> precio }} | Tipo: {{ $viaje -> tipo_viaje }}</p>
-            <a href="/viajes/verDetallesGrupo/{{ $viaje -> id_grupo }}" class="btn btn-info">Ver detalles</a>
+            <div class="card-body">
+                <h5 class="card-title">Origen: {{ $viaje -> origen }} - Destino: {{ $viaje -> destino }}</h5>
+                <p class="card-text">Fecha: {{ \Carbon\Carbon::parse($viaje -> fecha)->format('d/m/Y') }} - Hora: {{ \Carbon\Carbon::parse($viaje -> fecha)->format('H:i') }} - Precio: ${{ ceil($viaje -> precio) }} - Tipo: {{ ucfirst($viaje -> tipo_viaje) }}</p>
+                <a href="/viajes/verDetallesGrupo/{{ $viaje -> id_grupo }}" class="btn btn-info">Ver detalles</a>
+            </div>
+
         </div>
-
-    </div>
-    @endforeach
+        @endforeach
+    @else
+        <h5 class="card-title text-center">No se ha encontrado ningún viaje</h5>
+    @endif
 
 </div>
-
 @endsection
