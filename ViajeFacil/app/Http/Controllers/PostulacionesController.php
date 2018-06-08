@@ -24,8 +24,7 @@ class PostulacionesController extends Controller
     public function postularmeViaje($id)
     {
         $user = Auth::user(); 
-        if(!Postulacion::where('id','=',$user->id)->where('id_viaje','=',$id)->get()->count())
-        {
+        if(!Postulacion::where('id','=',$user->id)->where('id_viaje','=',$id)->get()->count()){
             $nueva_postulacion = Postulacion::create([
                 'estado_postulacion' => 'pendiente',
                 'calificacion_viajero' => 0,
@@ -40,10 +39,8 @@ class PostulacionesController extends Controller
     {
         $user = Auth::user(); 
         $postulacionBorrar = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$id)->firstOrFail();
-        if($postulacionBorrar->count())
-        {
-            if($postulacionBorrar->estado_postulacion == 'pendiente')
-            {
+        if($postulacionBorrar->count()){
+            if($postulacionBorrar->estado_postulacion == 'pendiente'){
                 $postulacionBorrar->delete();
             }
         }
@@ -54,11 +51,9 @@ class PostulacionesController extends Controller
     {
         $user = Auth::user(); 
         $postulacionBorrar = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$id)->firstOrFail();
-        if($postulacionBorrar->count())
-        {
-            if($postulacionBorrar->estado_postulacion == 'aceptado')
-            {
-                //Codigo de bajar reputacion
+        if($postulacionBorrar->count()){
+            if($postulacionBorrar->estado_postulacion == 'aceptado'){
+                // Codigo de bajar reputacion.
                 $postulacionBorrar->delete();
             }
         }
@@ -76,8 +71,7 @@ class PostulacionesController extends Controller
     {
         $vehiculo = Vehiculo::find(Viaje::find($id_viaje)->id_vehiculo);
         $postulaciones_aceptadas = Postulacion::where('id_viaje','=',$id_viaje)->where('estado_postulacion','=','aceptado');
-        if($postulaciones_aceptadas->count() < ($vehiculo->cantidad_asientos - 1))
-        {
+        if($postulaciones_aceptadas->count() < ($vehiculo->cantidad_asientos - 1)){
             return true;
         }
         return false;
@@ -87,13 +81,10 @@ class PostulacionesController extends Controller
     {
         $user = Auth::user(); 
         $id_viaje = Postulacion::find($data->id_postulacion)->id_viaje;
-        if($data->action == 'aceptar')
-        {
-            if ($this->hayLugar($id_viaje))
-            {
+        if($data->action == 'aceptar'){
+            if ($this->hayLugar($id_viaje)){
                 $postulacionUpdate = Postulacion::where('id','=',$data->postulado_id)->where('id_viaje','=',$id_viaje)->first();
-                if($postulacionUpdate->count())
-                {
+                if($postulacionUpdate->count()){
                     $postulacionUpdate->estado_postulacion = 'aceptado';
                     $postulacionUpdate->save();
                 }
@@ -102,13 +93,11 @@ class PostulacionesController extends Controller
             }
         } elseif ($data->action == 'rechazar') {
             $postulacionUpdate = Postulacion::where('id','=',$data->postulado_id)->where('id_viaje','=',$id_viaje)->first();
-            if($postulacionUpdate->count())
-            {
+            if($postulacionUpdate->count()){
                 $postulacionUpdate->estado_postulacion = 'rechazado';
                 $postulacionUpdate->save();
             }
         }
         return redirect()->back();
     }
-
 }

@@ -35,7 +35,7 @@ class Viajes extends Controller
 
         $vehiculos = $this->vehiculosUsuario();
         if(!count($vehiculos)){
-            return redirect('/');
+            return redirect('/home')->with('info', 'sinVehiculos');
         }
         return view('viajes.crearViaje')->with('vehiculos',$vehiculos)
         ->with('f0',$f0)
@@ -46,11 +46,14 @@ class Viajes extends Controller
     {
         $user = Auth::user();
         $viaje = Viaje::find($id);
+        $vehiculo = Vehiculo::find($viaje->id_vehiculo);
+        $viaje['precio'] = $viaje->precio / $vehiculo->cantidad_asientos;
         $usuario_creador = User::find($viaje['id']);
         $tiene_postulacion = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$viaje->id_viaje)->first();
         return view('viajes.verDetallesViaje')
         ->with('usuario_creador',$usuario_creador)
         ->with('viaje',$viaje)
+        ->with('vehiculo',$vehiculo)
         ->with('postulacion',$tiene_postulacion);
     }
 
@@ -86,7 +89,13 @@ class Viajes extends Controller
         } elseif ((is_null($data['fecha1'])) and (is_null($data['fecha2']))) {
             $viajes->whereBetween('fecha', [$f0, $f1]);            
         }
-        return view('viajes.buscarViajes') -> with('viajes', $viajes->get());
+        $viajes = $viajes->orderBy('fecha', 'asc')->get();
+        foreach ($viajes as $viaje)
+        {
+            $vehiculo = Vehiculo::find($viaje->id_vehiculo);
+            $viaje['precio'] = $viaje->precio / $vehiculo->cantidad_asientos;
+        }
+        return view('viajes.buscarViajes') -> with('viajes', $viajes);
     }
 
     private function validateViaje($data)
@@ -104,6 +113,7 @@ class Viajes extends Controller
     {
         $user = Auth::user();
         $grupo = Grupo::find($data->id_grupo);
+        $data->precio = $data->precio * 1.1;
         if($data->tipo_viaje == 'ocasional'){
             $nuevo_viaje = Viaje::create([
                 'titulo' => $data['titulo'],
@@ -157,6 +167,7 @@ class Viajes extends Controller
         if ($data->titulo == null){
             $data['titulo'] = "Viaje desde " . $data['origen'] . " hacia " . $data['destino'];
         }
+        $data['precio'] = $data->precio * 1.1;
 
         $this->validateViaje($data);
 
@@ -176,7 +187,7 @@ class Viajes extends Controller
         $data['id_grupo'] = $grupo->id_grupo;
         $this->createViajes($data);
         
-        return redirect('/viajes/crearViaje')->with('mensaje', '¡El viaje ha sido publicado correctamente!');
+        return redirect('/viajes/crearViaje')->with('mensajeSuccess', '¡El viaje ha sido publicado correctamente!');
     }
 
     protected function vehiculosUsuario()
@@ -193,39 +204,54 @@ class Viajes extends Controller
         return $mis_vehiculos;
     }
 
-
     public function misViajes()
     {
         $today = Carbon::today();
 
         $user = Auth::user();
-        $mis_grupos = Grupo::where('id','like',$user['id'])->get();
+
+
+        $mis_grupos = Grupo::where('id','like',$user['id'])->orderBy('fecha', 'asc')->get();
         $postuPorGrupo = array();
-        foreach($mis_grupos as $grupo)
-        {
-            
-
-            $relacionDelGrupo = GruposViaje::where('id_grupo','=',$grupo->id_grupo)->get();
-            $mis_viajes = array();
-            foreach($relacionDelGrupo as $relacion){
-                $temp_viaje = Viaje::find($relacion->id_viaje);
-                if ($temp_viaje->fecha > $today){
-                    $mis_viajes[] = $temp_viaje;
-                }
-            }
-
-            $suma = 0;
-            foreach($mis_viajes as $viaje)
+        if(($mis_grupos != '[]')){
+            foreach($mis_grupos as $grupo)
             {
-                $suma = Postulacion::where('id_viaje','=',$viaje->id_viaje)->where('estado_postulacion','=','pendiente')->count() + $suma;
+                $relacionDelGrupo = GruposViaje::where('id_grupo','=',$grupo->id_grupo)->get();
+                $mis_viajes = array();
+                foreach($relacionDelGrupo as $relacion){
+                    $temp_viaje = Viaje::find($relacion->id_viaje);
+                    if ($temp_viaje->fecha > $today){
+                        $mis_viajes[] = $temp_viaje;
+                    }
+                }
+                $suma = 0;
+                foreach($mis_viajes as $viaje)
+                {
+                    $suma = Postulacion::where('id_viaje','=',$viaje->id_viaje)->where('estado_postulacion','=','pendiente')->count() + $suma;
+                }
+                $postuPorGrupo[$grupo->id_grupo] = $suma;
             }
-            $postuPorGrupo[$grupo->id_grupo] = $suma;
+            return view('viajes.misViajes') -> with('mis_viajes', $mis_grupos)
+            ->with('postuPorGrupo',$postuPorGrupo);
+        } else {
+            return redirect('/home')->with('info', 'sinViajes');
         }
-        return view('viajes.misViajes') -> with('mis_viajes', $mis_grupos)
-        ->with('postuPorGrupo',$postuPorGrupo);
     }
 
-
+    public function modificarViaje($id)
+    {
+        //$postulaciones = ???
+        //if ($postulaciones){
+            $viaje = Grupo::find($id);
+            $hora = explode(' ',$viaje->fecha)[1];
+            $vehiculos = $this->vehiculosUsuario();
+            return view('viajes.modificarViaje')->with('viaje',$viaje)
+            ->with('vehiculos',$vehiculos)
+            ->with('hora',$hora);
+        //} else {
+        //    return redirect('/viajes/misViajes')->with('mensajeDanger', '¡El viaje seleccionado no puede ser modificado! Tiene postulaciones para viajar.');
+        //}
+    }
 
     public function modificarViajeId(Request $data)
     {
@@ -272,12 +298,11 @@ class Viajes extends Controller
                     $viaje->estado_viaje = 'finalizado';
                     $viaje->save();
                     $conf = Configuracion::find(1);
-                    $conf->fondo = $conf->fondo + $viaje->precio;
+                    $conf->fondo = $conf->fondo + ceil( ceil(ceil($viaje->precio * 100) / 110) * 0.10  );
                     $conf->save(); 
                 }
             }
         }
         return redirect()->back();
     }
-
 }

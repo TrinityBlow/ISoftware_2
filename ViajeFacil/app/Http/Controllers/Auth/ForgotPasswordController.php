@@ -33,15 +33,16 @@ class ForgotPasswordController extends Controller
         $this->middleware('guest');
     }
 
-    public function customResetLink(Request $data){
-        if(!is_null($data['nombre']) && !is_null($data['apellido']) && !is_null($data['email'])){
+    public function customResetLink(Request $data)
+    {
+        if (!is_null($data['nombre']) && !is_null($data['apellido']) && !is_null($data['email'])){
             $userReset = User::where('email','=',$data['email'])->first();
             if (!is_null($userReset) && ($userReset->name == $data['nombre']) && ($userReset->last_name == $data['apellido'])){
                 $userReset->password = \Hash::make(1234);
                 $userReset->update();
-                return redirect('/login')->with('success','La contraseña fue reinicia a 1234');                
-            }else{
-                return redirect()->back()->with('message','Los datos no coinciden con los guardados');
+                return redirect('/login')->with('mensajeSuccess','¡La contraseña ha sido reiniciada a 1234! Por favor, inicie sesión y cámbiela para su seguridad.');                
+            } else {
+                return redirect()->back()->with('mensajeDanger','Los datos no coinciden con los registrados.');
             }
         }
     }

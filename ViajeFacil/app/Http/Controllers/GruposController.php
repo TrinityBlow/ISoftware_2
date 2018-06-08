@@ -122,10 +122,11 @@ class GruposController extends Viajes
         $grupo->delete();
 
         $grupos_viaje->delete();
-        return redirect('/viajes/misViajes')->with('mensaje', '¡El viaje ha sido eliminado correctamente!');
+        return redirect('/viajes/misViajes')->with('mensajeSuccess', '¡El viaje ha sido eliminado correctamente!');
     }
 
-    public function verViajesDetalle($id_grupo){
+    public function verViajesDetalle($id_grupo)
+    {
     	$user = Auth::user();
     	$mis_viajes=array();
         $registros = GruposViaje::all();
@@ -140,6 +141,7 @@ class GruposController extends Viajes
 
         $postulacionesViajes = array();
         $relacionDelGrupo = GruposViaje::where('id_grupo','=',$id_grupo)->get();
+
         foreach($relacionDelGrupo as $relacion)
         {
             $suma = 0;

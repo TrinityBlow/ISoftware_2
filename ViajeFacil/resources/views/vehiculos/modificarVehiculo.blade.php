@@ -64,7 +64,7 @@
 
                                 @if ($errors->has('cantidad_asientos'))
                                     <span class="invalid-feedback">
-                                        <strong> Cantidad de asientos inválido </strong>
+                                        <strong> Cantidad de asientos inválida </strong>
                                     </span>
                                 @endif
                             </div>

@@ -9,14 +9,14 @@
             <b> Mis viajes:</b>
             <div class="table-responsive mt-3">
                 <table class="table" id="dataTable" width="100%" cellspacing="0">
-                    <thead class="thead-light">
+                    <thead>
                         <tr>
                             <th>Origen</th>
                             <th>Destino</th>
-                            <th>Precio</th>
                             <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Precio</th>
                             <th>Tipo de viaje</th>
-                            <th>Vehículo a utilizar</th>
                             <th>Acciones</th>
                         </tr>
                     </div>
@@ -25,16 +25,16 @@
                         <tr>
                             <td> {{ $viaje -> origen }} </td> 
                             <td> {{ $viaje -> destino }} </td>
+                            <td> {{ \Carbon\Carbon::parse($viaje -> fecha)->format('d/m/Y') }} </td>
+                            <td> {{ \Carbon\Carbon::parse($viaje -> fecha)->format('H:i') }} </td>
                             <td> {{ $viaje -> precio }} </td>
-                            <td> {{ $viaje -> fecha }} </td>
-                            <td> {{ $viaje -> tipo_viaje }} </td> 
-                            <td> Vehículo </td>  
+                            <td> {{ ucfirst($viaje -> tipo_viaje) }} </td> 
                             <td>
                                 <div class="btn-group-vertical" style="width:100%">
                                     <a href="/viajes/verViajesDetalle/{{ $viaje->id_grupo }}" class="btn btn-info btn-sm"> Ver detalles de viajes @if($postuPorGrupo[$viaje->id_grupo] > 0) ({{$postuPorGrupo[$viaje->id_grupo]}}) @endif </a>
                                     <div class="btn-group">
                                         <a href="/viajes/modificarViaje/{{ $viaje -> id_grupo }}" class="btn btn-primary btn-sm"> Modificar </a>
-                                        <button class="btn btn-danger btn-sm" data-id="{{ $viaje -> id_grupo }}" data-toggle="modal" data-target="#eliminarModal"> Eliminar </button>
+                                        <button class="btn btn-danger btn-sm" data-id="{{ $viaje -> id_grupo }}" data-toggle="modal" data-target="#myModal"> Eliminar </button>
                                     </div>
                                 </div>
                             </td>
@@ -47,9 +47,8 @@
 
     </div>
 
-
 <!-- Modal -->
-<div class="modal fade" id="eliminarModal" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">

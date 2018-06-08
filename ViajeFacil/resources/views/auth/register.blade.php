@@ -15,10 +15,10 @@
 
                         <div class="col-md-6">
                             <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required autofocus>
-@csrf
+
                             @if ($errors->has('name'))
                                 <span class="invalid-feedback">
-                                    <strong> Nombre invalido </strong>
+                                    <strong> Nombre inválido </strong>
                                 </span>
                             @endif
                         </div>
@@ -32,7 +32,7 @@
 
                             @if ($errors->has('last_name'))
                                 <span class="invalid-feedback">
-                                    <strong> Apellido invalido </strong>
+                                    <strong> Apellido inválido </strong>
                                 </span>
                             @endif
                         </div>
@@ -46,7 +46,7 @@
 
                             @if ($errors->has('email'))
                                 <span class="invalid-feedback">
-                                    <strong> E-mail ya existente</strong>
+                                    <strong> E-Mail ya existente</strong>
                                 </span>
                             @endif
                         </div>
@@ -60,12 +60,11 @@
 
                             @if ($errors->has('birthdate'))
                                 <span class="invalid-feedback">
-                                    <strong> Fecha de nacimiento inválida.</strong>
+                                    <strong> Fecha de nacimiento inválida </strong>
                                 </span>
                             @endif
                         </div>
                     </div>
-
 
                     <div class="form-group row">
                         <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Contraseña') }}</label>
@@ -96,8 +95,10 @@
                             </button>
                         </div>
                     </div>
+
                 </form>
             </div>
+
         </div>
     </div>
 </div>
