@@ -179,7 +179,7 @@ class Viajes extends Controller
         return redirect('/viajes/crearViaje')->with('mensaje', '¡El viaje ha sido publicado correctamente!');
     }
 
-    private function vehiculosUsuario()
+    protected function vehiculosUsuario()
     {
         $user = Auth::user();
         $registras = Registra::all();
@@ -196,32 +196,36 @@ class Viajes extends Controller
 
     public function misViajes()
     {
+        $today = Carbon::today();
+
         $user = Auth::user();
-        $mis_viajes = Grupo::where('id','like',$user['id'])->get();
+        $mis_grupos = Grupo::where('id','like',$user['id'])->get();
         $postuPorGrupo = array();
-        foreach($mis_viajes as $grupo)
+        foreach($mis_grupos as $grupo)
         {
+            
+
             $relacionDelGrupo = GruposViaje::where('id_grupo','=',$grupo->id_grupo)->get();
+            $mis_viajes = array();
+            foreach($relacionDelGrupo as $relacion){
+                $temp_viaje = Viaje::find($relacion->id_viaje);
+                if ($temp_viaje->fecha > $today){
+                    $mis_viajes[] = $temp_viaje;
+                }
+            }
+
             $suma = 0;
-            foreach($relacionDelGrupo as $relacion)
+            foreach($mis_viajes as $viaje)
             {
-                $suma = Postulacion::where('id_viaje','=',$relacion->id_viaje)->where('estado_postulacion','=','pendiente')->count() + $suma;
+                $suma = Postulacion::where('id_viaje','=',$viaje->id_viaje)->where('estado_postulacion','=','pendiente')->count() + $suma;
             }
             $postuPorGrupo[$grupo->id_grupo] = $suma;
         }
-        return view('viajes.misViajes') -> with('mis_viajes', $mis_viajes)
+        return view('viajes.misViajes') -> with('mis_viajes', $mis_grupos)
         ->with('postuPorGrupo',$postuPorGrupo);
     }
 
-    public function modificarViaje($id)
-    {
-        $viaje = Grupo::find($id);
-        $hora = explode(' ',$viaje->fecha)[1];
-        $vehiculos = $this->vehiculosUsuario();
-        return view('viajes.modificarViaje')->with('viaje',$viaje)
-        ->with('vehiculos',$vehiculos)
-        ->with('hora',$hora);
-    }
+
 
     public function modificarViajeId(Request $data)
     {

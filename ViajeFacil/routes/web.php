@@ -53,7 +53,7 @@ Route::get('/viajes/verPostulacionesViaje/{id}','PostulacionesController@verPost
 
 Route::get('/viajes/misViajes','Viajes@misViajes')->name('misViajes');
 
-Route::get('/viajes/modificarViaje/{id}','Viajes@modificarViaje');
+Route::get('/viajes/modificarViaje/{id}','GruposController@modificarGrupo');
 
 Route::get('/viajes/finalizarViaje/{id_viaje}','Viajes@finalizarViaje');
 
