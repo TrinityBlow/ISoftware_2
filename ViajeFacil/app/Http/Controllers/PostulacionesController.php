@@ -44,22 +44,24 @@ class PostulacionesController extends Controller
                 $postulacionBorrar->delete();
             }
         }
-        return redirect('/viajes/verDetallesViaje/'.$id);
+        // return redirect('/viajes/verDetallesViaje/'.$id);
+        return redirect()->back()->with('mensajeSuccess', '¡La postulación ha sido cancelada correctamente!');
     }
 
-    public function rechazarPostulacionViajante($id)
+    public function rechazarPostulacionViajante(Request $data)
     {
         $user = Auth::user(); 
-        $postulacionBorrar = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$id)->firstOrFail();
+        $postulacionBorrar = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$data->id_viaje)->firstOrFail();
         if($postulacionBorrar->count()){
             if($postulacionBorrar->estado_postulacion == 'aceptado'){
                 // Codigo de bajar reputacion.
                 $postulacionBorrar->delete();
             }
         }
-        return redirect('/viajes/verDetallesViaje/'.$id);
+        // return redirect('/viajes/verDetallesViaje/'.$data->id_viaje);
+        return redirect()->back()->with('mensajeSuccess', '¡La postulación ha sido rechazada correctamente!');
     }
-    
+
     public function verPostulaciones($id)
     {
         $user = Auth::user(); 
@@ -81,7 +83,7 @@ class PostulacionesController extends Controller
     {
         $user = Auth::user(); 
         $id_viaje = Postulacion::find($data->id_postulacion)->id_viaje;
-        if($data->action == 'aceptar'){
+        if ($data->action == 'aceptar'){
             if ($this->hayLugar($id_viaje)){
                 $postulacionUpdate = Postulacion::where('id','=',$data->postulado_id)->where('id_viaje','=',$id_viaje)->first();
                 if($postulacionUpdate->count()){
@@ -89,7 +91,7 @@ class PostulacionesController extends Controller
                     $postulacionUpdate->save();
                 }
             } else {
-                return redirect()->back()->withErrors(['No hay mas espacio en el viaje']);
+                return redirect()->back()->with('mensajeDanger','¡No hay más asientos disponibles en el viaje!');
             }
         } elseif ($data->action == 'rechazar') {
             $postulacionUpdate = Postulacion::where('id','=',$data->postulado_id)->where('id_viaje','=',$id_viaje)->first();
@@ -99,5 +101,34 @@ class PostulacionesController extends Controller
             }
         }
         return redirect()->back();
+    }
+
+    public function misPostulaciones()
+    {
+        $user = Auth::user();
+        $postulaciones = Postulacion::where('id','=',$user->id)->get();
+        if ($postulaciones != '[]') {
+            foreach ($postulaciones as $postulacion) {
+                $viaje = Viaje::find($postulacion->id_viaje);
+                $vehiculo = Vehiculo::find($viaje->id_vehiculo);
+                $viaje['precio'] = $viaje->precio / $vehiculo->cantidad_asientos;
+                $postulacion->id_viaje = $viaje;
+            }
+            return view('postulaciones.misPostulaciones')->with('postulaciones',$postulaciones);
+        } else {
+            return redirect('/home')->with('info', 'sinPostulaciones');
+        }
+    }
+
+    public function calificarViaje(Request $data)
+    {
+        $user = Auth::user(); 
+        $postulacion = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$data->id_viaje)->firstOrFail();
+        if($postulacion->count()){
+            if($postulacion->estado_postulacion == 'aceptado'){
+                // Codigo de calificacion.
+            }
+        }
+        return redirect()->back()->with('mensajeSuccess', '¡La calificación ha sido registrada correctamente!');
     }
 }

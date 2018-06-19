@@ -34,12 +34,12 @@
 
                     <div class="form-group col">
                         <label for="fecha" class="control-label">Fecha:</label>
-                        <input type="date" class="form-control" id="fecha" name="fecha" value={{ $viaje->fecha }} required>
+                        <input type="date" class="form-control" id="fecha" name="fecha" value={{ \Carbon\Carbon::parse($viaje->fecha)->format('Y-m-d') }} required>
                     </div>
 
                     <div class="form-group col">
                         <label for="hora" class="control-label">Hora:</label>
-                        <input type="time" class="form-control" id="hora" name="hora" value={{ $hora }} required>
+                        <input type="time" class="form-control" id="hora" name="hora" value={{ \Carbon\Carbon::parse($viaje->fecha)->format('H:i') }} required>
                     </div>
 
                 </div>

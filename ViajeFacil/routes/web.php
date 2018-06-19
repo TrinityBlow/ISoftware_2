@@ -41,6 +41,10 @@ Route::get('/viajes/verDetallesGrupo/{id_grupo}','GruposController@verDetallesGr
 
 Route::get('/viajes/verDetallesViaje/{id_viaje}','Viajes@verDetallesViaje');
 
+Route::post('/pregunta/publicarPregunta','PreguntaController@publicarPregunta');
+
+Route::post('/pregunta/responderPregunta','PreguntaController@responderPregunta');
+
 Route::get('/viajes/crearViaje','Viajes@crearViaje')->name('crearViaje');
 
 Route::post('/viajes/publicarViaje','Viajes@publicarViaje');
@@ -51,9 +55,15 @@ Route::get('/viajes/postularmeViaje/{id}','PostulacionesController@postularmeVia
 
 Route::get('/viajes/cancelarPostulacion/{id}','PostulacionesController@cancelarPostulacion');
 
-Route::get('/viajes/rechazarPostulacionViajante/{id}','PostulacionesController@rechazarPostulacionViajante');
+Route::post('/viajes/rechazarPostulacionViajante','PostulacionesController@rechazarPostulacionViajante');
+
+Route::get('/viajes/eliminarPostulacion/{id}','PostulacionesController@eliminarPostulacion');
 
 Route::get('/viajes/verPostulacionesViaje/{id}','PostulacionesController@verPostulaciones');
+
+Route::get('/postulaciones/misPostulaciones','PostulacionesController@misPostulaciones')->name('misPostulaciones');
+
+Route::post('/postulaciones/calificarViaje','PostulacionesController@calificarViaje');
 
 Route::get('/viajes/misViajes','Viajes@misViajes')->name('misViajes');
 
@@ -63,7 +73,7 @@ Route::post('/viajes/modificarViaje','GruposController@modificarGrupoId');
 
 Route::post('/viajes/eliminarViaje','GruposController@eliminarGrupo');
 
-Route::get('/viajes/finalizarViaje/{id_viaje}','Viajes@finalizarViaje');
+Route::post('/viajes/finalizarViaje','Viajes@finalizarViaje');
 
 Route::get('/viajes/verViajesDetalle/{id}','GruposController@verViajesDetalle');
 

@@ -16,6 +16,10 @@
                         <p>¡No tienes viajes creados!</br>Crea uno y vuelve a intentarlo.</p>
                         <a href="/viajes/crearViaje" class="btn btn-primary">Crear viaje</a>
                         @break
+                    @case ('sinPostulaciones')
+                        <p>¡No tienes postulaciones a ningún viaje!</br>Busca uno, postúlate y vuelve a intentarlo.</p>
+                        <a href="/viajes/buscarViajes" class="btn btn-primary">Buscar viaje</a>
+                        @break
                     @default
                         <p>¡Has iniciado sesión correctamente!</p>
                 @endswitch

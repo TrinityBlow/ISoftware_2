@@ -7,6 +7,7 @@ use App\Vehiculo;
 use App\Registra;
 use App\Viaje;
 use App\Postulacion;
+use App\Pregunta;
 use App\Grupo;
 use App\GruposViaje;
 use App\Configuracion;
@@ -34,10 +35,11 @@ class Viajes extends Controller
         $f1 -> addDays(30);
 
         $vehiculos = $this->vehiculosUsuario();
-        if(!count($vehiculos)){
+        if (!count($vehiculos)){
             return redirect('/home')->with('info', 'sinVehiculos');
         }
-        return view('viajes.crearViaje')->with('vehiculos',$vehiculos)
+        return view('viajes.crearViaje')
+        ->with('vehiculos',$vehiculos)
         ->with('f0',$f0)
         ->with('f1',$f1);
     }
@@ -50,11 +52,17 @@ class Viajes extends Controller
         $viaje['precio'] = $viaje->precio / $vehiculo->cantidad_asientos;
         $usuario_creador = User::find($viaje['id']);
         $tiene_postulacion = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$viaje->id_viaje)->first();
+        $preguntas = Pregunta::where('id_viaje','=',$viaje->id_viaje)->get();
+        foreach ($preguntas as $pregunta)
+        {
+            $pregunta['id'] = User::find($pregunta->id);
+        }
         return view('viajes.verDetallesViaje')
         ->with('usuario_creador',$usuario_creador)
         ->with('viaje',$viaje)
         ->with('vehiculo',$vehiculo)
-        ->with('postulacion',$tiene_postulacion);
+        ->with('postulacion',$tiene_postulacion)
+        ->with('preguntas',$preguntas);
     }
 
     public function buscarViajes(Request $data)
@@ -86,7 +94,7 @@ class Viajes extends Controller
         }
         if (!is_null($data->fecha2)){
             $viajes->whereBetween('fecha', [$f0, $data['fecha2']]);
-        } elseif ((is_null($data['fecha1'])) and (is_null($data['fecha2']))) {
+        } elseif ((is_null($data['fecha1'])) and (is_null($data['fecha2']))){
             $viajes->whereBetween('fecha', [$f0, $f1]);            
         }
         $viajes = $viajes->orderBy('fecha', 'asc')->get();
@@ -114,7 +122,7 @@ class Viajes extends Controller
         $user = Auth::user();
         $grupo = Grupo::find($data->id_grupo);
         $data->precio = $data->precio * 1.1;
-        if($data->tipo_viaje == 'ocasional'){
+        if ($data->tipo_viaje == 'ocasional'){
             $nuevo_viaje = Viaje::create([
                 'titulo' => $data['titulo'],
                 'origen' => $data['origen'],
@@ -162,32 +170,48 @@ class Viajes extends Controller
         }
     } 
 
+    public function sinFinalizar()
+    {
+        $user = Auth::user();
+        $today = Carbon::now();
+
+        $sin_finalizar = Viaje::where('id','=',$user->id)->where('fecha','<',$today)->whereNull('estado_viaje')->first();
+        
+        if (is_null($sin_finalizar)){
+            return false;
+        }
+        return true;
+    }
+
     public function publicarViaje(Request $data)
     {
-        if ($data->titulo == null){
-            $data['titulo'] = "Viaje desde " . $data['origen'] . " hacia " . $data['destino'];
+        if (!$this->sinFinalizar()){
+            if ($data->titulo == null){
+                $data['titulo'] = "Viaje desde " . $data['origen'] . " hacia " . $data['destino'];
+            }
+            $data['precio'] = $data->precio * 1.1;
+
+            $this->validateViaje($data);
+
+            $user = Auth::user();
+            $firstDate = date_create($data['fecha'] . $data['hora']);
+            $grupo = Grupo::create([
+                'titulo' => $data['titulo'],
+                'origen' => $data['origen'],
+                'destino' => $data['destino'],
+                'fecha' => $firstDate,
+                'precio' => $data['precio'],
+                'tipo_viaje' => $data['tipo_viaje'],
+                'id_vehiculo' => $data['id_vehiculo'],
+                'id' => $user['id'],
+            ]);
+            $data['id_grupo'] = $grupo->id_grupo;
+            $this->createViajes($data);
+            
+            return redirect('/viajes/crearViaje')->with('mensajeSuccess', '¡El viaje ha sido publicado correctamente!');
+        } else {
+            return redirect()->back()->with('mensajeDanger', '¡El viaje no puede ser publicado! Tiene viajes sin finalizar.');
         }
-        $data['precio'] = $data->precio * 1.1;
-
-        $this->validateViaje($data);
-
-        $user = Auth::user();
-
-        $firstDate = date_create($data['fecha'] . $data['hora']);
-        $grupo = Grupo::create([
-            'titulo' => $data['titulo'],
-            'origen' => $data['origen'],
-            'destino' => $data['destino'],
-            'fecha' => $firstDate,
-            'precio' => $data['precio'],
-            'tipo_viaje' => $data['tipo_viaje'],
-            'id_vehiculo' => $data['id_vehiculo'],
-            'id' => $user['id'],
-        ]);
-        $data['id_grupo'] = $grupo->id_grupo;
-        $this->createViajes($data);
-        
-        return redirect('/viajes/crearViaje')->with('mensajeSuccess', '¡El viaje ha sido publicado correctamente!');
     }
 
     private function vehiculosUsuario()
@@ -197,7 +221,7 @@ class Viajes extends Controller
         $mis_vehiculos = array();
         foreach ($registras as $registra)
         {
-            if($registra['id'] == $user['id']){
+            if ($registra['id'] == $user['id']){
                 $mis_vehiculos[] = Vehiculo::find($registra['id_vehiculo']);
             }
         }
@@ -208,38 +232,84 @@ class Viajes extends Controller
     {
         $user = Auth::user();
         $mis_viajes = Grupo::where('id','like',$user['id'])->orderBy('fecha', 'asc')->get();
-        $postuPorGrupo = array();
-        if(($mis_viajes != '[]')){
+        // $postulacionesPorGrupo = array();
+        // $preguntasPorGrupo = array();
+        $notificacionesPorGrupo = array();
+
+        if ($mis_viajes != '[]'){
             foreach($mis_viajes as $grupo)
             {
                 $relacionDelGrupo = GruposViaje::where('id_grupo','=',$grupo->id_grupo)->get();
-                $suma = 0;
+                $sumaPostulaciones = 0;
+                $sumaPreguntas = 0;
                 foreach($relacionDelGrupo as $relacion)
                 {
-                    $suma = Postulacion::where('id_viaje','=',$relacion->id_viaje)->where('estado_postulacion','=','pendiente')->count() + $suma;
+                    $sumaPostulaciones = Postulacion::where('id_viaje','=',$relacion->id_viaje)->where('estado_postulacion','=','pendiente')->count() + $sumaPostulaciones;
+                    $sumaPreguntas = Pregunta::where('id_viaje','=',$relacion->id_viaje)->whereNull('respuesta')->count() + $sumaPreguntas;
                 }
-                $postuPorGrupo[$grupo->id_grupo] = $suma;
+                // $postulacionesPorGrupo[$grupo->id_grupo] = $sumaPostulaciones;
+                // $preguntasPorGrupo[$grupo->id_grupo] = $sumaPreguntas;
+                $notificacionesPorGrupo[$grupo->id_grupo] = $sumaPostulaciones + $sumaPreguntas;
             }
             return view('viajes.misViajes') -> with('mis_viajes', $mis_viajes)
-            ->with('postuPorGrupo',$postuPorGrupo);
+            // ->with('postulacionesPorGrupo',$postulacionesPorGrupo)
+            // ->with('preguntasPorGrupo',$preguntasPorGrupo);
+            ->with('notificacionesPorGrupo',$notificacionesPorGrupo);
         } else {
             return redirect('/home')->with('info', 'sinViajes');
         }
     }
 
+    public function tienePostulaciones($grupo)
+    {
+        $today = Carbon::now();
+        $relacionDelGrupo = GruposViaje::where('id_grupo','=',$grupo->id_grupo)->get();
+
+        foreach($relacionDelGrupo as $relacion)
+        {
+            $viaje = Viaje::where('id_viaje','=',$relacion->id_viaje)->where('fecha','>',$today)->first();
+            if (!is_null($viaje)){
+                $tiene_postulacion = Postulacion::where('id_viaje','=',$relacion->id_viaje)
+                                                ->where(function ($query) {
+                                                    $query->where('estado_postulacion','=','aceptado')
+                                                          ->orWhere('estado_postulacion','=','pendiente');
+                                                })
+                                                ->first();
+                if (!is_null($tiene_postulacion)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public function tieneViajesSinFinalizar($grupo)
+    {
+        $today = Carbon::now();
+        $relacionDelGrupo = GruposViaje::where('id_grupo','=',$grupo->id_grupo)->get();
+
+        foreach($relacionDelGrupo as $relacion)
+        {
+            $sin_finalizar = Viaje::where('id_viaje','=',$relacion->id_viaje)->where('fecha','<',$today)->whereNull('estado_viaje')->first();
+            if (!is_null($sin_finalizar)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function modificarViaje($id)
     {
-        //$postulaciones = ???
-        //if ($postulaciones){
-            $viaje = Grupo::find($id);
-            $hora = explode(' ',$viaje->fecha)[1];
+        $viaje = Grupo::find($id);
+        if ((!$this->tienePostulaciones($viaje)) && (!$this->tieneViajesSinFinalizar($viaje))){
+            $viaje->precio = ceil(ceil($viaje->precio / 110) * 100);
             $vehiculos = $this->vehiculosUsuario();
-            return view('viajes.modificarViaje')->with('viaje',$viaje)
-            ->with('vehiculos',$vehiculos)
-            ->with('hora',$hora);
-        //} else {
-        //    return redirect('/viajes/misViajes')->with('mensajeDanger', '¡El viaje seleccionado no puede ser modificado! Tiene postulaciones para viajar.');
-        //}
+            return view('viajes.modificarViaje')
+            ->with('viaje',$viaje)
+            ->with('vehiculos',$vehiculos);
+        } else {
+            return redirect('/viajes/misViajes')->with('mensajeDanger', '¡El viaje seleccionado no puede ser modificado! Tiene postulaciones aceptadas/pendientes para viajar y/o tiene viajes sin finalizar.');
+        }
     }
 
     public function modificarViajeId(Request $data)
@@ -261,12 +331,26 @@ class Viajes extends Controller
     protected function eliminarViajeId($id)
     {
         $mi_viaje = Viaje::find($id);
+
         $postulaciones = Postulacion::where('id_viaje','=',$id)->get();
         foreach ($postulaciones as $postulacion)
         {
             Postulacion::find($postulacion->id_postulacion)->delete();
+            // if ($postulacion->estado_postulacion == 'pendiente'){
+            //     $postulacion->estado_postulacion = 'rechazado';
+            //     $postulacion->save();
+            // }
         }
+
+        $preguntas = Pregunta::where('id_viaje','=',$id)->get();
+        foreach ($preguntas as $pregunta)
+        {
+            Pregunta::find($pregunta->id_pregunta)->delete();
+        }
+
         DB::table('viajes')->where('id_viaje', '=', $mi_viaje->id_viaje)->delete();
+        // $mi_viaje->estado_viaje = 'eliminado';
+        // $mi_viaje->save();
     }
 
     public function eliminarViaje($id)
@@ -275,23 +359,41 @@ class Viajes extends Controller
         return redirect('/viajes/misViajes');
     }
 
-    public function finalizarViaje($id_viaje)
+    public function finalizarViaje(Request $data)
     {
-        $today = Carbon::now();
         $user = Auth::user();
-        $viaje = Viaje::find($id_viaje);   
+        $today = Carbon::now();
+        $viaje = Viaje::find($data->id_viaje);
 
-        if(!is_null($viaje)){
-            if($user->id == $viaje->id){
-                if ( $today > $viaje->fecha ){
+        if (!is_null($viaje)){
+            if ($user->id == $viaje->id){
+                if ($today > $viaje->fecha){
                     $viaje->estado_viaje = 'finalizado';
                     $viaje->save();
+
+                    $postulaciones = Postulacion::where('id_viaje','=',$viaje->id_viaje)->get();
+                    foreach ($postulaciones as $postulacion)
+                    {
+                        Postulacion::find($postulacion->id_postulacion)->delete();
+                        // if ($postulacion->estado_postulacion == 'pendiente'){
+                        //     $postulacion->estado_postulacion = 'rechazado';
+                        //     $postulacion->save();
+                        // }
+                    }
+
+                    $preguntas = Pregunta::where('id_viaje','=',$viaje->id_viaje)->get();
+                    foreach ($preguntas as $pregunta)
+                    {
+                        Pregunta::find($pregunta->id_pregunta)->delete();
+                    }
+
                     $conf = Configuracion::find(1);
                     $conf->fondo = $conf->fondo + ceil( ceil(ceil($viaje->precio * 100) / 110) * 0.10  );
                     $conf->save(); 
                 }
             }
         }
-        return redirect()->back();
+        
+        return redirect()->back()->with('mensajeSuccess', '¡El pago ha sido realizado correctamente!');
     }
 }

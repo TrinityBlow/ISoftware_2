@@ -1,13 +1,13 @@
-@extends('layouts.layout', ['postulaciones',$postulaciones])
+@extends('layouts.layout', ['postulaciones',$postulaciones], ['preguntas',$preguntas])
 
 @section('content')
-
+<div class="container">
     <div class="card">
         @csrf
+        <div class="card-header">Mis viajes</div>
 
-        <li class="list-group ml-4 mt-3 mr-4">
-            <b> Mis viajes:</b>
-            <div class="table-responsive mt-3">
+        <div class="card-body">
+            <div class="table-responsive">
                 <table class="table" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
@@ -19,33 +19,39 @@
                             <th>Tipo de viaje</th>
                             <th>Acciones</th>
                         </tr>
-                    </div>
+                    </thead>
                     <tbody>
-                    @foreach ($mis_viajes->reverse() as $viaje)
-                        <tr>
-                            <td> {{ $viaje -> origen }} </td> 
-                            <td> {{ $viaje -> destino }} </td>
-                            <td> {{ \Carbon\Carbon::parse($viaje -> fecha)->format('d/m/Y') }} </td>
-                            <td> {{ \Carbon\Carbon::parse($viaje -> fecha)->format('H:i') }} </td>
-                            <td> {{ $viaje -> precio }} </td>
-                            <td> {{ ucfirst($viaje -> tipo_viaje) }} </td> 
-                            <td>
-                                <div class="btn-group-vertical" style="width:100%">
-                                    <a href="/viajes/verViajesDetalle/{{ $viaje->id_grupo }}" class="btn btn-info btn-sm"> Ver detalles de viajes @if($postuPorGrupo[$viaje->id_grupo] > 0) ({{$postuPorGrupo[$viaje->id_grupo]}}) @endif </a>
-                                    <div class="btn-group">
-                                        <a href="/viajes/modificarViaje/{{ $viaje -> id_grupo }}" class="btn btn-primary btn-sm"> Modificar </a>
-                                        <button class="btn btn-danger btn-sm" data-id="{{ $viaje -> id_grupo }}" data-toggle="modal" data-target="#myModal"> Eliminar </button>
+                        @foreach ($mis_viajes->reverse() as $viaje)
+                            <tr>
+                                <td> {{ $viaje -> origen }} </td> 
+                                <td> {{ $viaje -> destino }} </td>
+                                <td> {{ \Carbon\Carbon::parse($viaje -> fecha)->format('d/m/Y') }} </td>
+                                <td> {{ \Carbon\Carbon::parse($viaje -> fecha)->format('H:i') }} </td>
+                                <td> ${{ ceil($viaje -> precio) }} </td>
+                                <td> {{ ucfirst($viaje -> tipo_viaje) }} </td>
+                                <td>
+                                    <div class="btn-group-vertical" style="width:100%">
+                                        <a href="/viajes/verViajesDetalle/{{ $viaje->id_grupo }}" class="btn btn-info btn-sm">
+                                            Ver detalles de viajes
+                                            @if($notificacionesPorGrupo[$viaje->id_grupo] > 0)
+                                                ({{$notificacionesPorGrupo[$viaje->id_grupo]}})
+                                            @endif
+                                        </a>
+                                        <div class="btn-group">
+                                            <a href="/viajes/modificarViaje/{{ $viaje -> id_grupo }}" class="btn btn-primary btn-sm"> Modificar </a>
+                                            <button class="btn btn-danger btn-sm" data-id="{{ $viaje -> id_grupo }}" data-toggle="modal" data-target="#myModal"> Eliminar </button>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
                 </table>
             </div>
-        </li>
+        </div>
 
     </div>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">

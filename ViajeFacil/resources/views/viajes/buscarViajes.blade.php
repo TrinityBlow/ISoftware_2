@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <div class="card mb-4">
+    <div class="card mb-2">
         <div class="card-header">{{ __('Filtrar viajes por:') }}</div>
 
         <div class="card-body">
@@ -69,7 +69,9 @@
         </div>
         @endforeach
     @else
-        <h5 class="card-title text-center">No se ha encontrado ningún viaje</h5>
+        <ul class="list-group">
+            <p class="list-group-item bg-light text-center">No se ha encontrado ningún viaje</p>
+        </ul>
     @endif
 
 </div>

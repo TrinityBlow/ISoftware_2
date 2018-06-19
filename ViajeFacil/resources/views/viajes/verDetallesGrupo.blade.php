@@ -2,17 +2,16 @@
 
 @section('content')
 <div class="container">
-
-    <h5 class="card-title text-center">Seleccione alguna/s de las fechas de viaje</h5>
     
+    <ul class="list-group mb-2">
+        <p class="list-group-item bg-light">Viajes desde <strong>{{ $viajes[0] -> origen }}</strong> hacia <strong>{{ $viajes[0] -> destino }}</strong> a las <strong>{{ \Carbon\Carbon::parse($viajes[0] -> fecha)->format('H:i') }}</strong></p>
+    </ul>
     @foreach ($viajes as $viaje)
         <div class="card mb-2">
-
             <div class="card-body">
-                <p class="card-text"><u>{{ $viaje -> origen }}</u> hacia <u>{{ $viaje -> destino }}</u> | <strong>{{ $viaje -> fecha }}</strong></p>
+                <h5 class="card-title">Fecha: {{ \Carbon\Carbon::parse($viaje -> fecha)->format('d/m/Y') }}</h5>
                 <a href="/viajes/verDetallesViaje/{{ $viaje -> id_viaje }}" class="btn btn-info">Ver detalles</a>
             </div>
-
         </div>
     @endforeach
 

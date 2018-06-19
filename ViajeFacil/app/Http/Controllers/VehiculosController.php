@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Vehiculo;
 use App\Registra;
+use App\Grupo;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -62,10 +63,22 @@ class VehiculosController extends Controller
         return redirect('/mi_usuario')->with('mensajeSuccess','¡El vehículo ha sido agregado correctamente!');
     }
 
+    private function enUso($id)
+    {
+        $mis_viajes = Grupo::where('id_vehiculo','=',$id)->first();
+        if (is_null($mis_viajes)) {
+            return false;
+        }
+        return true;
+    }
+    
     public function modificarVehiculo($id)
     {
-        $mi_vehiculo = Vehiculo::find($id);
-        return view('vehiculos.modificarVehiculo')->with('mi_vehiculo',$mi_vehiculo);
+        if (!$this->enUso($id)) {
+            $mi_vehiculo = Vehiculo::find($id);
+            return view('vehiculos.modificarVehiculo')->with('mi_vehiculo',$mi_vehiculo);
+        }
+        return redirect()->back()->with('mensajeDanger', '¡El vehículo seleccionado no puede ser modificado! Está siendo utilizado para viajar.');
     }
 
     private function validateVehiculoModificar($data,$mi_vehiculo)
@@ -85,6 +98,7 @@ class VehiculosController extends Controller
     public function modificarVehiculoPorId(Request $data)
     {
         $mi_vehiculo = Vehiculo::find($data['id_vehiculo']);
+
         $this->validateVehiculoModificar($data,$mi_vehiculo);
         
         $mi_vehiculo->patente = $data->input('patente');
@@ -99,8 +113,11 @@ class VehiculosController extends Controller
 
     public function eliminarVehiculo(Request $data)
     {
-        $mi_vehiculo = Vehiculo::find($data->id_vehiculo);
-        DB::table('registra')->where('id_vehiculo', '=', $mi_vehiculo->id_vehiculo)->delete();
-        return redirect('/mi_usuario')->with('mensajeSuccess','¡El vehículo ha sido eliminado correctamente!');
+        if (!$this->enUso($data->id_vehiculo)) {
+            $mi_vehiculo = Vehiculo::find($data->id_vehiculo);
+            DB::table('registra')->where('id_vehiculo', '=', $mi_vehiculo->id_vehiculo)->delete();
+            return redirect('/mi_usuario')->with('mensajeSuccess','¡El vehículo ha sido eliminado correctamente!');
+        }
+        return redirect()->back()->with('mensajeDanger', '¡El vehículo seleccionado no puede ser eliminado! Está siendo utilizado para viajar.');
     }
 }

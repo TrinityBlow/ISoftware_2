@@ -134,8 +134,8 @@
                                         <td>
                                             <div class="container">
                                                 <div class="row no-gutters">
-                                                    <div class="col ml-1 mr-1"><a href="/vehiculos/modificarVehiculo/{{ $vehiculo->id_vehiculo }}" class="btn btn-primary btn-sm btn-block"> Modificar </a></div>
-                                                    <div class="col ml-1 mr-1"><button class="btn btn-danger btn-sm btn-block" data-id="{{ $vehiculo->id_vehiculo }}" data-toggle="modal" data-target="#myModal"> Eliminar </button></div>
+                                                    <div class="col pl-1 pr-1"><a href="/vehiculos/modificarVehiculo/{{ $vehiculo->id_vehiculo }}" class="btn btn-primary btn-sm btn-block"> Modificar </a></div>
+                                                    <div class="col pl-1 pr-1"><button class="btn btn-danger btn-sm btn-block" data-id="{{ $vehiculo->id_vehiculo }}" data-toggle="modal" data-target="#myModal"> Eliminar </button></div>
                                                 </div>
                                             </div>
                                         </td>

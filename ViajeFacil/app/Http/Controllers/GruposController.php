@@ -7,6 +7,7 @@ use App\Vehiculo;
 use App\Registra;
 use App\Viaje;
 use App\Postulacion;
+use App\Pregunta;
 use App\Grupo;
 use App\GruposViaje;
 use Illuminate\Support\Carbon;
@@ -66,7 +67,7 @@ class GruposController extends Viajes
         $date = date_create($carbonDate);
         $mi_grupo->fecha = $date;
 
-        $mi_grupo->precio = $data->input('precio');
+        $mi_grupo->precio = $data->input('precio') * 1.1;
         $mi_grupo->tipo_viaje = $data->input('tipo_viaje');
 
         $mi_grupo->save();
@@ -74,19 +75,40 @@ class GruposController extends Viajes
         return redirect("/viajes/misViajes")->with('mensajeSuccess', '¡El viaje ha sido modificado correctamente!');
     }
 
+    public function tienePostulacionesAceptadas($grupo)
+    {
+        $today = Carbon::now();
+        $relacionDelGrupo = GruposViaje::where('id_grupo','=',$grupo->id_grupo)->get();
+
+        foreach($relacionDelGrupo as $relacion)
+        {
+            $viaje = Viaje::where('id_viaje','=',$relacion->id_viaje)->where('fecha','>',$today)->first();
+            if (!is_null($viaje)){
+                $tiene_postulacion = Postulacion::where('id_viaje','=',$relacion->id_viaje)->where('estado_postulacion','=','aceptado')->first();
+                if (!is_null($tiene_postulacion)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
     public function eliminarGrupo(Request $data)
     {
-        $id = $data->id_grupo;
-        $grupo = Grupo::find($id);
-        $grupos_viaje = GruposViaje::where('id_grupo', '=', $id);
-        foreach ($grupos_viaje->get() as $dato)
-        {
-            parent::eliminarViaje($dato->id_viaje);
-        }
-        $grupo->delete();
+        $grupo = Grupo::find($data->id_grupo);
+        if ((!$this->tienePostulacionesAceptadas($grupo)) && (!parent::tieneViajesSinFinalizar($grupo))){
+            $grupos_viaje = GruposViaje::where('id_grupo', '=', $data->id_grupo);
+            foreach ($grupos_viaje->get() as $dato)
+            {
+                parent::eliminarViaje($dato->id_viaje);
+            }
+            $grupos_viaje->delete();
+            $grupo->delete();
 
-        $grupos_viaje->delete();
-        return redirect('/viajes/misViajes')->with('mensajeSuccess', '¡El viaje ha sido eliminado correctamente!');
+            return redirect('/viajes/misViajes')->with('mensajeSuccess', '¡El viaje ha sido eliminado correctamente!');
+        } else {
+            return redirect('/viajes/misViajes')->with('mensajeDanger', '¡El viaje seleccionado no puede ser eliminado! Tiene postulaciones aceptadas para viajar y/o tiene viajes sin finalizar.');
+        }
     }
 
     public function verViajesDetalle($id_grupo)
@@ -104,13 +126,17 @@ class GruposController extends Viajes
         }
 
         $postulacionesViajes = array();
+        $preguntasViajes = array();
         $relacionDelGrupo = GruposViaje::where('id_grupo','=',$id_grupo)->get();
 
         foreach($relacionDelGrupo as $relacion)
         {
-            $suma = 0;
-            $suma = Postulacion::where('id_viaje','=',$relacion->id_viaje)->where('estado_postulacion','=','pendiente')->count() + $suma;
-            $postulacionesViajes[$relacion->id_viaje] = $suma;
+            $sumaPostulaciones = 0;
+            $sumaPostulaciones = Postulacion::where('id_viaje','=',$relacion->id_viaje)->where('estado_postulacion','=','pendiente')->count() + $sumaPostulaciones;
+            $postulacionesViajes[$relacion->id_viaje] = $sumaPostulaciones;
+            $sumaPreguntas = 0;
+            $sumaPreguntas = Pregunta::where('id_viaje','=',$relacion->id_viaje)->whereNull('respuesta')->count() + $sumaPreguntas;
+            $preguntasViajes[$relacion->id_viaje] = $sumaPreguntas;
         }
 
         $usuario_creador = User::find(Grupo::find($id_grupo)->id);
@@ -118,6 +144,7 @@ class GruposController extends Viajes
         ->with('usuario_creador',$usuario_creador)
         ->with('mis_viajes',$mis_viajes)
         ->with('postulacionesViajes',$postulacionesViajes)
+        ->with('preguntasViajes',$preguntasViajes)
         ->with('today',$today);
     }
 }
