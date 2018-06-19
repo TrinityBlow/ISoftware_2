@@ -67,7 +67,7 @@ Route::post('/postulaciones/calificarViaje','PostulacionesController@calificarVi
 
 Route::get('/viajes/misViajes','Viajes@misViajes')->name('misViajes');
 
-Route::get('/viajes/modificarViaje/{id}','Viajes@modificarViaje');
+Route::get('/viajes/modificarViaje/{id}','GruposController@modificarGrupo');
 
 Route::post('/viajes/modificarViaje','GruposController@modificarGrupoId');
 

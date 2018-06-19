@@ -214,7 +214,7 @@ class Viajes extends Controller
         }
     }
 
-    private function vehiculosUsuario()
+    protected function vehiculosUsuario()
     {
         $user = Auth::user();
         $registras = Registra::all();
@@ -230,28 +230,37 @@ class Viajes extends Controller
 
     public function misViajes()
     {
+        $today = Carbon::today();
+
         $user = Auth::user();
-        $mis_viajes = Grupo::where('id','like',$user['id'])->orderBy('fecha', 'asc')->get();
+        $mis_grupos = Grupo::where('id','like',$user['id'])->orderBy('fecha', 'asc')->get();
         // $postulacionesPorGrupo = array();
         // $preguntasPorGrupo = array();
         $notificacionesPorGrupo = array();
 
-        if ($mis_viajes != '[]'){
-            foreach($mis_viajes as $grupo)
+        if ($mis_grupos != '[]'){
+            foreach($mis_grupos as $grupo)
             {
                 $relacionDelGrupo = GruposViaje::where('id_grupo','=',$grupo->id_grupo)->get();
+                $mis_viajes = array();
+                foreach($relacionDelGrupo as $relacion){
+                    $temp_viaje = Viaje::find($relacion->id_viaje);
+                    if ($temp_viaje->fecha > $today){
+                        $mis_viajes[] = $temp_viaje;
+                    }
+                }
                 $sumaPostulaciones = 0;
                 $sumaPreguntas = 0;
-                foreach($relacionDelGrupo as $relacion)
+                foreach($mis_viajes as $viaje)
                 {
-                    $sumaPostulaciones = Postulacion::where('id_viaje','=',$relacion->id_viaje)->where('estado_postulacion','=','pendiente')->count() + $sumaPostulaciones;
-                    $sumaPreguntas = Pregunta::where('id_viaje','=',$relacion->id_viaje)->whereNull('respuesta')->count() + $sumaPreguntas;
+                    $sumaPostulaciones = Postulacion::where('id_viaje','=',$viaje->id_viaje)->where('estado_postulacion','=','pendiente')->count() + $sumaPostulaciones;
+                    $sumaPreguntas = Pregunta::where('id_viaje','=',$viaje->id_viaje)->whereNull('respuesta')->count() + $sumaPreguntas;
                 }
                 // $postulacionesPorGrupo[$grupo->id_grupo] = $sumaPostulaciones;
                 // $preguntasPorGrupo[$grupo->id_grupo] = $sumaPreguntas;
                 $notificacionesPorGrupo[$grupo->id_grupo] = $sumaPostulaciones + $sumaPreguntas;
             }
-            return view('viajes.misViajes') -> with('mis_viajes', $mis_viajes)
+            return view('viajes.misViajes') -> with('mis_viajes', $mis_grupos)
             // ->with('postulacionesPorGrupo',$postulacionesPorGrupo)
             // ->with('preguntasPorGrupo',$preguntasPorGrupo);
             ->with('notificacionesPorGrupo',$notificacionesPorGrupo);
