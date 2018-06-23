@@ -84,6 +84,12 @@ class GruposController extends Viajes
 
     public function modificarGrupoId($id)
     {
+        
+        $f0 = Carbon::today();
+
+        $f1 = Carbon::today();
+
+        $f1 -> addDays(30);
         $viaje = Grupo::find($id);
         if ((!$this->tienePostulaciones($viaje)) && (!$this->tieneViajesSinFinalizar($viaje))){
             $f0 = Carbon::today();

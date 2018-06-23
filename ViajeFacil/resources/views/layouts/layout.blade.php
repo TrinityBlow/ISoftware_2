@@ -115,7 +115,6 @@
               <a href="{{ URL::route('misPostulaciones') }}" class="list-group-item">Mis postulaciones</a>
 
           </div>
-              
           @if( count($postulaciones) > 0)
           <div class="alert alert-info mt-2 ml-4 mr-4 inline">
               <strong>Nuevas postulaciones ({{ $postulaciones->count() }})</strong>

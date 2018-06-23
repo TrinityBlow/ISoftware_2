@@ -71,13 +71,6 @@ class AppServiceProvider extends ServiceProvider
                 $view->with('postulaciones',$this->postulaciones())->with('preguntas',$this->preguntas());
             }
         });
-
-        view()->composer('viajes.misViajes',function($view){
-            $user = Auth::user();
-            if($user){
-                $view->with('postulaciones',$this->postulaciones())->with('preguntas',$this->preguntas());
-            }
-        });
     }
 
     /**
