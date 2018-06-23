@@ -49,7 +49,7 @@
                                                 --}}
                                             @else
                                                 <strong>Viaje finalizado</strong>
-                                                @if(is_null($postulacion->calificacion_viajero)&&($postulacion->estado_postulacion == 'aceptado'))
+                                                @if(is_null($postulacion->calificacion_viaje)&&($postulacion->estado_postulacion == 'aceptado'))
                                                     <button class="btn btn-primary btn-sm" data-id="{{$postulacion->id_viaje->id_viaje}}" data-toggle="modal" data-target="#myModal">
                                                         Calificar viaje
                                                     </button>
@@ -96,7 +96,7 @@
                             Neutral
                         </label>
                     </div>
-                    <div class="form-check disabled">
+                    <div class="form-check">
                         <input class="form-check-input" type="radio" name="calificacion" value="-1">
                         <label class="form-check-label" for="calificacion">
                             Malo

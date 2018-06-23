@@ -60,7 +60,7 @@
                             <label for="cantidad_asientos" class="col-md-4 col-form-label text-md-right">{{ __('Cantidad de asientos') }}</label>
 
                             <div class="col-md-6">
-                                <input id="cantidad_asientos" type="number" class="form-control{{ $errors->has('cantidad_asientos') ? ' is-invalid' : '' }}" name="cantidad_asientos" value="{{ $mi_vehiculo->cantidad_asientos }}" required autofocus>
+                                <input id="cantidad_asientos" type="number" min="1" max="50" class="form-control{{ $errors->has('cantidad_asientos') ? ' is-invalid' : '' }}" name="cantidad_asientos" value="{{ $mi_vehiculo->cantidad_asientos }}" required autofocus>
 
                                 @if ($errors->has('cantidad_asientos'))
                                     <span class="invalid-feedback">

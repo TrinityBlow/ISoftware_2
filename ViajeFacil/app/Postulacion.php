@@ -13,7 +13,7 @@ class Postulacion extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'estado_postulacion','calificacion_viajero','id','id_viaje',
+        'estado_postulacion','calificacion_viajero','calificacion_viaje','id','id_viaje',
     ];
 
     public function user()

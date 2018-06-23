@@ -34,7 +34,7 @@
 
                     <div class="form-group col">
                         <label for="fecha" class="control-label">Fecha:</label>
-						<input type="date" class="form-control" name="fecha" value={{ \Carbon\Carbon::parse($viaje->fecha)->format('Y-m-d') }} min={{ $f0 }} max={{ $f1 }} required>
+                        <input type="date" class="form-control" id="fecha" name="fecha" value={{ \Carbon\Carbon::parse($viaje->fecha)->format('Y-m-d') }} min={{ $f0 }} max={{ $f1 }} required>
                     </div>
 
                     <div class="form-group col">
