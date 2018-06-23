@@ -101,7 +101,6 @@ class GruposController extends Viajes
             return view('viajes.modificarViaje')
             ->with('viaje',$viaje)
             ->with('vehiculos',$vehiculos)
-            ->with('hora',$hora)
             ->with('f0',$f0)
             ->with('f1',$f1);
         }else{

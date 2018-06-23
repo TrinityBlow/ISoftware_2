@@ -266,8 +266,11 @@ class Viajes extends Controller
 
         $user = Auth::user();
         $mis_grupos = Grupo::where('id','like',$user['id'])->orderBy('fecha', 'asc')->get();
+<<<<<<< HEAD
+=======
          $postulacionesPorGrupo = array();
          $preguntasPorGrupo = array();
+>>>>>>> 17010e581bb1652496367717b196737497525ddf
         $notificacionesPorGrupo = array();
 
         if ($mis_grupos != '[]'){
@@ -289,6 +292,11 @@ class Viajes extends Controller
                     $sumaPreguntas = Pregunta::where('id_viaje','=',$viaje->id_viaje)->whereNull('respuesta')->count() + $sumaPreguntas;
 
                 }
+<<<<<<< HEAD
+                $notificacionesPorGrupo[$grupo->id_grupo] = $sumaPostulaciones + $sumaPreguntas;
+            }
+            return view('viajes.misViajes') -> with('mis_viajes', $mis_grupos)
+=======
                  $postulacionesPorGrupo[$grupo->id_grupo] = $sumaPostulaciones;
                  $preguntasPorGrupo[$grupo->id_grupo] = $sumaPreguntas;
                 $notificacionesPorGrupo[$grupo->id_grupo] = $sumaPostulaciones + $sumaPreguntas;
@@ -296,6 +304,7 @@ class Viajes extends Controller
             return view('viajes.misViajes') -> with('mis_viajes', $mis_grupos)
              ->with('postulacionesPorGrupo',$postulacionesPorGrupo)
              ->with('preguntasPorGrupo',$preguntasPorGrupo);
+>>>>>>> 17010e581bb1652496367717b196737497525ddf
             ->with('notificacionesPorGrupo',$notificacionesPorGrupo);
         } else {
             return redirect('/home')->with('info', 'sinViajes');
