@@ -57,6 +57,12 @@ class GruposController extends Viajes
 
     public function modificarGrupo($id)
     {
+        
+        $f0 = Carbon::today();
+
+        $f1 = Carbon::today();
+
+        $f1 -> addDays(30);
         $viaje = Grupo::find($id);
         $suma = $this->grupoTienePostulacion($viaje);
         if($suma == 0){
@@ -64,7 +70,9 @@ class GruposController extends Viajes
             $vehiculos = parent::vehiculosUsuario();
             return view('viajes.modificarViaje')->with('viaje',$viaje)
             ->with('vehiculos',$vehiculos)
-            ->with('hora',$hora);
+            ->with('hora',$hora)
+            ->with('f0',$f0)
+            ->with('f1',$f1);
         }else{
             return redirect("/viajes/misViajes")->with('error', 'El viaje ya tiene postulaciones aceptadas y no se puede modificar');
         }

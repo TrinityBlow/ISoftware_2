@@ -72,12 +72,7 @@ class AppServiceProvider extends ServiceProvider
             }
         });
 
-        view()->composer('viajes.misViajes',function($view){
-            $user = Auth::user();
-            if($user){
-                $view->with('postulaciones',$this->postulaciones())->with('preguntas',$this->preguntas());
-            }
-        });
+
     }
 
     /**
