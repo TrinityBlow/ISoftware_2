@@ -29,6 +29,8 @@ class PostulacionesController extends Controller
                 'estado_postulacion' => 'pendiente',
                 'calificacion_viajero' => null,
                 'calificacion_viaje' => null,
+                'comentario_viajero' => null,
+                'comentario_viaje' => null,
                 'id' => $user->id,
                 'id_viaje' => $id,
             ]);
@@ -45,7 +47,6 @@ class PostulacionesController extends Controller
                 $postulacionBorrar->delete();
             }
         }
-        // return redirect('/viajes/verDetallesViaje/'.$id);
         return redirect()->back()->with('mensajeSuccess', '¡La postulación ha sido cancelada correctamente!');
     }
 
@@ -59,7 +60,6 @@ class PostulacionesController extends Controller
                 $postulacionBorrar->delete();
             }
         }
-        // return redirect('/viajes/verDetallesViaje/'.$data->id_viaje);
         return redirect()->back()->with('mensajeSuccess', '¡La postulación ha sido rechazada correctamente!');
     }
 
@@ -128,6 +128,7 @@ class PostulacionesController extends Controller
         if($postulacion->count()){
             if($postulacion->estado_postulacion == 'aceptado'){
                 // Codigo de reputacion.
+                $postulacion->comentario_viaje = $data->comentario;
                 $postulacion->calificacion_viaje = $data->calificacion;
                 $postulacion->save();
             }
@@ -141,6 +142,7 @@ class PostulacionesController extends Controller
         if($postulacion->count()){
             if($postulacion->estado_postulacion == 'aceptado'){
                 // Codigo de reputacion.
+                $postulacion->comentario_viajero = $data->comentario;
                 $postulacion->calificacion_viajero = $data->calificacion;
                 $postulacion->save();
             }
@@ -153,5 +155,12 @@ class PostulacionesController extends Controller
         $user = Auth::user(); 
         $viajeros = Postulacion::where('id','!=',$user->id)->where('id_viaje','=',$id)->where('estado_postulacion','=','aceptado');
         return view('postulaciones.calificarViajeros')->with('viajeros',$viajeros->get());
+    }
+
+    public function verCalificaciones($id)
+    {
+        $user = Auth::user(); 
+        $calificaciones = Postulacion::where('id','!=',$user->id)->where('id_viaje','=',$id)->whereNotNull('calificacion_viaje');
+        return view('postulaciones.calificacionViajeros')->with('calificaciones',$calificaciones->get());
     }
 }

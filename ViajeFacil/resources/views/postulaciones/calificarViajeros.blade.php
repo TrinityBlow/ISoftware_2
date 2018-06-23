@@ -36,13 +36,17 @@
                                 Malo
                             </label>
                         </div>
+                        <div class="form-group mt-3">
+                            <textarea type="text" class="form-control" rows="3" name="comentario" placeholder="Escribe tu comentario aquí... (Opcional)"></textarea>
+                        </div>
 
-                        <button type="submit" class="btn btn-primary mt-3">Calificar</button>
+                        <button type="submit" class="btn btn-primary">Calificar</button>
 
                     </form>
 
                 @else
-                    <strong>Viajero calificado</strong>
+                    <p>Mi calificación: @if ($viajero->calificacion_viajero == 1) Bueno @elseif ($viajero->calificacion_viajero == 0) Neutral @else Malo @endif</p>
+                    @if (!is_null($viajero->comentario_viajero)) <p>Mi comentario: "{{ $viajero->comentario_viajero }}"</p> @endif
                 @endif
             </div>
         </div>

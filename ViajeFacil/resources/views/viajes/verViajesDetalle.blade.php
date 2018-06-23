@@ -46,10 +46,21 @@
 												@endif
 											</div>
 										@else
-											<strong>Viaje finalizado</strong>
-											<a href="/postulaciones/verViajeros/{{ $viaje->id_viaje }}" class="btn btn-primary btn-sm">
-												Calificar viajeros
-											</a>
+											<div class="row no-gutters">
+												<div class="col-4 pl-1 pr-1 text-center">
+													<strong>Viaje finalizado</strong>
+												</div>
+												<div class="col-4 pl-1 pr-1">
+													<a href="/postulaciones/verViajeros/{{ $viaje->id_viaje }}" class="btn btn-primary btn-sm btn-block">
+														Calificar viajeros
+													</a>
+												</div>
+												<div class="col-4 pl-1 pr-1">
+													<a href="/postulaciones/verCalificaciones/{{ $viaje->id_viaje }}" class="btn btn-info btn-sm btn-block">
+														Ver calificaciones
+													</a>
+												</div>
+											</div>
 										@endif
 									</div>
 								</td>

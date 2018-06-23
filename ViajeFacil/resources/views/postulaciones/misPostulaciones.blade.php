@@ -36,21 +36,10 @@
                                                 <a href="/viajes/verDetallesViaje/{{ $postulacion->id_viaje->id_viaje }}" class="btn btn-info btn-sm">
                                                     Ver detalles del viaje
                                                 </a>
-                                                {{--
-                                                @if($postulacion->estado_postulacion == 'pendiente')
-                                                    <a href="/viajes/cancelarPostulacion/{{ $postulacion->id_viaje->id_viaje }}" class="btn btn-warning btn-sm">
-                                                        Cancelar postulación
-                                                    </a>
-                                                @elseif($postulacion->estado_postulacion == 'aceptado')
-                                                    <a href="/viajes/rechazarPostulacionViajante/{{ $postulacion->id_viaje->id_viaje }}" class="btn btn-warning btn-sm">
-                                                        Rechazar viaje
-                                                    </a>
-                                                @endif
-                                                --}}
                                             @else
                                                 <strong>Viaje finalizado</strong>
-                                                @if(is_null($postulacion->calificacion_viaje)&&($postulacion->estado_postulacion == 'aceptado'))
-                                                    <button class="btn btn-primary btn-sm" data-id="{{$postulacion->id_viaje->id_viaje}}" data-toggle="modal" data-target="#myModal">
+                                                @if($postulacion->estado_postulacion == 'aceptado')
+                                                    <button class="btn btn-primary btn-sm" data-id="{{ $postulacion }}" data-toggle="modal" data-target="#myModal">
                                                         Calificar viaje
                                                     </button>
                                                 @endif
@@ -81,32 +70,49 @@
             <form method="POST" action="/postulaciones/calificarViaje">
                 @csrf
                 <div class="modal-body">
-                    ¿Cómo calificaría el viaje?
-                    <input type="hidden" id="id_modal" name="id_viaje" value="">
+                    <input type="hidden" id="id_modal" name="postulacion" value="">
 
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="calificacion" value="1">
-                        <label class="form-check-label" for="calificacion">
-                            Bueno
-                        </label>
+                    @if (is_null($postulacion->calificacion_viaje))
+                        ¿Cómo calificaría el viaje?
+                        <input type="hidden" name="id_viaje" value={{ $postulacion->id_viaje->id_viaje }}>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="calificacion" value="1">
+                            <label class="form-check-label" for="calificacion">
+                                Bueno
+                            </label>
+                            </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="calificacion" value="0" checked>
+                            <label class="form-check-label" for="calificacion">
+                                Neutral
+                            </label>
                         </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="calificacion" value="0" checked>
-                        <label class="form-check-label" for="calificacion">
-                            Neutral
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="calificacion" value="-1">
-                        <label class="form-check-label" for="calificacion">
-                            Malo
-                        </label>
-                    </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="calificacion" value="-1">
+                            <label class="form-check-label" for="calificacion">
+                                Malo
+                            </label>
+                        </div>
+                        <div class="form-group mt-3">
+                            <textarea type="text" class="form-control" rows="3" name="comentario" placeholder="Escribe tu comentario aquí... (Opcional)"></textarea>
+                        </div>
+                    @else
+                        <p>Mi calificación: @if ($postulacion->calificacion_viaje == 1) Bueno @elseif ($postulacion->calificacion_viaje == 0) Neutral @else Malo @endif</p>
+                        @if (!is_null($postulacion->comentario_viaje)) <p>Mi comentario: "{{ $postulacion->comentario_viaje }}"</p> @endif
+                        <hr>
+                        @if (!is_null($postulacion->calificacion_viajero))
+                            <p>Su calificación: @if ($postulacion->calificacion_viajero == 1) Bueno @elseif ($postulacion->calificacion_viajero == 0) Neutral @else Malo @endif</p>
+                            @if (!is_null($postulacion->comentario_viajero)) <p>Su comentario: "{{ $postulacion->comentario_viajero }}"</p> @endif
+                        @endif
+                    @endif
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Calificar</button>
+                    @if (is_null($postulacion->calificacion_viaje))
+                        <button type="submit" class="btn btn-primary">Calificar</button>
+                    @endif
                 </div>
             </form>
         </div>
