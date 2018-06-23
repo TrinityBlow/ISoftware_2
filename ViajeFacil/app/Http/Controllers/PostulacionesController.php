@@ -27,7 +27,8 @@ class PostulacionesController extends Controller
         if(!Postulacion::where('id','=',$user->id)->where('id_viaje','=',$id)->get()->count()){
             $nueva_postulacion = Postulacion::create([
                 'estado_postulacion' => 'pendiente',
-                'calificacion_viajero' => 0,
+                'calificacion_viajero' => null,
+                'calificacion_viaje' => null,
                 'id' => $user->id,
                 'id_viaje' => $id,
             ]);
@@ -126,9 +127,31 @@ class PostulacionesController extends Controller
         $postulacion = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$data->id_viaje)->firstOrFail();
         if($postulacion->count()){
             if($postulacion->estado_postulacion == 'aceptado'){
-                // Codigo de calificacion.
+                // Codigo de reputacion.
+                $postulacion->calificacion_viaje = $data->calificacion;
+                $postulacion->save();
             }
         }
         return redirect()->back()->with('mensajeSuccess', '¡La calificación ha sido registrada correctamente!');
+    }
+
+    public function calificarViajero(Request $data)
+    {
+        $postulacion = Postulacion::where('id','=',$data->id)->where('id_viaje','=',$data->id_viaje)->firstOrFail();
+        if($postulacion->count()){
+            if($postulacion->estado_postulacion == 'aceptado'){
+                // Codigo de reputacion.
+                $postulacion->calificacion_viajero = $data->calificacion;
+                $postulacion->save();
+            }
+        }
+        return redirect()->back()->with('mensajeSuccess', '¡La calificación ha sido registrada correctamente!');
+    }
+
+    public function verViajeros($id)
+    {
+        $user = Auth::user(); 
+        $viajeros = Postulacion::where('id','!=',$user->id)->where('id_viaje','=',$id)->where('estado_postulacion','=','aceptado');
+        return view('postulaciones.calificarViajeros')->with('viajeros',$viajeros->get());
     }
 }

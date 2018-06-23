@@ -47,6 +47,9 @@
 											</div>
 										@else
 											<strong>Viaje finalizado</strong>
+											<a href="/postulaciones/verViajeros/{{ $viaje->id_viaje }}" class="btn btn-primary btn-sm">
+												Calificar viajeros
+											</a>
 										@endif
 									</div>
 								</td>

@@ -19,7 +19,6 @@ class Viaje extends Model
         'precio',
         'tipo_viaje',
         'estado_viaje',
-        'reputacion_viaje',
         'id_vehiculo',
         'id',
     ];

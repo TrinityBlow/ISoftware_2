@@ -65,11 +65,15 @@ Route::get('/postulaciones/misPostulaciones','PostulacionesController@misPostula
 
 Route::post('/postulaciones/calificarViaje','PostulacionesController@calificarViaje');
 
+Route::get('/postulaciones/verViajeros/{id}','PostulacionesController@verViajeros');
+
+Route::post('/postulaciones/calificarViajero','PostulacionesController@calificarViajero');
+
 Route::get('/viajes/misViajes','Viajes@misViajes')->name('misViajes');
 
-Route::get('/viajes/modificarViaje/{id}','GruposController@modificarGrupo');
+Route::get('/viajes/modificarViaje/{id}','GruposController@modificarGrupoId');
 
-Route::post('/viajes/modificarViaje','GruposController@modificarGrupoId');
+Route::post('/viajes/modificarViaje','GruposController@modificarGrupo');
 
 Route::post('/viajes/eliminarViaje','GruposController@eliminarGrupo');
 
