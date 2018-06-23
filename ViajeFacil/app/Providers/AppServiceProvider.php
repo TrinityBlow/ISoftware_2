@@ -71,8 +71,6 @@ class AppServiceProvider extends ServiceProvider
                 $view->with('postulaciones',$this->postulaciones())->with('preguntas',$this->preguntas());
             }
         });
-
-
     }
 
     /**

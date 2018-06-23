@@ -226,7 +226,8 @@ class Viajes extends Controller
 
     public function misViajes()
     {
-        $today = Carbon::today();
+        $today = Carbon::now();
+
         $user = Auth::user();
         $mis_grupos = Grupo::where('id','like',$user['id'])->orderBy('fecha', 'asc')->get();
         $notificacionesPorGrupo = array();
@@ -248,7 +249,6 @@ class Viajes extends Controller
                 {
                     $sumaPostulaciones = Postulacion::where('id_viaje','=',$viaje->id_viaje)->where('estado_postulacion','=','pendiente')->count() + $sumaPostulaciones;
                     $sumaPreguntas = Pregunta::where('id_viaje','=',$viaje->id_viaje)->whereNull('respuesta')->count() + $sumaPreguntas;
-
                 }
                 $notificacionesPorGrupo[$grupo->id_grupo] = $sumaPostulaciones + $sumaPreguntas;
             }
@@ -262,16 +262,12 @@ class Viajes extends Controller
 /*
     public function misViajes2()
     {
-        $today = Carbon::today();
+        $today = Carbon::now();
 
         $user = Auth::user();
         $mis_grupos = Grupo::where('id','like',$user['id'])->orderBy('fecha', 'asc')->get();
-<<<<<<< HEAD
-=======
-         $postulacionesPorGrupo = array();
-         $preguntasPorGrupo = array();
->>>>>>> 17010e581bb1652496367717b196737497525ddf
-        $notificacionesPorGrupo = array();
+        $postulacionesPorGrupo = array();
+        $preguntasPorGrupo = array();
 
         if ($mis_grupos != '[]'){
             foreach($mis_grupos as $grupo)
@@ -290,22 +286,13 @@ class Viajes extends Controller
                 {
                     $sumaPostulaciones = Postulacion::where('id_viaje','=',$viaje->id_viaje)->where('estado_postulacion','=','pendiente')->count() + $sumaPostulaciones;
                     $sumaPreguntas = Pregunta::where('id_viaje','=',$viaje->id_viaje)->whereNull('respuesta')->count() + $sumaPreguntas;
-
                 }
-<<<<<<< HEAD
-                $notificacionesPorGrupo[$grupo->id_grupo] = $sumaPostulaciones + $sumaPreguntas;
+                $postulacionesPorGrupo[$grupo->id_grupo] = $sumaPostulaciones;
+                $preguntasPorGrupo[$grupo->id_grupo] = $sumaPreguntas;
             }
             return view('viajes.misViajes') -> with('mis_viajes', $mis_grupos)
-=======
-                 $postulacionesPorGrupo[$grupo->id_grupo] = $sumaPostulaciones;
-                 $preguntasPorGrupo[$grupo->id_grupo] = $sumaPreguntas;
-                $notificacionesPorGrupo[$grupo->id_grupo] = $sumaPostulaciones + $sumaPreguntas;
-            }
-            return view('viajes.misViajes') -> with('mis_viajes', $mis_grupos)
-             ->with('postulacionesPorGrupo',$postulacionesPorGrupo)
-             ->with('preguntasPorGrupo',$preguntasPorGrupo);
->>>>>>> 17010e581bb1652496367717b196737497525ddf
-            ->with('notificacionesPorGrupo',$notificacionesPorGrupo);
+            ->with('postulacionesPorGrupo',$postulacionesPorGrupo)
+            ->with('preguntasPorGrupo',$preguntasPorGrupo);
         } else {
             return redirect('/home')->with('info', 'sinViajes');
         }
@@ -351,11 +338,10 @@ class Viajes extends Controller
         $postulaciones = Postulacion::where('id_viaje','=',$id)->get();
         foreach ($postulaciones as $postulacion)
         {
-            Postulacion::find($postulacion->id_postulacion)->delete();
-             if ($postulacion->estado_postulacion == 'pendiente'){
-                 $postulacion->estado_postulacion = 'rechazado';
+            if ($postulacion->estado_postulacion == 'pendiente'){
+                $postulacion->estado_postulacion = 'rechazado';
                  $postulacion->save();
-             }
+            }
         }
 
         $preguntas = Pregunta::where('id_viaje','=',$id)->get();
@@ -364,9 +350,8 @@ class Viajes extends Controller
             Pregunta::find($pregunta->id_pregunta)->delete();
         }
 
-        DB::table('viajes')->where('id_viaje', '=', $mi_viaje->id_viaje)->delete();
-         $mi_viaje->estado_viaje = 'eliminado';
-         $mi_viaje->save();
+        $mi_viaje->estado_viaje = 'eliminado';
+        $mi_viaje->save();
     }
 */
 

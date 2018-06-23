@@ -103,7 +103,7 @@ class GruposController extends Viajes
             ->with('vehiculos',$vehiculos)
             ->with('f0',$f0)
             ->with('f1',$f1);
-        }else{
+        } else {
             return redirect('/viajes/misViajes')->with('mensajeDanger', '¡El viaje seleccionado no puede ser modificado! Tiene postulaciones aceptadas/pendientes para viajar y/o tiene viajes sin finalizar.');
         }
     }
