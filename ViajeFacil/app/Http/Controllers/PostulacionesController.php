@@ -45,7 +45,6 @@ class PostulacionesController extends Controller
                 $postulacionBorrar->delete();
             }
         }
-        // return redirect('/viajes/verDetallesViaje/'.$id);
         return redirect()->back()->with('mensajeSuccess', '¡La postulación ha sido cancelada correctamente!');
     }
 
@@ -55,11 +54,14 @@ class PostulacionesController extends Controller
         $postulacionBorrar = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$data->id_viaje)->firstOrFail();
         if($postulacionBorrar->count()){
             if($postulacionBorrar->estado_postulacion == 'aceptado'){
-                // Codigo de bajar reputacion.
+                $user->reputacion = $user->reputacion - 1;
+                if ($user->reputacion == -1) {
+                    $user->reputacion = 0;
+                }
+                $user->save();
                 $postulacionBorrar->delete();
             }
         }
-        // return redirect('/viajes/verDetallesViaje/'.$data->id_viaje);
         return redirect()->back()->with('mensajeSuccess', '¡La postulación ha sido rechazada correctamente!');
     }
 
@@ -97,6 +99,11 @@ class PostulacionesController extends Controller
         } elseif ($data->action == 'rechazar') {
             $postulacionUpdate = Postulacion::where('id','=',$data->postulado_id)->where('id_viaje','=',$id_viaje)->first();
             if($postulacionUpdate->count()){
+                $user->reputacion = $user->reputacion - 1;
+                if ($user->reputacion == -1) {
+                    $user->reputacion = 0;
+                }
+                $user->save();
                 $postulacionUpdate->estado_postulacion = 'rechazado';
                 $postulacionUpdate->save();
             }
@@ -127,7 +134,13 @@ class PostulacionesController extends Controller
         $postulacion = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$data->id_viaje)->firstOrFail();
         if($postulacion->count()){
             if($postulacion->estado_postulacion == 'aceptado'){
-                // Codigo de reputacion.
+                $viaje = Viaje::find($data->id_viaje);
+                $creador = User::find($viaje->id);
+                $creador->reputacion = $creador->reputacion + $data->calificacion;
+                if ($creador->reputacion == -1) {
+                    $creador->reputacion = 0;
+                }
+                $creador->save();
                 $postulacion->calificacion_viaje = $data->calificacion;
                 $postulacion->save();
             }
@@ -140,7 +153,12 @@ class PostulacionesController extends Controller
         $postulacion = Postulacion::where('id','=',$data->id)->where('id_viaje','=',$data->id_viaje)->firstOrFail();
         if($postulacion->count()){
             if($postulacion->estado_postulacion == 'aceptado'){
-                // Codigo de reputacion.
+                $viajero = User::find($postulacion->id);
+                $viajero->reputacion = $viajero->reputacion + $data->calificacion;
+                if ($viajero->reputacion == -1) {
+                    $viajero->reputacion = 0;
+                }
+                $viajero->save();
                 $postulacion->calificacion_viajero = $data->calificacion;
                 $postulacion->save();
             }

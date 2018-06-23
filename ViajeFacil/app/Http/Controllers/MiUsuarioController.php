@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Vehiculo;
 use App\Registra;
+use App\Grupo;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -124,6 +126,26 @@ class MiUsuarioController extends Controller
         $user->password = Hash::make($data['password']);
         $user->update();
         return redirect('/mi_usuario')->with('mensajeSuccess','¡La contraseña ha sido modificada correctamente!');
+    }
+
+    public function eliminarUsuario()
+    {
+        $user = Auth::user();
+        $mis_grupos = Grupo::where('id','=',$user->id)->get();
+        $grupoControl = new GruposController; 
+        foreach ($mis_grupos as $grupo) {
+            $data = new Request;
+            $data['id_grupo'] = $grupo->id_grupo;
+            $grupoControl->eliminarGrupo($data);
+          //  GruposController::eliminarMiGrupoStatic($grupo->id_grupo);
+        }
+        $mis_vehiculos = Registra::where('id','=',$user->id)->get();
+        foreach ($mis_vehiculos as $vehiculo) {
+            DB::table('registra')->where('id_vehiculo', '=', $vehiculo->id_vehiculo)->delete();
+            DB::table('vehiculos')->where('id_vehiculo', '=', $vehiculo->id_vehiculo)->delete();
+        }
+        $user->delete();
+        return redirect('/')->with('mensajeSuccess','Usted se ha dado de baja del sistema satisfactoriamente. Lamentamos su perdida. Antes reclamos y críticas: facundolopezosornio@viajefacil.com');
     }
     
     /*

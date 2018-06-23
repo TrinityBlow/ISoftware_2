@@ -35,6 +35,8 @@ Route::get('/mi_usuario/verPassword','MiUsuarioController@verPassword');
 
 Route::post('/mi_usuario/cambiarPassword','MiUsuarioController@cambiarPassword');
 
+Route::get('/mi_usuario/eliminar_usuario','MiUsuarioController@eliminarUsuario');
+
 Route::get('/viajes/buscarViajes','Viajes@buscarViajes')->name('buscarViajes');
 
 Route::get('/viajes/verDetallesGrupo/{id_grupo}','GruposController@verDetallesGrupo');

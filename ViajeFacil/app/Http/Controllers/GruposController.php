@@ -96,7 +96,7 @@ class GruposController extends Viajes
             $f0 -> addDays(1);
             $f1 = Carbon::today();
             $f1 -> addDays(30);
-            $viaje->precio = $viaje->precio / 110 * 100;
+            $viaje->precio = ceil($viaje->precio / 110) * 100;
             $vehiculos = parent::vehiculosUsuario();
             return view('viajes.modificarViaje')
             ->with('viaje',$viaje)
@@ -164,11 +164,32 @@ class GruposController extends Viajes
         }
         return false;
     }
+
+    public static function eliminarMiGrupoStatic($id_grupo){
+        $data = new Request;
+        $data['id_grupo'] = $id_grupo;
+        $this->eliminarGrupo($data);
+    }
     
     public function eliminarGrupo(Request $data)
     {
         $grupo = Grupo::find($data->id_grupo);
-        if ((!$this->tienePostulacionesAceptadas($grupo)) && (!$this::tieneViajesSinFinalizar($grupo))){
+        $user = Auth::user();
+        if ($this->tienePostulacionesAceptadas($grupo)) {
+            $user->reputacion = $user->reputacion - 1;
+            $user->save();
+        }
+        $grupos_viaje = GruposViaje::where('id_grupo', '=', $data->id_grupo);
+        foreach ($grupos_viaje->get() as $dato)
+        {
+             parent::eliminarViaje($dato->id_viaje);
+        }
+        $grupos_viaje->delete();
+        $grupo->delete();
+        return redirect('/viajes/misViajes')->with('mensajeSuccess', '¡El viaje ha sido eliminado correctamente!');
+
+        
+        /*if ((!$this->tienePostulacionesAceptadas($grupo)) && (!$this::tieneViajesSinFinalizar($grupo))){
             $grupos_viaje = GruposViaje::where('id_grupo', '=', $data->id_grupo);
             foreach ($grupos_viaje->get() as $dato)
             {
@@ -176,11 +197,12 @@ class GruposController extends Viajes
             }
             $grupos_viaje->delete();
             $grupo->delete();
-
             return redirect('/viajes/misViajes')->with('mensajeSuccess', '¡El viaje ha sido eliminado correctamente!');
+
         } else {
             return redirect('/viajes/misViajes')->with('mensajeDanger', '¡El viaje seleccionado no puede ser eliminado! Tiene postulaciones aceptadas para viajar y/o tiene viajes sin finalizar.');
         }
+        }*/
     }
 
     public function verViajesDetalle($id_grupo)

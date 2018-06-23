@@ -39,7 +39,7 @@
                     @endif
                 </div>
                 <div class="col">
-                    <h5 class="text-right">Reputación: 0</h5>
+                    <h5 class="text-right">Reputación: {{ $usuario_creador -> reputacion }}</h5>
                 </div>
             </div>
         </div>
