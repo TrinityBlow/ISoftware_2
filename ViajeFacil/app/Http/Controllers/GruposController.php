@@ -25,17 +25,6 @@ class GruposController extends Viajes
         $this->middleware('auth');  
     }
 
-    protected function grupoTienePostulacion($mi_grupo){
-        $postulacionesViajes = array();
-        $relacionDelGrupo = GruposViaje::where('id_grupo','=',$mi_grupo->id_grupo)->get();
-        $suma = 0;
-        foreach($relacionDelGrupo as $relacion)
-        {
-            $suma = Postulacion::where('id_viaje','=',$relacion->id_viaje)->where('estado_postulacion','=','aceptado')->count() + $suma;
-        }
-        return $suma;
-    }
-
     public function verDetallesGrupo($id_grupo)
     {
     	$user = Auth::user();
@@ -55,62 +44,104 @@ class GruposController extends Viajes
         ->with('viajes',$mis_viajes);
     }
 
-    public function modificarGrupo($id)
+    private function tienePostulaciones($grupo)
+    {
+        $today = Carbon::now();
+        $relacionDelGrupo = GruposViaje::where('id_grupo','=',$grupo->id_grupo)->get();
+
+        foreach($relacionDelGrupo as $relacion)
+        {
+            $viaje = Viaje::where('id_viaje','=',$relacion->id_viaje)->where('fecha','>',$today)->first();
+            if (!is_null($viaje)){
+                $tiene_postulacion = Postulacion::where('id_viaje','=',$relacion->id_viaje)
+                                                ->where(function ($query) {
+                                                    $query->where('estado_postulacion','=','aceptado')
+                                                          ->orWhere('estado_postulacion','=','pendiente');
+                                                })
+                                                ->first();
+                if (!is_null($tiene_postulacion)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private function tieneViajesSinFinalizar($grupo)
+    {
+        $today = Carbon::now();
+        $relacionDelGrupo = GruposViaje::where('id_grupo','=',$grupo->id_grupo)->get();
+
+        foreach($relacionDelGrupo as $relacion)
+        {
+            $sin_finalizar = Viaje::where('id_viaje','=',$relacion->id_viaje)->where('fecha','<',$today)->whereNull('estado_viaje')->first();
+            if (!is_null($sin_finalizar)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function modificarGrupoId($id)
     {
         $viaje = Grupo::find($id);
-        $suma = $this->grupoTienePostulacion($viaje);
-        if($suma == 0){
-            $hora = explode(' ',$viaje->fecha)[1];
+        if ((!$this->tienePostulaciones($viaje)) && (!$this->tieneViajesSinFinalizar($viaje))){
+            $f0 = Carbon::today();
+            $f0 -> addDays(1);
+            $f1 = Carbon::today();
+            $f1 -> addDays(30);
+            $viaje->precio = $viaje->precio / 110 * 100;
             $vehiculos = parent::vehiculosUsuario();
-            return view('viajes.modificarViaje')->with('viaje',$viaje)
+            return view('viajes.modificarViaje')
+            ->with('viaje',$viaje)
             ->with('vehiculos',$vehiculos)
-            ->with('hora',$hora);
-        }else{
-            return redirect("/viajes/misViajes")->with('error', 'El viaje ya tiene postulaciones aceptadas y no se puede modificar');
+            ->with('f0',$f0)
+            ->with('f1',$f1);
+        } else {
+            return redirect('/viajes/misViajes')->with('mensajeDanger', '¡El viaje seleccionado no puede ser modificado! Tiene postulaciones aceptadas/pendientes para viajar y/o tiene viajes sin finalizar.');
         }
     }
 
-    public function modificarGrupoId(Request $data)
+    public function modificarGrupo(Request $data)
     {
         $mi_grupo = Grupo::find($data['id_grupo']);
 
-        
-
-        $suma = $this->grupoTienePostulacion($mi_grupo);
-
-        if($suma == 0){
+        if ((!$this->tienePostulaciones($mi_grupo)) && (!$this->tieneViajesSinFinalizar($mi_grupo))){
             $mi_grupo->titulo = $data->input('titulo');
             $mi_grupo->origen = $data->input('origen');
             $mi_grupo->destino = $data->input('destino');
+            $data['fecha'] = new Carbon($data->input('fecha') . $data->input('hora'));
+            $data['precio'] = $data->input('precio') * 1.1;
 
+            $grupos_viaje = GruposViaje::where('id_grupo', '=', $data['id_grupo']);
             if (($mi_grupo->fecha != $data->fecha) || ($mi_grupo->tipo_viaje != $data->tipo_viaje)){
-                $grupos_viaje = GruposViaje::where('id_grupo', '=', $data['id_grupo']);
                 foreach ($grupos_viaje->get() as $dato)
                 {
                     parent::eliminarViaje($dato->id_viaje);
                 }
                 $grupos_viaje->delete();
                 parent::createViajes($data);
+            } else {
+                foreach ($grupos_viaje->get() as $dato)
+                {
+                    parent::modificarViaje($dato->id_viaje, $data);
+                }
             }
 
-            $date = explode('-',$data->fecha);
-            $carbonDate = Carbon::createFromDate($date[0],$date[1],$date[2]);
-            $carbonDate->setTimeFromTimeString($data->hora);
-            $date = date_create($carbonDate);
-            $mi_grupo->fecha = $date;
-            $mi_grupo->precio = $data->input('precio') * 1.1;
+            $mi_grupo->fecha = $data['fecha'];
+            $mi_grupo->precio = $data['precio'];
             $mi_grupo->tipo_viaje = $data->input('tipo_viaje');
+            $mi_grupo->id_vehiculo = $data->input('id_vehiculo');
 
             $mi_grupo->save();
 
-            return redirect("/viajes/misViajes")->with('mensaje', '¡El viaje ha sido modificado correctamente!');
-        }else{
-            return redirect("/viajes/misViajes")->with('error', 'El viaje ya tiene postulaciones aceptadas y no se puede modificar');
+            return redirect('/viajes/misViajes')->with('mensajeSuccess', '¡El viaje ha sido modificado correctamente!');
+        } else {
+            return redirect('/viajes/misViajes')->with('mensajeDanger', '¡El viaje seleccionado no puede ser modificado! Tiene postulaciones aceptadas/pendientes para viajar y/o tiene viajes sin finalizar.');
         }
-
     }
 
-    public function tienePostulacionesAceptadas($grupo)
+    private function tienePostulacionesAceptadas($grupo)
     {
         $today = Carbon::now();
         $relacionDelGrupo = GruposViaje::where('id_grupo','=',$grupo->id_grupo)->get();
@@ -131,7 +162,7 @@ class GruposController extends Viajes
     public function eliminarGrupo(Request $data)
     {
         $grupo = Grupo::find($data->id_grupo);
-        if ((!$this->tienePostulacionesAceptadas($grupo)) && (!parent::tieneViajesSinFinalizar($grupo))){
+        if ((!$this->tienePostulacionesAceptadas($grupo)) && (!$this::tieneViajesSinFinalizar($grupo))){
             $grupos_viaje = GruposViaje::where('id_grupo', '=', $data->id_grupo);
             foreach ($grupos_viaje->get() as $dato)
             {
