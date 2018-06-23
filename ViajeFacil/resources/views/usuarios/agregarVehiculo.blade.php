@@ -10,7 +10,7 @@
                     <form method="POST" action="/vehiculo/agregarVehiculo">
                         @csrf
 
-                        <div class="text-center mb-6">
+                        <div class="text-center">
 
                         <div class="form-group row">
                             <label for="patente" class="col-md-4 col-form-label text-md-right">{{ __('Patente') }}</label>
@@ -58,7 +58,7 @@
                             <label for="cantidad_asientos" class="col-md-4 col-form-label text-md-right">{{ __('Cantidad de asientos') }}</label>
 
                             <div class="col-md-6">
-                                <input id="cantidad_asientos" type="number" min="1" class="form-control{{ $errors->has('cantidad_asientos') ? ' is-invalid' : '' }}" name="cantidad_asientos" value="{{ old('cantidad_asientos') }}" required>
+                                <input id="cantidad_asientos" type="number" min="1" max="50" class="form-control{{ $errors->has('cantidad_asientos') ? ' is-invalid' : '' }}" name="cantidad_asientos" value="{{ old('cantidad_asientos') }}" required>
 
                                 @if ($errors->has('cantidad_asientos'))
                                     <span class="invalid-feedback">
@@ -79,6 +79,8 @@
                                     </button>
                                 </a>
                             </div>
+                        </div>
+
                         </div>
 
                     </form>

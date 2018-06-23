@@ -8,6 +8,9 @@
         <div class="card-body">
             <form method="POST" action="/viajes/modificarViaje">
                 @csrf
+
+                <input type="hidden" name="id_grupo" value={{ $viaje->id_grupo}}>
+
                 <div class="form-group">
                     <label for="titulo" class="control-label">Título:</label>
                     <input type="text" class="form-control" id="titulo" name="titulo" value="{{ $viaje->titulo }}" placeholder="(Opcional)">
@@ -31,12 +34,12 @@
 
                     <div class="form-group col">
                         <label for="fecha" class="control-label">Fecha:</label>
-                        <input type="date" class="form-control" id="fecha" name="fecha" value={{ $viaje->fecha }} required>
+                        <input type="date" class="form-control" id="fecha" name="fecha" value={{ \Carbon\Carbon::parse($viaje->fecha)->format('Y-m-d') }} min={{ $f0 }} max={{ $f1 }} required>
                     </div>
 
                     <div class="form-group col">
                         <label for="hora" class="control-label">Hora:</label>
-                        <input type="time" class="form-control" id="hora" name="hora" value={{ $hora }} required>
+                        <input type="time" class="form-control" id="hora" name="hora" value={{ \Carbon\Carbon::parse($viaje->fecha)->format('H:i') }} required>
                     </div>
 
                 </div>
@@ -72,17 +75,9 @@
                     </select>                   
                 </div>
 
-                <div class="form-group row mb-0">
-                    <div class="col-md-6 offset-md-4">
-                        <button type="submit" class="btn btn-primary">
-                            {{ __('Modificar') }}
-                        </button>
-                        <a href="/viajes/misViajes">                      
-                            <button type="button" class="btn btn-secondary">
-                                {{ __('Cancelar') }}
-                            </button>
-                        </a>
-                    </div>
+                <div class="form-group text-center">
+                        <button type="submit" class="btn btn-primary"> {{ __('Modificar') }} </button>
+                        <a href="/viajes/misViajes" class="btn btn-secondary"> {{ __('Cancelar') }} </a>
                 </div>
 
             </form>

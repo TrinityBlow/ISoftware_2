@@ -1,14 +1,10 @@
 @extends('layouts.layout')
 
 @section('content')
+
 <div class="row justify-content-center">
     <div class="col-md-8">
         
-        @if (session('mensajeCrearViaje'))
-        <div class="alert alert-success">
-            {{ session('mensajeCrearViaje') }}
-        </div>
-        @endif
         <div class="card">
             <div class="card-header">{{ __('Mi usuario') }}</div>
 
@@ -16,18 +12,17 @@
                 <form method="POST" action="/mi_usuario/modificar" enctype="multipart/form-data">
                     @csrf
 
-                    <div class="text-center mb-6">
+                    <div class="text-center">
 
-                    <div class="text-center mb-6 form-group">
-
-                        <img class="rounded" src='/storage/images/{{ Auth::user()->image }}' height="50%" width="50%">
+                    <div class="form-group mb-6 text-center">
+                        <img class="rounded img-thumbnail" src='/storage/images/{{ Auth::user()->image }}' height="auto" width="50%">
 
                         <input id="image" type="file" class="mt-2{{ $errors->has('image') ? ' is-invalid' : '' }}" name="image">
                         
                         @if ($errors->has('image'))
-                        <span class="invalid-feedback">
-                            <strong> Imagen inválida </strong>
-                        </span>
+                            <span class="invalid-feedback">
+                                <strong> Imagen inválida </strong>
+                            </span>
                         @endif
                     </div>
 
@@ -88,20 +83,25 @@
                     </div>
 
                     <div class="form-group row mb-0">
-                        <div class="col-md-6 offset-md-4">
+                        <div class="col-md-10 text-md-right">
                             <button type="submit" class="btn btn-primary">
                                 {{ __('Modificar') }}
                             </button>
+                            <a href="/mi_usuario/verPassword">                      
+                                <button type="button" class="btn btn-info">
+                                    {{ __('Cambiar contraseña') }}
+                                </button>
+                            </a>
                         </div>
+                    </div>
+
                     </div>
 
                 </form>
             </div>
-            
-            </div>
         </div>
 
-        <div class="card mt-2">  
+        <div class="card mt-3">  
 
             <div class="card-header">{{ __('Vehículos') }}</div>
                 <ul class="list-group list-group-flush">
@@ -112,30 +112,40 @@
                             </button>
                         </a>
                     </li>
+                    @if ($mis_vehiculos != null)
                     <li class="list-group-item">
-                        <b> Mis vehículos: </b>
+                        <b> Mis vehículos:</b>
                         <div class="table-responsive mt-2">
-                            <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
-                                <tr>
-                                    <th> Patente </th>
-                                    <th> Marca </th>
-                                    <th> Modelo </th>
-                                    <th> Opciones </th>
-                                </tr>
+                            <table class="table" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th> Patente </th>
+                                        <th> Marca </th>
+                                        <th> Modelo </th>
+                                        <th> Opciones </th>
+                                    </tr>
+                                </div>
+                                <tbody>
                                 @foreach ($mis_vehiculos as $vehiculo)
                                     <tr>
                                         <td> {{ $vehiculo->patente }} </td> 
                                         <td> {{ $vehiculo->marca }} </td>
                                         <td> {{ $vehiculo->modelo }} </td> 
                                         <td>
-                                            <a href="/vehiculos/modificarVehiculo/{{ $vehiculo->id_vehiculo }}" class="btn btn-primary"> Modificar </a> 
-                                            <button class="btn btn-danger" data-id="{{ $vehiculo->id_vehiculo }}" data-toggle="modal" data-target="#eliminarModal"> Eliminar </button>
+                                            <div class="container">
+                                                <div class="row no-gutters">
+                                                    <div class="col pl-1 pr-1"><a href="/vehiculos/modificarVehiculo/{{ $vehiculo->id_vehiculo }}" class="btn btn-primary btn-sm btn-block"> Modificar </a></div>
+                                                    <div class="col pl-1 pr-1"><button class="btn btn-danger btn-sm btn-block" data-id="{{ $vehiculo->id_vehiculo }}" data-toggle="modal" data-target="#myModal"> Eliminar </button></div>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
+                                </div>
                             </table>
                         </div>
                     </li>
+                    @endif
                 </ul>
             </div>
             
@@ -145,7 +155,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="eliminarModal" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">

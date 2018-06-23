@@ -81,7 +81,22 @@
       </div>
     </nav>
 
-    
+
+    @if (session('mensajeSuccess'))
+        <div class="alert alert-success alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {{ session('mensajeSuccess') }}
+        </div>
+    @endif
+
+    @if (session('mensajeDanger'))
+        <div class="alert alert-danger alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {{ session('mensajeDanger') }}
+        </div>
+    @endif
+
+
     <!-- Page Content -->
 
     
@@ -92,19 +107,26 @@
         @auth
         <div class="col-lg-3 col-sm-4">
           
-          <div class="list-group mt-4 ml-4 mr-4">
+          <div class="list-group mt-4 ml-4 mr-4 mb-3">
             
               <a href="{{ URL::route('buscarViajes') }}" class="list-group-item active">Buscar viaje</a>
               <a href="{{ URL::route('crearViaje') }}" class="list-group-item">Crear viaje</a>
-              <a href="{{ URL::route('misViajes') }}" class="list-group-item">Mis viajes</a>        
-              
-              @if( count($postulaciones) > 0)
-              <div class="alert alert-info mt-1 inline">
-                  <strong>Pedido de Postulaciones ({{ $postulaciones->count() }})</strong>
-              </div>
-              @endif
-            
+              <a href="{{ URL::route('misViajes') }}" class="list-group-item">Mis viajes</a>
+              <a href="{{ URL::route('misPostulaciones') }}" class="list-group-item">Mis postulaciones</a>
+
           </div>
+              
+          @if( count($postulaciones) > 0)
+          <div class="alert alert-info mt-2 ml-4 mr-4 inline">
+              <strong>Nuevas postulaciones ({{ $postulaciones->count() }})</strong>
+          </div>
+          @endif
+
+          @if( count($preguntas) > 0)
+          <div class="alert alert-primary mt-2 ml-4 mr-4 inline">
+              <strong>Nuevas preguntas ({{ $preguntas->count() }})</strong>
+          </div>
+          @endif
 
         
         <!-- /.col-lg-3 -->

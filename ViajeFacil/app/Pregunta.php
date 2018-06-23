@@ -4,18 +4,21 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Postulacion extends Model
+class Pregunta extends Model
 {
-    protected $primaryKey = 'id_postulacion';
+    protected $primaryKey = 'id_pregunta';
 
-    protected $table = 'postulaciones';
-    
+    protected $table = 'pregunta';
+
     public $timestamps = false;
 
     protected $fillable = [
-        'estado_postulacion','calificacion_viajero','calificacion_viaje','id','id_viaje',
+        'consigna',
+        'respuesta',
+        'id_viaje',
+        'id',
     ];
-
+    
     public function user()
     {
         return $this->hasOne('App\User','id','id');

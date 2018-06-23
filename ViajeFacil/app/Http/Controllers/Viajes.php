@@ -7,6 +7,7 @@ use App\Vehiculo;
 use App\Registra;
 use App\Viaje;
 use App\Postulacion;
+use App\Pregunta;
 use App\Grupo;
 use App\GruposViaje;
 use App\Configuracion;
@@ -28,16 +29,17 @@ class Viajes extends Controller
     public function crearViaje()
     {        
         $f0 = Carbon::today();
+        $f0 -> addDays(1);
 
         $f1 = Carbon::today();
-
         $f1 -> addDays(30);
 
         $vehiculos = $this->vehiculosUsuario();
-        if(!count($vehiculos)){
-            return redirect('/');
+        if (!count($vehiculos)){
+            return redirect('/home')->with('info', 'sinVehiculos');
         }
-        return view('viajes.crearViaje')->with('vehiculos',$vehiculos)
+        return view('viajes.crearViaje')
+        ->with('vehiculos',$vehiculos)
         ->with('f0',$f0)
         ->with('f1',$f1);
     }
@@ -46,23 +48,30 @@ class Viajes extends Controller
     {
         $user = Auth::user();
         $viaje = Viaje::find($id);
+        $vehiculo = Vehiculo::find($viaje->id_vehiculo);
+        $viaje['precio'] = $viaje->precio / $vehiculo->cantidad_asientos;
         $usuario_creador = User::find($viaje['id']);
         $tiene_postulacion = Postulacion::where('id','=',$user->id)->where('id_viaje','=',$viaje->id_viaje)->first();
+        $preguntas = Pregunta::where('id_viaje','=',$viaje->id_viaje)->get();
+        foreach ($preguntas as $pregunta)
+        {
+            $pregunta['id'] = User::find($pregunta->id);
+        }
         return view('viajes.verDetallesViaje')
         ->with('usuario_creador',$usuario_creador)
         ->with('viaje',$viaje)
-        ->with('postulacion',$tiene_postulacion);
+        ->with('vehiculo',$vehiculo)
+        ->with('postulacion',$tiene_postulacion)
+        ->with('preguntas',$preguntas);
     }
 
     public function buscarViajes(Request $data)
     {
-
         /* Carbon es un paquete de Laravel que permite hacer todo tipo de operaciones con fechas */ 
         
         $f0 = Carbon::today();
 
         $f1 = Carbon::today();
-
         $f1 -> addDays(30);
 
         $viajes = (new Grupo)->newQuery();
@@ -84,10 +93,16 @@ class Viajes extends Controller
         }
         if (!is_null($data->fecha2)){
             $viajes->whereBetween('fecha', [$f0, $data['fecha2']]);
-        } elseif ((is_null($data['fecha1'])) and (is_null($data['fecha2']))) {
+        } elseif ((is_null($data['fecha1'])) and (is_null($data['fecha2']))){
             $viajes->whereBetween('fecha', [$f0, $f1]);            
         }
-        return view('viajes.buscarViajes') -> with('viajes', $viajes->get());
+        $viajes = $viajes->orderBy('fecha', 'asc')->get();
+        foreach ($viajes as $viaje)
+        {
+            $vehiculo = Vehiculo::find($viaje->id_vehiculo);
+            $viaje['precio'] = $viaje->precio / $vehiculo->cantidad_asientos;
+        }
+        return view('viajes.buscarViajes') -> with('viajes', $viajes);
     }
 
     private function validateViaje($data)
@@ -96,8 +111,9 @@ class Viajes extends Controller
             'titulo' => 'required|string|min:1|max:255',
             'origen' => 'required|string|min:1|max:255',
             'destino' => 'required|string|min:1|max:255',
+            'fecha' => 'required|date',
             'precio' => 'required',
-            'titulo' => 'required',
+            'tipo_viaje' => 'required',
         ]);
     }    
 
@@ -105,13 +121,12 @@ class Viajes extends Controller
     {
         $user = Auth::user();
         $grupo = Grupo::find($data->id_grupo);
-        if($data->tipo_viaje == 'ocasional')
-        {
+        if ($data->tipo_viaje == 'ocasional'){
             $nuevo_viaje = Viaje::create([
                 'titulo' => $data['titulo'],
                 'origen' => $data['origen'],
                 'destino' => $data['destino'],
-                'fecha' => date_create($data['fecha'] . $data['hora']),
+                'fecha' => $data['fecha'],
                 'precio' => $data['precio'],
                 'tipo_viaje' => $data['tipo_viaje'],
                 'id_vehiculo' => $data['id_vehiculo'],
@@ -127,19 +142,16 @@ class Viajes extends Controller
             } else {
                 $dias = 7;
             }
-            $date = explode('-',$data->fecha);
-            $carbonDate = Carbon::createFromDate($date[0],$date[1],$date[2]);
-            $carbonDate->setTimeFromTimeString($data->hora);
-            $f1 = Carbon::today();
-            $f1 -> addDays(31);
-            while ($carbonDate->lessThan($f1))
+            $carbonDate = new Carbon($data['fecha']);
+            $f1 = Carbon::now();
+            $f1 -> addDays(30);
+            while ($carbonDate->lte($f1))
             {
-                $date = date_create($carbonDate);
                 $nuevo_viaje = Viaje::create([
                     'titulo' => $data['titulo'],
                     'origen' => $data['origen'],
                     'destino' => $data['destino'],
-                    'fecha' => date_format($date,'Y-m-d H:i'),
+                    'fecha' => $carbonDate,
                     'precio' => $data['precio'],
                     'tipo_viaje' => $data['tipo_viaje'],
                     'id_vehiculo' => $data['id_vehiculo'],
@@ -154,130 +166,163 @@ class Viajes extends Controller
         }
     } 
 
-    public function publicarViaje(Request $data)
+    private function tieneViajesSinFinalizar()
     {
-        if ($data->titulo == null)
-        {
-            $data['titulo'] = "Viaje desde " . $data['origen'] . " hasta " . $data['destino'] . " el día " . $data['fecha'] . " a las " . $data['hora'] . " hs.";
-        }
-
-        $this->validateViaje($data);
-
         $user = Auth::user();
+        $today = Carbon::now();
 
-        $firstDate = date_create($data['fecha'] . $data['hora']);
-        $grupo = Grupo::create([
-            'titulo' => $data['titulo'],
-            'origen' => $data['origen'],
-            'destino' => $data['destino'],
-            'fecha' => $firstDate,
-            'precio' => $data['precio'],
-            'tipo_viaje' => $data['tipo_viaje'],
-            'id_vehiculo' => $data['id_vehiculo'],
-            'id' => $user['id'],
-        ]);
-        $data['id_grupo'] = $grupo->id_grupo;
-        $this->createViajes($data);
+        $sin_finalizar = Viaje::where('id','=',$user->id)->where('fecha','<',$today)->whereNull('estado_viaje')->first();
         
-        return redirect('mi_usuario')->with('mensajeCrearViaje', 'El viaje ha sido publicado correctamente.');
+        if (is_null($sin_finalizar)){
+            return false;
+        }
+        return true;
     }
 
-    private function vehiculosUsuario()
+    public function publicarViaje(Request $data)
+    {
+        if (!$this->tieneViajesSinFinalizar()){
+            if ($data->titulo == null){
+                $data['titulo'] = "Viaje desde " . $data['origen'] . " hacia " . $data['destino'];
+            }
+            $data['fecha'] = new Carbon($data['fecha'] . $data['hora']);
+            $data['precio'] = $data->precio * 1.1;
+
+            $this->validateViaje($data);
+
+            $user = Auth::user();
+            $grupo = Grupo::create([
+                'titulo' => $data['titulo'],
+                'origen' => $data['origen'],
+                'destino' => $data['destino'],
+                'fecha' => $data['fecha'],
+                'precio' => $data['precio'],
+                'tipo_viaje' => $data['tipo_viaje'],
+                'id_vehiculo' => $data['id_vehiculo'],
+                'id' => $user['id'],
+            ]);
+            $data['id_grupo'] = $grupo->id_grupo;
+            $this->createViajes($data);
+            
+            return redirect('/viajes/crearViaje')->with('mensajeSuccess', '¡El viaje ha sido publicado correctamente!');
+        } else {
+            return redirect()->back()->with('mensajeDanger', '¡El viaje no puede ser publicado! Tiene viajes sin finalizar.');
+        }
+    }
+
+    protected function vehiculosUsuario()
     {
         $user = Auth::user();
         $registras = Registra::all();
         $mis_vehiculos = array();
         foreach ($registras as $registra)
         {
-            if($registra['id'] == $user['id']){
+            if ($registra['id'] == $user['id']){
                 $mis_vehiculos[] = Vehiculo::find($registra['id_vehiculo']);
             }
         }
         return $mis_vehiculos;
     }
 
-
     public function misViajes()
     {
+        $today = Carbon::now();
+
         $user = Auth::user();
-        $mis_viajes = Grupo::where('id','like',$user['id'])->get();
-        $postuPorGrupo = array();
-        foreach($mis_viajes as $grupo){
-            $relacionDelGrupo = GruposViaje::where('id_grupo','=',$grupo->id_grupo)->get();
-            $suma = 0;
-            foreach($relacionDelGrupo as $relacion){
-                $suma = Postulacion::where('id_viaje','=',$relacion->id_viaje)->where('estado_postulacion','=','pendiente')->count() + $suma;
+        $mis_grupos = Grupo::where('id','like',$user['id'])->orderBy('fecha', 'asc')->get();
+        $notificacionesPorGrupo = array();
+
+        if ($mis_grupos != '[]'){
+            foreach($mis_grupos as $grupo)
+            {
+                $relacionDelGrupo = GruposViaje::where('id_grupo','=',$grupo->id_grupo)->get();
+                $mis_viajes = array();
+                foreach($relacionDelGrupo as $relacion){
+                    $temp_viaje = Viaje::find($relacion->id_viaje);
+                    if ($temp_viaje->fecha > $today){
+                        $mis_viajes[] = $temp_viaje;
+                    }
+                }
+                $sumaPostulaciones = 0;
+                $sumaPreguntas = 0;
+                foreach($mis_viajes as $viaje)
+                {
+                    $sumaPostulaciones = Postulacion::where('id_viaje','=',$viaje->id_viaje)->where('estado_postulacion','=','pendiente')->count() + $sumaPostulaciones;
+                    $sumaPreguntas = Pregunta::where('id_viaje','=',$viaje->id_viaje)->whereNull('respuesta')->count() + $sumaPreguntas;
+                }
+                $notificacionesPorGrupo[$grupo->id_grupo] = $sumaPostulaciones + $sumaPreguntas;
             }
-            $postuPorGrupo[$grupo->id_grupo] = $suma;
+            return view('viajes.misViajes') -> with('mis_viajes', $mis_grupos)
+            ->with('notificacionesPorGrupo',$notificacionesPorGrupo);
+        } else {
+            return redirect('/home')->with('info', 'sinViajes');
         }
-        return view('viajes.misViajes') -> with('mis_viajes', $mis_viajes)
-        ->with('postuPorGrupo',$postuPorGrupo);
     }
 
-    public function modificarViaje($id)
+    protected function modificarViaje($id, $data)
     {
-        $viaje = Grupo::find($id);
-        $hora = explode(' ',$viaje->fecha)[1];
-        $vehiculos = $this->vehiculosUsuario();
-        return view('viajes.modificarViaje')->with('viaje',$viaje)
-        ->with('vehiculos',$vehiculos)
-        ->with('hora',$hora);
+        $viaje = Viaje::find($id);
+
+        $viaje->titulo = $data['titulo'];
+        $viaje->origen = $data['origen'];
+        $viaje->destino = $data['destino'];
+        $viaje->precio = $data['precio'];
+        $viaje->id_vehiculo = $data['id_vehiculo'];
+        $viaje->save();
     }
-
-    public function modificarViajeId(Request $data)
-    {
-        $mi_viaje = Viaje::find($data['id_viaje']);
-
-        $mi_viaje->titulo = $data->input('titulo');
-        $mi_viaje->origen = $data->input('origen');
-        $mi_viaje->destino = $data->input('destino');
-        $mi_viaje->fecha = $data->input('fecha');
-        $mi_viaje->precio = $data->input('precio');
-        $mi_viaje->tipo_viaje = $data->input('tipo_viaje');
-        $mi_viaje->titulo = $data->input('titulo');
-        $mi_viaje->save();
-
-        return redirect("/viajes/modificarViaje/" . $mi_viaje->id_viaje);
-    }
-
-    protected function eliminarViajeId($id)
+    
+    protected function eliminarViaje($id)
     {
         $mi_viaje = Viaje::find($id);
+
         $postulaciones = Postulacion::where('id_viaje','=',$id)->get();
         foreach ($postulaciones as $postulacion)
         {
             Postulacion::find($postulacion->id_postulacion)->delete();
         }
+
+        $preguntas = Pregunta::where('id_viaje','=',$id)->get();
+        foreach ($preguntas as $pregunta)
+        {
+            Pregunta::find($pregunta->id_pregunta)->delete();
+        }
+
         DB::table('viajes')->where('id_viaje', '=', $mi_viaje->id_viaje)->delete();
     }
 
-    public function eliminarViaje($id)
+    public function finalizarViaje(Request $data)
     {
-        $this->eliminarViajeId($id);
-        return redirect('/mi_usuario');
-    }
-
-    public function finalizarViaje($id_viaje)
-    {
-        $today = Carbon::now();
         $user = Auth::user();
-        $viaje = Viaje::find($id_viaje);   
+        $today = Carbon::now();
+        $viaje = Viaje::find($data->id_viaje);
 
-        if(!is_null($viaje))
-        {
-            if($user->id == $viaje->id)
-            {
-                if ( $today > $viaje->fecha )
-                {
+        if (!is_null($viaje)){
+            if ($user->id == $viaje->id){
+                if ($today > $viaje->fecha){
                     $viaje->estado_viaje = 'finalizado';
                     $viaje->save();
+
+                    $postulaciones = Postulacion::where('id_viaje','=',$viaje->id_viaje)->get();
+                    foreach ($postulaciones as $postulacion)
+                    {
+                        if ($postulacion->estado_postulacion != 'aceptado'){
+                            Postulacion::find($postulacion->id_postulacion)->delete();
+                        }
+                    }
+
+                    $preguntas = Pregunta::where('id_viaje','=',$viaje->id_viaje)->get();
+                    foreach ($preguntas as $pregunta)
+                    {
+                        Pregunta::find($pregunta->id_pregunta)->delete();
+                    }
+
                     $conf = Configuracion::find(1);
-                    $conf->fondo = $conf->fondo + $viaje->precio;
+                    $conf->fondo = $conf->fondo + ceil( ceil(ceil($viaje->precio * 100) / 110) * 0.10  );
                     $conf->save(); 
                 }
             }
         }
-        return redirect()->back();
+        
+        return redirect()->back()->with('mensajeSuccess', '¡El pago ha sido realizado correctamente!');
     }
-
 }
