@@ -1,4 +1,4 @@
-@extends('layouts.layout', ['postulaciones',$postulaciones], ['preguntas',$preguntas])
+@extends('layouts.layout')
 
 @section('content')
 <div class="container">

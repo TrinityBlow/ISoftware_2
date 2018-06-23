@@ -84,6 +84,12 @@ class GruposController extends Viajes
 
     public function modificarGrupoId($id)
     {
+        
+        $f0 = Carbon::today();
+
+        $f1 = Carbon::today();
+
+        $f1 -> addDays(30);
         $viaje = Grupo::find($id);
         if ((!$this->tienePostulaciones($viaje)) && (!$this->tieneViajesSinFinalizar($viaje))){
             $f0 = Carbon::today();
@@ -95,9 +101,10 @@ class GruposController extends Viajes
             return view('viajes.modificarViaje')
             ->with('viaje',$viaje)
             ->with('vehiculos',$vehiculos)
+            ->with('hora',$hora)
             ->with('f0',$f0)
             ->with('f1',$f1);
-        } else {
+        }else{
             return redirect('/viajes/misViajes')->with('mensajeDanger', '¡El viaje seleccionado no puede ser modificado! Tiene postulaciones aceptadas/pendientes para viajar y/o tiene viajes sin finalizar.');
         }
     }
