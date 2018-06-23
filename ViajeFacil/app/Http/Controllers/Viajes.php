@@ -179,32 +179,50 @@ class Viajes extends Controller
         return true;
     }
 
+    private function tieneCalifaciones30Dias()
+    {
+        $user = Auth::user();
+        $thristyDaysAgo = Carbon::now()->subDays(30);
+        $viajes = Viaje::where('id','=',$user->id)->where('fecha','<',$thristyDaysAgo)->get();
+        foreach($viajes as $viaje){
+            if (!is_null(Postulacion::where('id_viaje','=',$viaje->id_viaje)->where('estado_postulacion','=','aceptado')->where('calificacion_viajero','=',null)->first()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function publicarViaje(Request $data)
     {
         if (!$this->tieneViajesSinFinalizar()){
-            if ($data->titulo == null){
-                $data['titulo'] = "Viaje desde " . $data['origen'] . " hacia " . $data['destino'];
+            if (!$this->tieneCalifaciones30Dias()){
+                if ($data->titulo == null){
+                    $data['titulo'] = "Viaje desde " . $data['origen'] . " hacia " . $data['destino'];
+                }
+                $data['fecha'] = new Carbon($data['fecha'] . $data['hora']);
+                $data['precio'] = $data->precio * 1.1;
+
+                $this->validateViaje($data);
+
+                $user = Auth::user();
+                $grupo = Grupo::create([
+                    'titulo' => $data['titulo'],
+                    'origen' => $data['origen'],
+                    'destino' => $data['destino'],
+                    'fecha' => $data['fecha'],
+                    'precio' => $data['precio'],
+                    'tipo_viaje' => $data['tipo_viaje'],
+                    'id_vehiculo' => $data['id_vehiculo'],
+                    'id' => $user['id'],
+                ]);
+                $data['id_grupo'] = $grupo->id_grupo;
+                $this->createViajes($data);
+                
+                return redirect('/viajes/crearViaje')->with('mensajeSuccess', '¡El viaje ha sido publicado correctamente!');
+            } else {
+                return redirect()->back()->with('mensajeDanger', '¡El viaje no puede ser publicado! Tiene calificaciones pendientes de hace mas de 30 días.');
             }
-            $data['fecha'] = new Carbon($data['fecha'] . $data['hora']);
-            $data['precio'] = $data->precio * 1.1;
-
-            $this->validateViaje($data);
-
-            $user = Auth::user();
-            $grupo = Grupo::create([
-                'titulo' => $data['titulo'],
-                'origen' => $data['origen'],
-                'destino' => $data['destino'],
-                'fecha' => $data['fecha'],
-                'precio' => $data['precio'],
-                'tipo_viaje' => $data['tipo_viaje'],
-                'id_vehiculo' => $data['id_vehiculo'],
-                'id' => $user['id'],
-            ]);
-            $data['id_grupo'] = $grupo->id_grupo;
-            $this->createViajes($data);
-            
-            return redirect('/viajes/crearViaje')->with('mensajeSuccess', '¡El viaje ha sido publicado correctamente!');
         } else {
             return redirect()->back()->with('mensajeDanger', '¡El viaje no puede ser publicado! Tiene viajes sin finalizar.');
         }

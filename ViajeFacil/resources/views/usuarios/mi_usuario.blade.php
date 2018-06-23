@@ -6,7 +6,7 @@
     <div class="col-md-8">
         
         <div class="card">
-            <div class="card-header">{{ __('Mi usuario') }}</div>
+            <div class="card-header"><span>Mi usuario</span><span class="float-right">Reputación: {{ Auth::user()->reputacion }}</span></div>
 
             <div class="card-body">
                 <form method="POST" action="/mi_usuario/modificar" enctype="multipart/form-data">
@@ -148,6 +148,7 @@
                     @endif
                 </ul>
             </div>
+        <button class="btn btn-danger btn-sm btn-block mt-4" data-toggle="modal" data-target="#myModal2"> Darme de baja definitivamente </button>
             
         </div>
 
@@ -178,5 +179,28 @@
         </div>
     </div>
 </div>
+<!-- Modal 2 -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCenterTitle">Darme de baja</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="GET" action="/mi_usuario/eliminar_usuario">
+                <div class="modal-body">
+                    ¿Estás seguro de que quieres darte de baja del sistema? Se PERDERAN todos tus datos de viajes, vehículos y reputación definitivamente.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Sí, estoy seguro</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 @endsection

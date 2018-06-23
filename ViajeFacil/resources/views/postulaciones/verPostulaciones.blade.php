@@ -10,7 +10,7 @@
             <div class="card mb-2">
                 <div class="card-body">
                     <h5 class="card-title">Postulado: {{ $postulacion->user->name }}, {{ $postulacion->user->last_name }}</h5>
-                    <p class="card-text">Reputación: 0</p>
+                    <p class="card-text">Reputación: {{ $postulacion->user->reputacion }}</p>
                     <form method="POST" action="/viajes/manejarPostulacion">
                         @csrf
                         <input type="hidden" name="postulado_id" value={{ $postulacion->id }}>

@@ -29,7 +29,6 @@
 				</div>
 
 				<div class="row">
-
 					<div class="form-group col">
 						<label for="fecha" class="control-label">Fecha:</label>
 						<input type="date" class="form-control" name="fecha" value={{ $f0 }} min={{ $f0 }} max={{ $f1 }} required>
@@ -66,12 +65,12 @@
 				</div>
 
 				<div class="form-group">
-					<label for="id_vehiculo" class="control-label">Vehículo utilizado para viajar:</label>
+					<label for="id_vehiculo" class="control-label">Vehículo que se usará para viajar:</label>
 					<select class="form-control" name="id_vehiculo">
 					@foreach ($vehiculos as $vehiculo)
 						<option value={{$vehiculo->id_vehiculo}}>Patente: {{$vehiculo->patente}} | Marca: {{$vehiculo->marca}} | Modelo: {{$vehiculo->modelo}} | Cantidad de asientos: {{$vehiculo->cantidad_asientos}}</option>
 					@endforeach	
-					</select>					
+					</select>
 				</div>
 
 				<div class="form-group text-center"> <!-- Submit Button -->
