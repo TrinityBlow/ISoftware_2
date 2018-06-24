@@ -10,6 +10,8 @@
             <div class="row form-group">
                 <div class="col">
                     <h5 class="card-title">{{ $viaje -> titulo }}</h5>
+                    <p class="card-text">Origen: {{ $viaje -> origen }}</p>
+                    <p class="card-text">Destino: {{ $viaje -> destino }}</p>
                     <p class="card-text">Fecha: {{ \Carbon\Carbon::parse($viaje -> fecha)->format('d/m/Y') }}</p>
                     <p class="card-text">Hora: {{ \Carbon\Carbon::parse($viaje -> fecha)->format('H:i') }}</p>
                     <p class="card-text">Precio: ${{ ceil($viaje -> precio) }}</p>

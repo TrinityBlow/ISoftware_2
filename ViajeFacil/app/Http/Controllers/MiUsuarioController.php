@@ -145,7 +145,7 @@ class MiUsuarioController extends Controller
             DB::table('vehiculos')->where('id_vehiculo', '=', $vehiculo->id_vehiculo)->delete();
         }
         $user->delete();
-        return redirect('/')->with('mensajeSuccess','Usted se ha dado de baja del sistema satisfactoriamente. Lamentamos su perdida. Antes reclamos y críticas: facundolopezosornio@viajefacil.com');
+        return redirect('/')->with('mensajeSuccess','Usted se ha dado de baja del sistema satisfactoriamente. Lamentamos su pérdida. Antes reclamos y críticas: facundolopezosornio@viajefacil.com');
     }
     
     /*

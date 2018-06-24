@@ -21,7 +21,7 @@
                         @else
                             <p class="card-text">El postulado fue: <strong>{{$postulacion->estado_postulacion}}</strong></p>
                             @if($postulacion->estado_postulacion == 'aceptado')
-                                <button type="submit" name="action" value="rechazar" class="btn btn-danger">Rechazar</button>
+                                <button type="submit" name="action" value="rechazar" class="btn btn-danger" data-toggle="modal" data-target="#myModal3">Rechazar</button>
                             @endif
                         @endif
                     </form>
@@ -33,5 +33,30 @@
             <p class="list-group-item bg-light text-center">No se ha encontrado ninguna postulación</p>
         </ul>
     @endif
+</div>
+
+<!-- Modal3 -->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCenterTitle">Eliminar viaje</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="/viajes/rechazarPostulacionViajante">
+                @csrf
+                <div class="modal-body">
+                    <p>¿Estás seguro que quieres rechazar el viaje?</br>Se te restará 1 punto de reputación.</p>
+                    <input type="hidden" id="id_modal" name="id_viaje" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Sí, estoy seguro</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 @endsection
