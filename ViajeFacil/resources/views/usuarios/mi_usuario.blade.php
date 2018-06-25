@@ -191,7 +191,7 @@
             </div>
             <form method="GET" action="/mi_usuario/eliminar_usuario">
                 <div class="modal-body">
-                    ¿Estás seguro de que quieres darte de baja del sistema? Se PERDERAN todos tus datos de viajes, vehículos y reputación definitivamente.
+                    ¿Estás seguro de que quieres darte de baja del sistema? Se PERDERÁN todos sus datos de viajes, vehículos y reputación definitivamente.
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>

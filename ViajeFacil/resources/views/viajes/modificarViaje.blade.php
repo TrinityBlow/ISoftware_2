@@ -52,7 +52,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
                             </div>
-                            <input type="text" class="form-control" id="precio" name="precio" value="{{ $viaje->precio }}" required>
+                            <input type="number" min="1" max="100000" class="form-control" id="precio" name="precio" value="{{ $viaje->precio }}" required>
                         </div>
                     </div>
                     

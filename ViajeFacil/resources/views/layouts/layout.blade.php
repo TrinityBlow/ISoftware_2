@@ -46,10 +46,10 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Ayuda</a>
+              <a class="nav-link" href="{{ route('ayuda') }}">Ayuda</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Contacto</a>
+              <a class="nav-link" href="{{ route('contacto') }}">Contacto</a>
             </li>
               <!-- Authentication Links -->
               @guest

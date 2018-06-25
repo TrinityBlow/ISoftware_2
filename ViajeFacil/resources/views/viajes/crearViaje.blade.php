@@ -49,7 +49,7 @@
 							<div class="input-group-prepend">
 								<span class="input-group-text">$</span>
 							</div>
-							<input type="text" class="form-control" name="precio" placeholder="Ej.: 100" required>
+							<input type="number" min="1" max="100000" class="form-control" name="precio" placeholder="Ej.: 100" required>
 						</div>
 					</div>
 					

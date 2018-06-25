@@ -44,7 +44,7 @@
                     <div class="form-group row mb-0">
                         <div class="col-md-10 text-md-right">
                             <button type="submit" class="btn btn-primary">
-                                {{ __('Cambiar contraseña') }}
+                                {{ __('Cambiar') }}
                             </button>
                             <a href="/mi_usuario">                      
                                 <button type="button" class="btn btn-secondary">

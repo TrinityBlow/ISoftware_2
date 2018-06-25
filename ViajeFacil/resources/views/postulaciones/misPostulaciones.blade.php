@@ -40,7 +40,11 @@
                                                 <strong>Viaje finalizado</strong>
                                                 @if($postulacion->estado_postulacion == 'aceptado')
                                                     <button class="btn btn-primary btn-sm" data-id="{{ $postulacion }}" data-toggle="modal" data-target="#myModal">
-                                                        Calificar viaje
+                                                        @if (is_null($postulacion->calificacion_viaje))
+                                                            Calificar viaje
+                                                        @else
+                                                            Calificación viaje
+                                                        @endif
                                                     </button>
                                                 @endif
                                             @endif
@@ -62,7 +66,13 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalCenterTitle">Calificar viaje</h5>
+                <h5 class="modal-title" id="modalCenterTitle">
+                    @if (is_null($postulacion->calificacion_viaje))
+                        Calificar viaje
+                    @else
+                        Calificación viaje
+                    @endif
+                </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -100,8 +110,9 @@
                     @else
                         <p>Mi calificación: @if ($postulacion->calificacion_viaje == 1) Bueno @elseif ($postulacion->calificacion_viaje == 0) Neutral @else Malo @endif</p>
                         @if (!is_null($postulacion->comentario_viaje)) <p>Mi comentario: "{{ $postulacion->comentario_viaje }}"</p> @endif
-                        <hr>
+                        
                         @if (!is_null($postulacion->calificacion_viajero))
+                            <hr>
                             <p>Su calificación: @if ($postulacion->calificacion_viajero == 1) Bueno @elseif ($postulacion->calificacion_viajero == 0) Neutral @else Malo @endif</p>
                             @if (!is_null($postulacion->comentario_viajero)) <p>Su comentario: "{{ $postulacion->comentario_viajero }}"</p> @endif
                         @endif
@@ -109,9 +120,11 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                     @if (is_null($postulacion->calificacion_viaje))
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-primary">Calificar</button>
+                    @else
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                     @endif
                 </div>
             </form>

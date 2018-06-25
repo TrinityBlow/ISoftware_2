@@ -23,7 +23,7 @@
                 <div class="col">
                     @if( $viaje->id == Auth::user()->id )
                         <strong> Este es mi viaje </strong>
-                    @else
+                    @elseif($viaje->estado_viaje != 'finalizado')
                         @if(is_null($postulacion))
                             <a href="/viajes/postularmeViaje/{{ $viaje->id_viaje }}"> <button type="button" class="btn btn-success">Postularme para viajar</button> </a>
                         @else
@@ -36,6 +36,8 @@
                                 @endif
                             @endif
                         @endif
+                    @else
+                        <strong> Viaje finalizado </strong>
                     @endif
                 </div>
                 <div class="col">

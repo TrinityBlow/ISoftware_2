@@ -221,7 +221,7 @@ class Viajes extends Controller
                 
                 return redirect('/viajes/crearViaje')->with('mensajeSuccess', '¡El viaje ha sido publicado correctamente!');
             } else {
-                return redirect()->back()->with('mensajeDanger', '¡El viaje no puede ser publicado! Tiene calificaciones pendientes de hace mas de 30 días.');
+                return redirect()->back()->with('mensajeDanger', '¡El viaje no puede ser publicado! Tiene calificaciones pendientes de hace más de 30 días.');
             }
         } else {
             return redirect()->back()->with('mensajeDanger', '¡El viaje no puede ser publicado! Tiene viajes sin finalizar.');

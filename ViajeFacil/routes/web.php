@@ -25,6 +25,12 @@ Auth::routes();
 
 Route::get('/home','HomeController@index')->name('home');
 
+Route::get('/ayuda','AyudaController@ayuda')->name('ayuda');
+
+Route::get('/contacto','ContactoController@contacto')->name('contacto');
+
+Route::post('/contacto/enviarMensaje','ContactoController@enviarMensaje');
+
 Route::get('/mi_usuario','MiUsuarioController@index');
 
 Route::post('/mi_usuario/modificar','MiUsuarioController@modificar');
