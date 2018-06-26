@@ -6,6 +6,8 @@ use App\User;
 use App\Vehiculo;
 use App\Registra;
 use App\Grupo;
+use App\Pregunta;
+use App\Postulacion;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
@@ -137,8 +139,9 @@ class MiUsuarioController extends Controller
             $data = new Request;
             $data['id_grupo'] = $grupo->id_grupo;
             $grupoControl->eliminarGrupo($data);
-          //  GruposController::eliminarMiGrupoStatic($grupo->id_grupo);
         }
+        Postulacion::where('id','=',$user->id)->delete();
+        Pregunta::where('id','=',$user->id)->delete();
         $mis_vehiculos = Registra::where('id','=',$user->id)->get();
         foreach ($mis_vehiculos as $vehiculo) {
             DB::table('registra')->where('id_vehiculo', '=', $vehiculo->id_vehiculo)->delete();
@@ -148,6 +151,7 @@ class MiUsuarioController extends Controller
         return redirect('/')->with('mensajeSuccess','¡Se ha dado de baja del sistema correctamente! Lamentamos su pérdida. Ante reclamos y críticas, vaya a la sección de contacto.');
     }
     
+    //  GruposController::eliminarMiGrupoStatic($grupo->id_grupo);
     /*
     public function showPicture($id)
     {

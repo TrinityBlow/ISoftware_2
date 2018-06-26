@@ -179,7 +179,7 @@ class Viajes extends Controller
         return true;
     }
 
-    private function tieneCalifaciones30Dias()
+    public function tieneCalifaciones30Dias()
     {
         $user = Auth::user();
         $thristyDaysAgo = Carbon::now()->subDays(30);
@@ -193,7 +193,7 @@ class Viajes extends Controller
         return false;
     }
 
-    private function tieneCalifaciones30DiasPasajero()
+    public function tieneCalifaciones30DiasPasajero()
     {
         $user = Auth::user();
         $thristyDaysAgo = Carbon::now()->subDays(30);

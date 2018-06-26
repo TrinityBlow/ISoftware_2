@@ -105,18 +105,6 @@
                                     Malo
                                 </label>
                             </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="calificacion" value="0" checked>
-                                <label class="form-check-label" for="calificacion">
-                                    Neutral
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="calificacion" value="-1">
-                                <label class="form-check-label" for="calificacion">
-                                    Malo
-                                </label>
-                            </div>
                             <div class="form-group mt-3">
                                 <textarea type="text" class="form-control" rows="3" name="comentario" placeholder="Escribe tu comentario aquí... (Opcional)"></textarea>
                             </div>

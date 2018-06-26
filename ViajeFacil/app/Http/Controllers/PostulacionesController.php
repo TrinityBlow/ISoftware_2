@@ -6,6 +6,7 @@ use App\User;
 use App\Vehiculo;
 use App\Registra;
 use App\Viaje;
+use App\Http\Controllers\Viajes;
 use App\Postulacion;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
@@ -24,18 +25,27 @@ class PostulacionesController extends Controller
     public function postularmeViaje($id)
     {
         $user = Auth::user(); 
-        if(!Postulacion::where('id','=',$user->id)->where('id_viaje','=',$id)->get()->count()){
-            $nueva_postulacion = Postulacion::create([
-                'estado_postulacion' => 'pendiente',
-                'calificacion_viajero' => null,
-                'calificacion_viaje' => null,
-                'comentario_viajero' => null,
-                'comentario_viaje' => null,
-                'id' => $user->id,
-                'id_viaje' => $id,
-            ]);
+        $viajeClass = new Viajes;
+        if(!$viajeClass->tieneCalifaciones30Dias()){
+            if(!$viajeClass->tieneCalifaciones30DiasPasajero()){
+                if(!Postulacion::where('id','=',$user->id)->where('id_viaje','=',$id)->get()->count()){
+                    $nueva_postulacion = Postulacion::create([
+                        'estado_postulacion' => 'pendiente',
+                        'calificacion_viajero' => null,
+                        'calificacion_viaje' => null,
+                        'comentario_viajero' => null,
+                        'comentario_viaje' => null,
+                        'id' => $user->id,
+                        'id_viaje' => $id,
+                    ]);
+                }
+                return redirect()->back();
+            }else{
+                return redirect()->back()->with('mensajeDanger', '¡La postulacion no puede ser publicado! Tiene calificaciones pendientes de hace más de 30 días como pasajero.');
+            }
+        }else{
+            return redirect()->back()->with('mensajeDanger', '¡La postulacion no puede ser publicado! Tiene calificaciones pendientes de hace más de 30 días como conductor.');
         }
-        return redirect('/viajes/verDetallesViaje/'.$id);
     }
 
     public function cancelarPostulacion($id)
