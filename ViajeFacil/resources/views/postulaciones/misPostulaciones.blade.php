@@ -62,25 +62,26 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="myModal{{$postulacion->id_postulacion}}" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalCenterTitle">
-                    @if (is_null($postulacion->calificacion_viaje))
-                        Calificar viaje
-                    @else
-                        Calificación viaje
-                    @endif
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form method="POST" action="/postulaciones/calificarViaje">
-                @csrf
-                <div class="modal-body">
-                    <input type="hidden" id="id_modal" name="postulacion" value="">
+@foreach ($postulaciones->reverse() as $postulacion)
+    <div class="modal fade" id="myModal{{$postulacion->id_postulacion}}" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCenterTitle">
+                        @if (is_null($postulacion->calificacion_viaje))
+                            Calificar viaje
+                        @else
+                            Calificación viaje
+                        @endif
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST" action="/postulaciones/calificarViaje">
+                    @csrf
+                    <div class="modal-body">
+                        <input type="hidden" id="id_modal" name="postulacion" value="">
 
                         @if (is_null($postulacion->calificacion_viaje))
                             ¿Cómo calificaría el viaje?
@@ -91,7 +92,7 @@
                                 <label class="form-check-label" for="calificacion">
                                     Bueno
                                 </label>
-                                </div>
+                            </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="calificacion" value="0" checked>
                                 <label class="form-check-label" for="calificacion">
@@ -104,41 +105,43 @@
                                     Malo
                                 </label>
                             </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="calificacion" value="0" checked>
-                            <label class="form-check-label" for="calificacion">
-                                Neutral
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="calificacion" value="-1">
-                            <label class="form-check-label" for="calificacion">
-                                Malo
-                            </label>
-                        </div>
-                        <div class="form-group mt-3">
-                            <textarea type="text" class="form-control" rows="3" name="comentario" placeholder="Escribe tu comentario aquí... (Opcional)"></textarea>
-                        </div>
-                    @else
-                        <p>Mi calificación: @if ($postulacion->calificacion_viaje == 1) Bueno @elseif ($postulacion->calificacion_viaje == 0) Neutral @else Malo @endif</p>
-                        @if (!is_null($postulacion->comentario_viaje)) <p>Mi comentario: "{{ $postulacion->comentario_viaje }}"</p> @endif
-                        
-                        @if (!is_null($postulacion->calificacion_viajero))
-                            <hr>
-                            <p>Su calificación: @if ($postulacion->calificacion_viajero == 1) Bueno @elseif ($postulacion->calificacion_viajero == 0) Neutral @else Malo @endif</p>
-                            @if (!is_null($postulacion->comentario_viajero)) <p>Su comentario: "{{ $postulacion->comentario_viajero }}"</p> @endif
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="calificacion" value="0" checked>
+                                <label class="form-check-label" for="calificacion">
+                                    Neutral
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="calificacion" value="-1">
+                                <label class="form-check-label" for="calificacion">
+                                    Malo
+                                </label>
+                            </div>
+                            <div class="form-group mt-3">
+                                <textarea type="text" class="form-control" rows="3" name="comentario" placeholder="Escribe tu comentario aquí... (Opcional)"></textarea>
+                            </div>
+                        @else
+                            <p>Mi calificación: @if ($postulacion->calificacion_viaje == 1) Bueno @elseif ($postulacion->calificacion_viaje == 0) Neutral @else Malo @endif</p>
+                            @if (!is_null($postulacion->comentario_viaje)) <p>Mi comentario: "{{ $postulacion->comentario_viaje }}"</p> @endif
+                            
+                            @if (!is_null($postulacion->calificacion_viajero))
+                                <hr>
+                                <p>Su calificación: @if ($postulacion->calificacion_viajero == 1) Bueno @elseif ($postulacion->calificacion_viajero == 0) Neutral @else Malo @endif</p>
+                                @if (!is_null($postulacion->comentario_viajero)) <p>Su comentario: "{{ $postulacion->comentario_viajero }}"</p> @endif
+                            @endif
                         @endif
 
-                </div>
-                <div class="modal-footer">
-                    @if (is_null($postulacion->calificacion_viaje))
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Calificar</button>
-                    @else
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    @endif
-                </div>
-            </form>
+                    </div>
+                    <div class="modal-footer">
+                        @if (is_null($postulacion->calificacion_viaje))
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Calificar</button>
+                        @else
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        @endif
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 @endforeach
