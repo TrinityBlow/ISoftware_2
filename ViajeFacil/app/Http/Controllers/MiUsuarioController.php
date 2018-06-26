@@ -145,7 +145,7 @@ class MiUsuarioController extends Controller
             DB::table('vehiculos')->where('id_vehiculo', '=', $vehiculo->id_vehiculo)->delete();
         }
         $user->delete();
-        return redirect('/')->with('mensajeSuccess','¡Se ha dado de baja del sistema correctamente! Lamentamos su perdida. Ante reclamos y críticas, vaya a la sección de contacto.');
+        return redirect('/')->with('mensajeSuccess','¡Se ha dado de baja del sistema correctamente! Lamentamos su pérdida. Ante reclamos y críticas, vaya a la sección de contacto.');
     }
     
     /*

@@ -39,7 +39,7 @@
                                             @else
                                                 <strong>Viaje finalizado</strong>
                                                 @if($postulacion->estado_postulacion == 'aceptado')
-                                                    <button class="btn btn-primary btn-sm" data-id="{{ $postulacion }}" data-toggle="modal" data-target="#myModal">
+                                                    <button class="btn btn-primary btn-sm" data-id="{{ $postulacion }}" data-toggle="modal" data-target="#myModal{{$postulacion->id_postulacion}}">
                                                         @if (is_null($postulacion->calificacion_viaje))
                                                             Calificar viaje
                                                         @else
@@ -62,7 +62,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="myModal{{$postulacion->id_postulacion}}" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -82,15 +82,27 @@
                 <div class="modal-body">
                     <input type="hidden" id="id_modal" name="postulacion" value="">
 
-                    @if (is_null($postulacion->calificacion_viaje))
-                        ¿Cómo calificaría el viaje?
-                        <input type="hidden" name="id_viaje" value={{ $postulacion->id_viaje->id_viaje }}>
+                        @if (is_null($postulacion->calificacion_viaje))
+                            ¿Cómo calificaría el viaje?
+                            <input type="hidden" name="id_viaje" value={{ $postulacion->id_viaje->id_viaje }}>
 
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="calificacion" value="1">
-                            <label class="form-check-label" for="calificacion">
-                                Bueno
-                            </label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="calificacion" value="1">
+                                <label class="form-check-label" for="calificacion">
+                                    Bueno
+                                </label>
+                                </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="calificacion" value="0" checked>
+                                <label class="form-check-label" for="calificacion">
+                                    Neutral
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="calificacion" value="-1">
+                                <label class="form-check-label" for="calificacion">
+                                    Malo
+                                </label>
                             </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="calificacion" value="0" checked>
@@ -116,7 +128,6 @@
                             <p>Su calificación: @if ($postulacion->calificacion_viajero == 1) Bueno @elseif ($postulacion->calificacion_viajero == 0) Neutral @else Malo @endif</p>
                             @if (!is_null($postulacion->comentario_viajero)) <p>Su comentario: "{{ $postulacion->comentario_viajero }}"</p> @endif
                         @endif
-                    @endif
 
                 </div>
                 <div class="modal-footer">
@@ -130,6 +141,6 @@
             </form>
         </div>
     </div>
-</div>
+@endforeach
 
 @endsection
